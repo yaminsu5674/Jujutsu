@@ -19,6 +19,6 @@ void AJujutsuHeroController::OnPossess(APawn* InPawn)
 
 	if (AJujutsuBaseCharacter* HeroCharacter = Cast<AJujutsuBaseCharacter>(InPawn))
 	{
-		Debug::Print(TEXT("Possessed by Hero Controller"));
+		//Debug::Print(TEXT("Possessed by Hero Controller"));
 	}
 }

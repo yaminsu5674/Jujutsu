@@ -17,6 +17,6 @@ void AJujutsuAIController::OnPossess(APawn* InPawn)
 
 	if (AJujutsuBaseCharacter* AICharacter = Cast<AJujutsuBaseCharacter>(InPawn))
 	{
-		Debug::Print(TEXT("Possessed by AI Controller"));
+		//Debug::Print(TEXT("Possessed by AI Controller"));
 	}
 }
