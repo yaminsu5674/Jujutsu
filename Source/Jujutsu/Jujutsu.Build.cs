@@ -16,7 +16,8 @@ public class Jujutsu : ModuleRules
 			"EnhancedInput", 
 			"AIModule",
 			"GameplayTags",
-			"GameplayTasks" });
+			"GameplayTasks",
+			"GameplayAbilities" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
