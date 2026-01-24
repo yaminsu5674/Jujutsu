@@ -8,6 +8,8 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Controllers/JujutsuHeroController.h"
+#include "AbilitySystem/JujutsuAbilitySystemComponent.h"
+#include "AbilitySystem/JujutsuAttributeSet.h"
 
 // Sets default values
 AJujutsuBaseCharacter::AJujutsuBaseCharacter()
@@ -39,6 +41,25 @@ AJujutsuBaseCharacter::AJujutsuBaseCharacter()
  GetCharacterMovement()->RotationRate = FRotator(0.f,500.f,0.f);
  GetCharacterMovement()->MaxWalkSpeed = 400.f;
  GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
+
+ JujutsuAbilitySystemComponent = CreateDefaultSubobject<UJujutsuAbilitySystemComponent>(TEXT("JujutsuAbilitySystemComponent"));
+
+ JujutsuAttributeSet = CreateDefaultSubobject<UJujutsuAttributeSet>(TEXT("JujutsuAttributeSet"));
+}
+
+UAbilitySystemComponent* AJujutsuBaseCharacter::GetAbilitySystemComponent() const
+{
+	return GetJujutsuAbilitySystemComponent();
+}
+
+void AJujutsuBaseCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	if (JujutsuAbilitySystemComponent)
+	{
+		JujutsuAbilitySystemComponent->InitAbilityActorInfo(this,this);
+	}
 }
 
 void AJujutsuBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
