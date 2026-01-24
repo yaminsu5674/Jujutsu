@@ -6,6 +6,9 @@
 #include "GameFramework/Character.h"
 #include "JujutsuBaseCharacter.generated.h"
 
+class USpringArmComponent;
+class UCameraComponent;
+
 UCLASS()
 class JUJUTSU_API AJujutsuBaseCharacter : public ACharacter
 {
@@ -14,5 +17,19 @@ class JUJUTSU_API AJujutsuBaseCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	AJujutsuBaseCharacter();
+
+protected:
+
+private:
+
+#pragma region Components
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	USpringArmComponent* CameraBoom;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	UCameraComponent* FollowCamera;
+
+#pragma endregion
 
 };

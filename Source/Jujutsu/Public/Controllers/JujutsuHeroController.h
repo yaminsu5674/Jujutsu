@@ -13,5 +13,11 @@ UCLASS()
 class JUJUTSU_API AJujutsuHeroController : public APlayerController
 {
 	GENERATED_BODY()
-	
+
+public:
+	AJujutsuHeroController();
+
+protected:
+	virtual void OnPossess(APawn* InPawn) override;
+
 };

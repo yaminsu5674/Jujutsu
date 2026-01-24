@@ -14,4 +14,10 @@ class JUJUTSU_API AJujutsuAIController : public AAIController
 {
 	GENERATED_BODY()
 
+public:
+	AJujutsuAIController();
+
+protected:
+	virtual void OnPossess(APawn* InPawn) override;
+
 };
