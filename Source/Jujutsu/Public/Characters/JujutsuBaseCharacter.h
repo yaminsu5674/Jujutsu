@@ -19,6 +19,7 @@ public:
 	AJujutsuBaseCharacter();
 
 protected:
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
 

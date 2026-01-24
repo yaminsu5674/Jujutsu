@@ -7,6 +7,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Controllers/JujutsuHeroController.h"
 
 // Sets default values
 AJujutsuBaseCharacter::AJujutsuBaseCharacter()
@@ -38,4 +39,15 @@ AJujutsuBaseCharacter::AJujutsuBaseCharacter()
  GetCharacterMovement()->RotationRate = FRotator(0.f,500.f,0.f);
  GetCharacterMovement()->MaxWalkSpeed = 400.f;
  GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
+}
+
+void AJujutsuBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	// PlayerController일 때만 Input 설정을 Controller에 위임
+	if (AJujutsuHeroController* HeroController = Cast<AJujutsuHeroController>(GetController()))
+	{
+		HeroController->BindInputActions(PlayerInputComponent);
+	}
 }
