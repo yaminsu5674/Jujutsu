@@ -10,6 +10,18 @@ void UDataAsset_StartUpDataBase::GiveToAbilitySystemComponent(UJujutsuAbilitySys
 
 	GrantAbilities(ActivateOnGivenAbilities, InASCToGive, ApplyLevel);
 	GrantAbilities(ReactiveAbilities, InASCToGive, ApplyLevel);
+
+	for (const FJujutsuCharacterAbilitySet& AbilitySet : CharacterAbilitySets)
+	{
+		if (!AbilitySet.IsValid()) continue;
+
+		FGameplayAbilitySpec AbilitySpec(AbilitySet.AbilityToGrant);
+		AbilitySpec.SourceObject = InASCToGive->GetAvatarActor();
+		AbilitySpec.Level = ApplyLevel;
+		AbilitySpec.DynamicAbilityTags.AddTag(AbilitySet.InputTag);
+
+		InASCToGive->GiveAbility(AbilitySpec);
+	}
 }
 
 void UDataAsset_StartUpDataBase::GrantAbilities(const TArray<TSubclassOf<UJujutsuGameplayAbility>>& InAbilitiesToGive, UJujutsuAbilitySystemComponent* InASCToGive, int32 ApplyLevel)
