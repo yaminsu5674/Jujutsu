@@ -16,6 +16,4 @@ void UJujutsuCharacterCombatComponent::ToggleBodyCollision(bool bShouldEnable)
 	if (UBoxComponent* Box = BaseCharacter->GetRightHandCollisionBox()) { Box->SetCollisionEnabled(NewState); }
 	if (UBoxComponent* Box = BaseCharacter->GetLeftFootCollisionBox())  { Box->SetCollisionEnabled(NewState); }
 	if (UBoxComponent* Box = BaseCharacter->GetRightFootCollisionBox()) { Box->SetCollisionEnabled(NewState); }
-
-	Debug::Print(bShouldEnable ? TEXT("Body collision ON") : TEXT("Body collision OFF"), bShouldEnable ? FColor::Green : FColor::Orange);
 }

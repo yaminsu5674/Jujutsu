@@ -14,8 +14,6 @@
 #include "DataAssets/StartUpData/DataAsset_StartUpDataBase.h"
 #include "Components/Combat/JujutsuCharacterCombatComponent.h"
 
-#include "JujutsuDebugHelper.h"
-
 // Sets default values
 AJujutsuBaseCharacter::AJujutsuBaseCharacter()
 {
@@ -57,21 +55,25 @@ AJujutsuBaseCharacter::AJujutsuBaseCharacter()
 	LeftHandCollisionBox->SetupAttachment(GetMesh());
 	LeftHandCollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	LeftHandCollisionBox->OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::OnBodyCollisionBoxBeginOverlap);
+	LeftHandCollisionBox->OnComponentEndOverlap.AddUniqueDynamic(this, &ThisClass::OnBodyCollisionBoxEndOverlap);
 
 	RightHandCollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("RightHandCollisionBox"));
 	RightHandCollisionBox->SetupAttachment(GetMesh());
 	RightHandCollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	RightHandCollisionBox->OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::OnBodyCollisionBoxBeginOverlap);
+	RightHandCollisionBox->OnComponentEndOverlap.AddUniqueDynamic(this, &ThisClass::OnBodyCollisionBoxEndOverlap);
 
 	LeftFootCollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("LeftFootCollisionBox"));
 	LeftFootCollisionBox->SetupAttachment(GetMesh());
 	LeftFootCollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	LeftFootCollisionBox->OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::OnBodyCollisionBoxBeginOverlap);
+	LeftFootCollisionBox->OnComponentEndOverlap.AddUniqueDynamic(this, &ThisClass::OnBodyCollisionBoxEndOverlap);
 
 	RightFootCollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("RightFootCollisionBox"));
 	RightFootCollisionBox->SetupAttachment(GetMesh());
 	RightFootCollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	RightFootCollisionBox->OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::OnBodyCollisionBoxBeginOverlap);
+	RightFootCollisionBox->OnComponentEndOverlap.AddUniqueDynamic(this, &ThisClass::OnBodyCollisionBoxEndOverlap);
 }
 
 UAbilitySystemComponent* AJujutsuBaseCharacter::GetAbilitySystemComponent() const
@@ -139,5 +141,22 @@ void AJujutsuBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 
 void AJujutsuBaseCharacter::OnBodyCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	// TODO: 히트 처리 로직
+	if (APawn* HitPawn = Cast<APawn>(OtherActor))
+	{
+		if (HitPawn != this)
+		{
+			// TODO: 히트 처리 로직
+		}
+	}
+}
+
+void AJujutsuBaseCharacter::OnBodyCollisionBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (APawn* HitPawn = Cast<APawn>(OtherActor))
+	{
+		if (HitPawn != this)
+		{
+			// TODO: 히트 처리 로직
+		}
+	}
 }
