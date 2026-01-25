@@ -13,7 +13,7 @@ namespace JujutsuGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_D, "InputTag.D");
 
 	/** Character Ability Tags */
-	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_A, "Character.Ability.A");
-	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_S, "Character.Ability.S");
-	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_D, "Character.Ability.D");
+	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Combo_A, "Character.Ability.Combo.A");
+	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Combo_S, "Character.Ability.Combo.S");
+	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Combo_D, "Character.Ability.Combo.D");
 }
