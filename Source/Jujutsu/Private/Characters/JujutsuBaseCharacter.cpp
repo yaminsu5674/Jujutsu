@@ -91,7 +91,6 @@ void AJujutsuBaseCharacter::PossessedBy(AController* NewController)
 			if (UDataAsset_StartUpDataBase* LoadedData = CharacterStartUpData.LoadSynchronous())
 			{
 				LoadedData->GiveToAbilitySystemComponent(JujutsuAbilitySystemComponent);
-				Debug::Print(FString::Printf(TEXT("Possessed: %s by %s"), *GetName(), NewController ? *NewController->GetName() : TEXT("null")));
 			}
 		}
 	}
