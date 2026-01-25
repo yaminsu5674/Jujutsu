@@ -6,6 +6,8 @@
 #include "Abilities/GameplayAbility.h"
 #include "JujutsuGameplayAbility.generated.h"
 
+class UJujutsuCharacterCombatComponent;
+
 UENUM(BlueprintType)
 enum class EJujutsuAbilityActivationPolicy : uint8
 {
@@ -30,4 +32,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "JujutsuAbility")
 	EJujutsuAbilityActivationPolicy AbilityActivationPolicy = EJujutsuAbilityActivationPolicy::OnTriggered;
 
+	UFUNCTION(BlueprintPure, Category = "Jujutsu|Ability")
+	UJujutsuCharacterCombatComponent* GetCharacterCombatComponentFromActorInfo() const;
 };

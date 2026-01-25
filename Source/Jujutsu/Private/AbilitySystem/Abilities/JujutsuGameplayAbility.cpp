@@ -4,6 +4,7 @@
 
 #include "AbilitySystem/Abilities/JujutsuGameplayAbility.h"
 #include "AbilitySystem/JujutsuAbilitySystemComponent.h"
+#include "Components/Combat/JujutsuCharacterCombatComponent.h"
 
 void UJujutsuGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
@@ -29,4 +30,10 @@ void UJujutsuGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handle
 			ActorInfo->AbilitySystemComponent->ClearAbility(Handle);
 		}
 	}
+}
+
+UJujutsuCharacterCombatComponent* UJujutsuGameplayAbility::GetCharacterCombatComponentFromActorInfo() const
+{
+	AActor* Avatar = GetAvatarActorFromActorInfo();
+	return Avatar ? Avatar->FindComponentByClass<UJujutsuCharacterCombatComponent>() : nullptr;
 }
