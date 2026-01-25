@@ -88,6 +88,11 @@ public:
 
 	FORCEINLINE UJujutsuCharacterCombatComponent* GetCharacterCombatComponent() const { return CharacterCombatComponent; }
 
+	UBoxComponent* GetLeftHandCollisionBox() const { return LeftHandCollisionBox; }
+	UBoxComponent* GetRightHandCollisionBox() const { return RightHandCollisionBox; }
+	UBoxComponent* GetLeftFootCollisionBox() const { return LeftFootCollisionBox; }
+	UBoxComponent* GetRightFootCollisionBox() const { return RightFootCollisionBox; }
+
 private:
 
 #pragma region Components

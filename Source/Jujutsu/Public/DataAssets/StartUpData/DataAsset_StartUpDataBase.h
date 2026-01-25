@@ -5,11 +5,11 @@
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include "GameplayTagContainer.h"
+#include "AbilitySystem/Abilities/JujutsuGameplayAbility.h"
+#include "GameplayEffect.h"
 #include "DataAsset_StartUpDataBase.generated.h"
 
-class UJujutsuGameplayAbility;
 class UJujutsuAbilitySystemComponent;
-class UGameplayEffect;
 
 USTRUCT(BlueprintType)
 struct FJujutsuCharacterAbilitySet
