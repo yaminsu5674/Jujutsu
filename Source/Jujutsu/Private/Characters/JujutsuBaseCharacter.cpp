@@ -12,6 +12,7 @@
 #include "AbilitySystem/JujutsuAbilitySystemComponent.h"
 #include "AbilitySystem/JujutsuAttributeSet.h"
 #include "DataAssets/StartUpData/DataAsset_StartUpDataBase.h"
+#include "Components/Combat/JujutsuCharacterCombatComponent.h"
 
 #include "JujutsuDebugHelper.h"
 
@@ -49,6 +50,8 @@ AJujutsuBaseCharacter::AJujutsuBaseCharacter()
  JujutsuAbilitySystemComponent = CreateDefaultSubobject<UJujutsuAbilitySystemComponent>(TEXT("JujutsuAbilitySystemComponent"));
 
  JujutsuAttributeSet = CreateDefaultSubobject<UJujutsuAttributeSet>(TEXT("JujutsuAttributeSet"));
+
+	CharacterCombatComponent = CreateDefaultSubobject<UJujutsuCharacterCombatComponent>(TEXT("CharacterCombatComponent"));
 
 	LeftHandCollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("LeftHandCollisionBox"));
 	LeftHandCollisionBox->SetupAttachment(GetMesh());

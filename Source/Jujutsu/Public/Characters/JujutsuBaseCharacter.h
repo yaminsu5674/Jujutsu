@@ -13,6 +13,7 @@ class UBoxComponent;
 class UJujutsuAbilitySystemComponent;
 class UJujutsuAttributeSet;
 class UDataAsset_StartUpDataBase;
+class UJujutsuCharacterCombatComponent;
 
 UCLASS()
 class JUJUTSU_API AJujutsuBaseCharacter : public ACharacter, public IAbilitySystemInterface
@@ -24,7 +25,7 @@ public:
 	AJujutsuBaseCharacter();
 
 	//~ Begin IAbilitySystemInterface Interface.
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const;
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	//~ End IAbilitySystemInterface Interface
 
 protected:
@@ -48,6 +49,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData")
 	TSoftObjectPtr<UDataAsset_StartUpDataBase> CharacterStartUpData;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	UJujutsuCharacterCombatComponent* CharacterCombatComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
 	UBoxComponent* LeftHandCollisionBox;
@@ -78,9 +82,11 @@ protected:
 	void OnBodyCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 public:
-	FORCEINLINE UJujutsuAbilitySystemComponent* GetJujutsuAbilitySystemComponent() const {return JujutsuAbilitySystemComponent;}
+	FORCEINLINE UJujutsuAbilitySystemComponent* GetJujutsuAbilitySystemComponent() const { return JujutsuAbilitySystemComponent; }
 
-	FORCEINLINE UJujutsuAttributeSet* GetJujutsuAttributeSet() const {return JujutsuAttributeSet;}
+	FORCEINLINE UJujutsuAttributeSet* GetJujutsuAttributeSet() const { return JujutsuAttributeSet; }
+
+	FORCEINLINE UJujutsuCharacterCombatComponent* GetCharacterCombatComponent() const { return CharacterCombatComponent; }
 
 private:
 
