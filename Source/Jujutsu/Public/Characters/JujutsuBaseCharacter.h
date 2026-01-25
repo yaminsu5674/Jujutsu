@@ -12,6 +12,7 @@ class UCameraComponent;
 class UBoxComponent;
 class UJujutsuAbilitySystemComponent;
 class UJujutsuAttributeSet;
+class UDataAsset_StartUpDataBase;
 
 UCLASS()
 class JUJUTSU_API AJujutsuBaseCharacter : public ACharacter, public IAbilitySystemInterface
@@ -44,6 +45,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AbilitySystem")
 	UJujutsuAttributeSet* JujutsuAttributeSet;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData")
+	TSoftObjectPtr<UDataAsset_StartUpDataBase> CharacterStartUpData;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
 	UBoxComponent* LeftHandCollisionBox;
