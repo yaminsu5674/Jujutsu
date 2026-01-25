@@ -9,6 +9,7 @@
 
 class UJujutsuGameplayAbility;
 class UJujutsuAbilitySystemComponent;
+class UGameplayEffect;
 
 USTRUCT(BlueprintType)
 struct FJujutsuCharacterAbilitySet
@@ -42,6 +43,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "StartUpData")
 	TArray<TSubclassOf<UJujutsuGameplayAbility>> ReactiveAbilities;
+
+	UPROPERTY(EditDefaultsOnly, Category = "StartUpData")
+	TArray<TSubclassOf<UGameplayEffect>> StartUpGameplayEffects;
 
 	UPROPERTY(EditDefaultsOnly, Category = "StartUpData", meta = (TitleProperty = "InputTag"))
 	TArray<FJujutsuCharacterAbilitySet> CharacterAbilitySets;

@@ -8,12 +8,20 @@
 #include "JujutsuFunctionLibrary.generated.h"
 
 class UJujutsuAbilitySystemComponent;
+class UJujutsuCharacterCombatComponent;
 
 UENUM()
 enum class EJujutsuConfirmType : uint8
 {
 	Yes,
 	No
+};
+
+UENUM()
+enum class EJujutsuValidType : uint8
+{
+	Valid,
+	Invalid
 };
 
 /**
@@ -37,4 +45,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Jujutsu|FunctionLibrary", meta = (DisplayName = "Does Actor Have Tag", ExpandEnumAsExecs = "OutConfirmType"))
 	static void BP_DoesActorHaveTag(AActor* InActor, FGameplayTag TagToCheck, EJujutsuConfirmType& OutConfirmType);
+
+	static UJujutsuCharacterCombatComponent* NativeGetCharacterCombatComponentFromActor(AActor* InActor);
+
+	UFUNCTION(BlueprintCallable, Category = "Jujutsu|FunctionLibrary", meta = (DisplayName = "Get Character Combat Component From Actor", ExpandEnumAsExecs = "OutValidType"))
+	static UJujutsuCharacterCombatComponent* BP_GetCharacterCombatComponentFromActor(AActor* InActor, EJujutsuValidType& OutValidType);
 };

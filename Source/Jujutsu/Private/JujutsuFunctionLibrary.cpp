@@ -3,6 +3,8 @@
 #include "JujutsuFunctionLibrary.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystem/JujutsuAbilitySystemComponent.h"
+#include "Characters/JujutsuBaseCharacter.h"
+#include "Components/Combat/JujutsuCharacterCombatComponent.h"
 
 UJujutsuAbilitySystemComponent* UJujutsuFunctionLibrary::NativeGetJujutsuASCFromActor(AActor* InActor)
 {
@@ -41,4 +43,25 @@ bool UJujutsuFunctionLibrary::NativeDoesActorHaveTag(AActor* InActor, FGameplayT
 void UJujutsuFunctionLibrary::BP_DoesActorHaveTag(AActor* InActor, FGameplayTag TagToCheck, EJujutsuConfirmType& OutConfirmType)
 {
 	OutConfirmType = NativeDoesActorHaveTag(InActor, TagToCheck) ? EJujutsuConfirmType::Yes : EJujutsuConfirmType::No;
+}
+
+UJujutsuCharacterCombatComponent* UJujutsuFunctionLibrary::NativeGetCharacterCombatComponentFromActor(AActor* InActor)
+{
+	check(InActor);
+
+	if (AJujutsuBaseCharacter* BaseCharacter = Cast<AJujutsuBaseCharacter>(InActor))
+	{
+		return BaseCharacter->GetCharacterCombatComponent();
+	}
+
+	return nullptr;
+}
+
+UJujutsuCharacterCombatComponent* UJujutsuFunctionLibrary::BP_GetCharacterCombatComponentFromActor(AActor* InActor, EJujutsuValidType& OutValidType)
+{
+	UJujutsuCharacterCombatComponent* CombatComponent = NativeGetCharacterCombatComponentFromActor(InActor);
+
+	OutValidType = CombatComponent ? EJujutsuValidType::Valid : EJujutsuValidType::Invalid;
+
+	return CombatComponent;
 }
