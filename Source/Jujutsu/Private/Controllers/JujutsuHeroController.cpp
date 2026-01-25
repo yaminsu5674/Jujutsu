@@ -4,6 +4,7 @@
 
 #include "Controllers/JujutsuHeroController.h"
 #include "Characters/JujutsuBaseCharacter.h"
+#include "AbilitySystem/JujutsuAbilitySystemComponent.h"
 #include "GameFramework/Character.h"
 #include "Camera/CameraComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -36,7 +37,8 @@ void AJujutsuHeroController::BindInputActions(UInputComponent* PlayerInputCompon
 
 	if (UJujutsuInputComponent* JujutsuInputComponent = Cast<UJujutsuInputComponent>(PlayerInputComponent))
 	{
-		JujutsuInputComponent->BindNativeInputAction(InputConfigDataAsset,JujutsuGameplayTags::InputTag_Move,ETriggerEvent::Triggered,this,&ThisClass::Input_Move);
+		JujutsuInputComponent->BindNativeInputAction(InputConfigDataAsset, JujutsuGameplayTags::InputTag_Move, ETriggerEvent::Triggered, this, &ThisClass::Input_Move);
+		JujutsuInputComponent->BindAbilityInputAction(InputConfigDataAsset, this, &ThisClass::Input_AbilityInputPressed, &ThisClass::Input_AbilityInputReleased);
 	}
 }
 
@@ -57,7 +59,29 @@ void AJujutsuHeroController::Input_Move(const FInputActionValue& InputActionValu
 		if (MovementVector.X != 0.f)
 		{
 			const FVector RightDirection = MovementRotation.RotateVector(FVector::RightVector);
-			ControlledPawn->AddMovementInput(RightDirection,MovementVector.X);
+			ControlledPawn->AddMovementInput(RightDirection, MovementVector.X);
+		}
+	}
+}
+
+void AJujutsuHeroController::Input_AbilityInputPressed(FGameplayTag InInputTag)
+{
+	if (AJujutsuBaseCharacter* BaseCharacter = Cast<AJujutsuBaseCharacter>(GetPawn()))
+	{
+		if (UJujutsuAbilitySystemComponent* ASC = BaseCharacter->GetJujutsuAbilitySystemComponent())
+		{
+			ASC->OnAbilityInputPressed(InInputTag);
+		}
+	}
+}
+
+void AJujutsuHeroController::Input_AbilityInputReleased(FGameplayTag InInputTag)
+{
+	if (AJujutsuBaseCharacter* BaseCharacter = Cast<AJujutsuBaseCharacter>(GetPawn()))
+	{
+		if (UJujutsuAbilitySystemComponent* ASC = BaseCharacter->GetJujutsuAbilitySystemComponent())
+		{
+			ASC->OnAbilityInputReleased(InInputTag);
 		}
 	}
 }

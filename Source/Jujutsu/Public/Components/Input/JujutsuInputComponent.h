@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "EnhancedInputComponent.h"
+#include "GameplayTagContainer.h"
 #include "DataAssets/Input/DataAsset_InputConfig.h"
 #include "JujutsuInputComponent.generated.h"
 
@@ -43,8 +44,7 @@ inline void UJujutsuInputComponent::BindAbilityInputAction(const UDataAsset_Inpu
 	{
 		if (!AbilityInputActionConfig.IsValid()) continue;
 
-		const FGameplayTag Tag = AbilityInputActionConfig.InputTag;
-		BindAction(AbilityInputActionConfig.InputAction, ETriggerEvent::Started, ContextObject, [InputPressedFunc, Tag]() { InputPressedFunc(Tag); });
-		BindAction(AbilityInputActionConfig.InputAction, ETriggerEvent::Completed, ContextObject, [InputReleasedFunc, Tag]() { InputReleasedFunc(Tag); });
+		BindAction(AbilityInputActionConfig.InputAction, ETriggerEvent::Started, ContextObject, InputPressedFunc, AbilityInputActionConfig.InputTag);
+		BindAction(AbilityInputActionConfig.InputAction, ETriggerEvent::Completed, ContextObject, InputReleasedFunc, AbilityInputActionConfig.InputTag);
 	}
 }

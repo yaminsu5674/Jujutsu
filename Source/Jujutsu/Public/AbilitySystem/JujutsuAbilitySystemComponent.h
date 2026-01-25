@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
+#include "GameplayTagContainer.h"
 #include "JujutsuAbilitySystemComponent.generated.h"
 
 /**
@@ -14,4 +15,7 @@ class JUJUTSU_API UJujutsuAbilitySystemComponent : public UAbilitySystemComponen
 {
 	GENERATED_BODY()
 
+public:
+	void OnAbilityInputPressed(const FGameplayTag& InInputTag);
+	void OnAbilityInputReleased(const FGameplayTag& InInputTag);
 };

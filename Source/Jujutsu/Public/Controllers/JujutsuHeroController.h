@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "GameplayTagContainer.h"
 #include "JujutsuHeroController.generated.h"
 
 class UDataAsset_InputConfig;
@@ -33,6 +34,9 @@ private:
 	UDataAsset_InputConfig* InputConfigDataAsset;
 
 	void Input_Move(const FInputActionValue& InputActionValue);
+
+	void Input_AbilityInputPressed(FGameplayTag InInputTag);
+	void Input_AbilityInputReleased(FGameplayTag InInputTag);
 
 #pragma endregion
 
