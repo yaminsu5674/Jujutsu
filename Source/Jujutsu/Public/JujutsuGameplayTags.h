@@ -23,10 +23,10 @@ namespace JujutsuGameplayTags
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_HitReact_Middle);
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_HitReact_Heavy);
 
-	/** Character Event tags */
-	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Event_MeleeHit);
+	/** Character Event Hit (피격 이벤트 부모. 하위 Light/Stun/Middle/Heavy 전부 Hit으로 적용하려면 MatchesTag(Character_Event_Hit) 사용) */
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Event_Hit);
 
-	/** Character Event Hit (피격 이벤트 타입) */
+	/** Character Event Hit 하위 (피격 이벤트 타입) */
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Event_Hit_Light);
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Event_Hit_Stun);
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Event_Hit_Middle);

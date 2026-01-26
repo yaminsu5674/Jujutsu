@@ -55,7 +55,7 @@ void UJujutsuCharacterCombatComponent::OnHitTargetActor(AActor* HitActor)
 
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
 		OwningPawn,
-		JujutsuGameplayTags::Character_Event_MeleeHit,
+		JujutsuGameplayTags::Character_Event_Hit,
 		Data
 	);
 }

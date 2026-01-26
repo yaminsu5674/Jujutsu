@@ -23,10 +23,10 @@ namespace JujutsuGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_HitReact_Middle, "Character.Ability.HitReact.Middle");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_HitReact_Heavy, "Character.Ability.HitReact.Heavy");
 
-	/** Character Event tags */
-	UE_DEFINE_GAMEPLAY_TAG(Character_Event_MeleeHit, "Character.Event.MeleeHit");
+	/** Character Event Hit (부모. Character.Event.Hit — 하위 전부 매칭) */
+	UE_DEFINE_GAMEPLAY_TAG(Character_Event_Hit, "Character.Event.Hit");
 
-	/** Character Event Hit (피격 이벤트 타입) */
+	/** Character Event Hit 하위 (피격 이벤트 타입) */
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_Hit_Light, "Character.Event.Hit.Light");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_Hit_Stun, "Character.Event.Hit.Stun");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_Hit_Middle, "Character.Event.Hit.Middle");
