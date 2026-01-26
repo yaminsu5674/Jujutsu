@@ -5,6 +5,7 @@
 #include "AbilitySystem/Abilities/JujutsuGameplayAbility.h"
 #include "AbilitySystem/JujutsuAbilitySystemComponent.h"
 #include "Components/Combat/JujutsuCharacterCombatComponent.h"
+#include "AbilitySystemBlueprintLibrary.h"
 #include "GameplayEffect.h"
 #include "JujutsuGameplayTags.h"
 
@@ -70,4 +71,25 @@ FGameplayEffectSpecHandle UJujutsuGameplayAbility::MakeDamageEffectSpecHandle(TS
 	}
 
 	return EffectSpecHandle;
+}
+
+FActiveGameplayEffectHandle UJujutsuGameplayAbility::NativeApplyEffectSpecHandleToTarget(AActor* TargetActor, const FGameplayEffectSpecHandle& InSpecHandle)
+{
+	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+
+	check(TargetASC && InSpecHandle.IsValid());
+
+	return GetJujutsuAbilitySystemComponentFromActorInfo()->ApplyGameplayEffectSpecToTarget(
+		*InSpecHandle.Data,
+		TargetASC
+	);
+}
+
+FActiveGameplayEffectHandle UJujutsuGameplayAbility::BP_ApplyEffectSpecHandleToTarget(AActor* TargetActor, const FGameplayEffectSpecHandle& InSpecHandle, EJujutsuSuccessType& OutSuccessType)
+{
+	FActiveGameplayEffectHandle ActiveHandle = NativeApplyEffectSpecHandleToTarget(TargetActor, InSpecHandle);
+
+	OutSuccessType = ActiveHandle.WasSuccessfullyApplied() ? EJujutsuSuccessType::Successful : EJujutsuSuccessType::Failed;
+
+	return ActiveHandle;
 }

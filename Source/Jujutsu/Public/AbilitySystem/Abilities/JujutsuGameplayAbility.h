@@ -5,18 +5,12 @@
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
 #include "GameplayTagContainer.h"
+#include "JujutsuTypes/JujutsuEnumTypes.h"
 #include "JujutsuGameplayAbility.generated.h"
 
 class UGameplayEffect;
 class UJujutsuAbilitySystemComponent;
 class UJujutsuCharacterCombatComponent;
-
-UENUM(BlueprintType)
-enum class EJujutsuAbilityActivationPolicy : uint8
-{
-	OnTriggered,
-	OnGiven
-};
 
 /**
  *
@@ -48,4 +42,11 @@ protected:
 	/** BaseDamage 멤버를 사용해 데미지용 GE 스펙 생성. InUsedComboCount는 공격 타입 태그의 SetByCaller 값으로 전달 */
 	UFUNCTION(BlueprintPure, Category = "Jujutsu|Ability")
 	FGameplayEffectSpecHandle MakeDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> EffectClass, FGameplayTag InCurrentAttackTypeTag, int32 InUsedComboCount);
+
+	/** 타겟 액터의 ASC에 EffectSpec 적용 (네이티브용) */
+	FActiveGameplayEffectHandle NativeApplyEffectSpecHandleToTarget(AActor* TargetActor, const FGameplayEffectSpecHandle& InSpecHandle);
+
+	/** 타겟 액터의 ASC에 EffectSpec 적용. 블루프린트용, OutSuccessType으로 성공 여부 분기 */
+	UFUNCTION(BlueprintCallable, Category = "Jujutsu|Ability", meta = (DisplayName = "Apply Gameplay Effect Spec Handle To Target Actor", ExpandEnumAsExecs = "OutSuccessType"))
+	FActiveGameplayEffectHandle BP_ApplyEffectSpecHandleToTarget(AActor* TargetActor, const FGameplayEffectSpecHandle& InSpecHandle, EJujutsuSuccessType& OutSuccessType);
 };
