@@ -7,6 +7,8 @@
 #include "AbilitySystem/JujutsuAbilitySystemComponent.h"
 #include "JujutsuAttributeSet.generated.h"
 
+class UCharacterUIComponent;
+
 #define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
 	GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName) \
@@ -53,4 +55,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Damage")
 	FGameplayAttributeData DamageTaken;
 	ATTRIBUTE_ACCESSORS(UJujutsuAttributeSet, DamageTaken)
+
+private:
+	TWeakObjectPtr<UCharacterUIComponent> CachedCharacterUIComponent;
 };

@@ -1,6 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "AbilitySystem/JujutsuAttributeSet.h"
+#include "Characters/JujutsuBaseCharacter.h"
+#include "Components/UI/CharacterUIComponent.h"
 #include "GameplayEffectExtension.h"
 #include "JujutsuDebugHelper.h"
 #include "JujutsuFunctionLibrary.h"
@@ -18,16 +20,39 @@ UJujutsuAttributeSet::UJujutsuAttributeSet()
 
 void UJujutsuAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
+	if (!CachedCharacterUIComponent.IsValid())
+	{
+		if (AActor* Avatar = Data.Target.GetAvatarActor())
+		{
+			if (AJujutsuBaseCharacter* Char = Cast<AJujutsuBaseCharacter>(Avatar))
+			{
+				CachedCharacterUIComponent = Char->GetCharacterUIComponent();
+			}
+		}
+	}
+
+	UCharacterUIComponent* UIComp = CachedCharacterUIComponent.Get();
+
 	if (Data.EvaluatedData.Attribute == GetCurrentHealthAttribute())
 	{
 		const float NewCurrentHealth = FMath::Clamp(GetCurrentHealth(), 0.f, GetMaxHealth());
 		SetCurrentHealth(NewCurrentHealth);
+
+		if (UIComp)
+		{
+			UIComp->OnCurrentHealthChanged.Broadcast(GetCurrentHealth() / GetMaxHealth());
+		}
 	}
 
 	if (Data.EvaluatedData.Attribute == GetCurrentRageAttribute())
 	{
 		const float NewCurrentRage = FMath::Clamp(GetCurrentRage(), 0.f, GetMaxRage());
 		SetCurrentRage(NewCurrentRage);
+
+		if (UIComp)
+		{
+			UIComp->OnCurrentRageChanged.Broadcast(GetCurrentRage() / GetMaxRage());
+		}
 	}
 
 	if (Data.EvaluatedData.Attribute == GetDamageTakenAttribute())
@@ -46,7 +71,11 @@ void UJujutsuAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCal
 		);
 		Debug::Print(DebugString, FColor::Green);
 
-		// TODO: Notify the UI
+		if (UIComp)
+		{
+			UIComp->OnCurrentHealthChanged.Broadcast(GetCurrentHealth() / GetMaxHealth());
+		}
+
 		if (NewCurrentHealth == 0.f)
 		{
 			UJujutsuFunctionLibrary::AddGameplayTagToActorIfNone(Data.Target.GetAvatarActor(), JujutsuGameplayTags::Character_Status_Dead);
