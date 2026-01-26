@@ -8,6 +8,7 @@
 #include "JujutsuTypes/JujutsuEnumTypes.h"
 #include "JujutsuGameplayAbility.generated.h"
 
+class AJujutsuBaseCharacter;
 class UGameplayEffect;
 class UJujutsuAbilitySystemComponent;
 class UJujutsuCharacterCombatComponent;
@@ -32,6 +33,9 @@ protected:
 	/** 이 어빌리티로 줄 데미지의 기본값 (스킬마다 에디터에서 지정) */
 	UPROPERTY(EditDefaultsOnly, Category = "Jujutsu|Damage", meta = (ClampMin = "0"))
 	float BaseDamage = 10.f;
+
+	UFUNCTION(BlueprintPure, Category = "Jujutsu|Ability")
+	AJujutsuBaseCharacter* GetCharacterFromActorInfo() const;
 
 	UFUNCTION(BlueprintPure, Category = "Jujutsu|Ability")
 	UJujutsuCharacterCombatComponent* GetCharacterCombatComponentFromActorInfo() const;

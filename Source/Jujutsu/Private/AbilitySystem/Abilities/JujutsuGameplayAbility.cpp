@@ -4,6 +4,7 @@
 
 #include "AbilitySystem/Abilities/JujutsuGameplayAbility.h"
 #include "AbilitySystem/JujutsuAbilitySystemComponent.h"
+#include "Characters/JujutsuBaseCharacter.h"
 #include "Components/Combat/JujutsuCharacterCombatComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GameplayEffect.h"
@@ -33,6 +34,11 @@ void UJujutsuGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handle
 			ActorInfo->AbilitySystemComponent->ClearAbility(Handle);
 		}
 	}
+}
+
+AJujutsuBaseCharacter* UJujutsuGameplayAbility::GetCharacterFromActorInfo() const
+{
+	return Cast<AJujutsuBaseCharacter>(GetAvatarActorFromActorInfo());
 }
 
 UJujutsuCharacterCombatComponent* UJujutsuGameplayAbility::GetCharacterCombatComponentFromActorInfo() const
