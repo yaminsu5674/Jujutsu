@@ -19,4 +19,7 @@ namespace JujutsuGameplayTags
 
 	/** Character Event tags */
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_MeleeHit, "Character.Event.MeleeHit");
+
+	/** Character SetByCaller tags */
+	UE_DEFINE_GAMEPLAY_TAG(Character_SetByCaller_BaseDamage, "Character.SetByCaller.BaseDamage");
 }

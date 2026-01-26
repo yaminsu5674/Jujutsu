@@ -4,8 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
+#include "GameplayTagContainer.h"
 #include "JujutsuGameplayAbility.generated.h"
 
+class UGameplayEffect;
+class UJujutsuAbilitySystemComponent;
 class UJujutsuCharacterCombatComponent;
 
 UENUM(BlueprintType)
@@ -34,4 +37,10 @@ protected:
 
 	UFUNCTION(BlueprintPure, Category = "Jujutsu|Ability")
 	UJujutsuCharacterCombatComponent* GetCharacterCombatComponentFromActorInfo() const;
+
+	UFUNCTION(BlueprintPure, Category = "Jujutsu|Ability")
+	UJujutsuAbilitySystemComponent* GetJujutsuAbilitySystemComponentFromActorInfo() const;
+
+	UFUNCTION(BlueprintPure, Category = "Jujutsu|Ability")
+	FGameplayEffectSpecHandle MakeDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> EffectClass, float InBaseDamage, FGameplayTag InCurrentAttackTypeTag, int32 InCurrentComboCount);
 };

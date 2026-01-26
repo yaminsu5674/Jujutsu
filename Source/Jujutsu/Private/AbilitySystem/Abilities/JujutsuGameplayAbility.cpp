@@ -5,6 +5,8 @@
 #include "AbilitySystem/Abilities/JujutsuGameplayAbility.h"
 #include "AbilitySystem/JujutsuAbilitySystemComponent.h"
 #include "Components/Combat/JujutsuCharacterCombatComponent.h"
+#include "GameplayEffect.h"
+#include "JujutsuGameplayTags.h"
 
 void UJujutsuGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
@@ -36,4 +38,36 @@ UJujutsuCharacterCombatComponent* UJujutsuGameplayAbility::GetCharacterCombatCom
 {
 	AActor* Avatar = GetAvatarActorFromActorInfo();
 	return Avatar ? Avatar->FindComponentByClass<UJujutsuCharacterCombatComponent>() : nullptr;
+}
+
+UJujutsuAbilitySystemComponent* UJujutsuGameplayAbility::GetJujutsuAbilitySystemComponentFromActorInfo() const
+{
+	return Cast<UJujutsuAbilitySystemComponent>(GetAbilitySystemComponentFromActorInfo());
+}
+
+FGameplayEffectSpecHandle UJujutsuGameplayAbility::MakeDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> EffectClass, float InBaseDamage, FGameplayTag InCurrentAttackTypeTag, int32 InCurrentComboCount)
+{
+	check(EffectClass);
+
+	UJujutsuAbilitySystemComponent* ASC = GetJujutsuAbilitySystemComponentFromActorInfo();
+	if (!ASC) return FGameplayEffectSpecHandle();
+
+	FGameplayEffectContextHandle ContextHandle = ASC->MakeEffectContext();
+	ContextHandle.SetAbility(this);
+	ContextHandle.AddSourceObject(GetAvatarActorFromActorInfo());
+	ContextHandle.AddInstigator(GetAvatarActorFromActorInfo(), GetAvatarActorFromActorInfo());
+
+	FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(EffectClass, GetAbilityLevel(), ContextHandle);
+
+	EffectSpecHandle.Data->SetSetByCallerMagnitude(
+		JujutsuGameplayTags::Character_SetByCaller_BaseDamage,
+		InBaseDamage
+	);
+
+	if (InCurrentAttackTypeTag.IsValid())
+	{
+		EffectSpecHandle.Data->SetSetByCallerMagnitude(InCurrentAttackTypeTag, InCurrentComboCount);
+	}
+
+	return EffectSpecHandle;
 }

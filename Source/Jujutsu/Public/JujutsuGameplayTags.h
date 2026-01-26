@@ -19,4 +19,7 @@ namespace JujutsuGameplayTags
 
 	/** Character Event tags */
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Event_MeleeHit);
+
+	/** Character SetByCaller tags */
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_SetByCaller_BaseDamage);
 }
