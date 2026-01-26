@@ -24,6 +24,8 @@ class JUJUTSU_API UJujutsuAttributeSet : public UAttributeSet
 public:
 	UJujutsuAttributeSet();
 
+	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
+
 	UPROPERTY(BlueprintReadOnly, Category = "Health")
 	FGameplayAttributeData CurrentHealth;
 	ATTRIBUTE_ACCESSORS(UJujutsuAttributeSet, CurrentHealth)

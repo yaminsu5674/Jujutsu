@@ -42,7 +42,7 @@ void UJujutsuExecCalc_DamageTaken::Execute_Implementation(const FGameplayEffectC
 
 	float SourceAttackPower = 0.f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(GetJujutsuDamageCapture().AttackPowerDef, EvaluateParameters, SourceAttackPower);
-	Debug::Print(TEXT("SourceAttackPower"), SourceAttackPower);
+	/* Debug::Print(TEXT("SourceAttackPower"), SourceAttackPower); */
 
 	float BaseDamage = 0.f;
 	int32 UsedComboCount = 0;
@@ -52,29 +52,29 @@ void UJujutsuExecCalc_DamageTaken::Execute_Implementation(const FGameplayEffectC
 		if (TagMagnitude.Key.MatchesTagExact(JujutsuGameplayTags::Character_SetByCaller_BaseDamage))
 		{
 			BaseDamage = TagMagnitude.Value;
-			Debug::Print(TEXT("BaseDamage"), BaseDamage);
+			/* Debug::Print(TEXT("BaseDamage"), BaseDamage); */
 		}
 
 		if (TagMagnitude.Key.MatchesTagExact(JujutsuGameplayTags::Character_SetByCaller_AttackType_Light))
 		{
 			UsedComboCount = static_cast<int32>(TagMagnitude.Value);
-			Debug::Print(TEXT("UsedComboCount"), static_cast<float>(UsedComboCount));
+			/* Debug::Print(TEXT("UsedComboCount"), static_cast<float>(UsedComboCount)); */
 		}
 	}
 
 	float TargetDefensePower = 0.f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(GetJujutsuDamageCapture().DefensePowerDef, EvaluateParameters, TargetDefensePower);
-	Debug::Print(TEXT("TargetDefensePower"), TargetDefensePower);
+	/* Debug::Print(TEXT("TargetDefensePower"), TargetDefensePower); */
 
 	if (UsedComboCount > 0)
 	{
 		const float DamageIncreasePercent = (UsedComboCount - 1) * 0.05f + 1.f;
 		BaseDamage *= DamageIncreasePercent;
-		Debug::Print(TEXT("ScaledBaseDamage"), BaseDamage);
+		/* Debug::Print(TEXT("ScaledBaseDamage"), BaseDamage); */
 	}
 
 	const float FinalDamageDone = BaseDamage * SourceAttackPower / FMath::Max(TargetDefensePower, 1.f);
-	Debug::Print(TEXT("FinalDamageDone"), FinalDamageDone);
+	/* Debug::Print(TEXT("FinalDamageDone"), FinalDamageDone); */
 
 	if (FinalDamageDone > 0.f)
 	{
