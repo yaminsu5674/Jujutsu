@@ -76,7 +76,7 @@ void UJujutsuAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCal
 			UIComp->OnCurrentHealthChanged.Broadcast(GetCurrentHealth() / GetMaxHealth());
 		}
 
-		if (NewCurrentHealth == 0.f)
+		if (GetCurrentHealth() == 0.f)
 		{
 			UJujutsuFunctionLibrary::AddGameplayTagToActorIfNone(Data.Target.GetAvatarActor(), JujutsuGameplayTags::Character_Status_Dead);
 		}
