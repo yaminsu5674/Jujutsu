@@ -12,10 +12,10 @@ namespace JujutsuGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_S, "InputTag.S");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_D, "InputTag.D");
 
-	/** Character Ability Tags */
-	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Combo_A, "Character.Ability.Combo.A");
-	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Combo_S, "Character.Ability.Combo.S");
-	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Combo_D, "Character.Ability.Combo.D");
+	/** Character Ability Attack Combo */
+	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Attack_Combo_A, "Character.Ability.Attack.Combo.A");
+	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Attack_Combo_S, "Character.Ability.Attack.Combo.S");
+	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Attack_Combo_D, "Character.Ability.Attack.Combo.D");
 
 	/** Character Ability HitReact (피격 타입) */
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_HitReact_Stun, "Character.Ability.HitReact.Stun");

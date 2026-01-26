@@ -12,10 +12,10 @@ namespace JujutsuGameplayTags
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_S);
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_D);
 
-	/** Character Ability Tags */
-	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_Combo_A);
-	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_Combo_S);
-	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_Combo_D);
+	/** Character Ability Attack Combo */
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_Attack_Combo_A);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_Attack_Combo_S);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_Attack_Combo_D);
 
 	/** Character Ability HitReact (피격 타입) */
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_HitReact_Stun);
