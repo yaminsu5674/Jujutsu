@@ -35,6 +35,10 @@ namespace JujutsuGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_Hit_Middle, "Character.Event.Hit.Middle");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_Hit_Heavy, "Character.Event.Hit.Heavy");
 
+	/** Character Ability/Status (Enemy death 등) */
+	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Death, "Character.Ability.Death");
+	UE_DEFINE_GAMEPLAY_TAG(Character_Status_Dead, "Character.Status.Dead");
+
 	/** Character SetByCaller tags */
 	UE_DEFINE_GAMEPLAY_TAG(Character_SetByCaller_BaseDamage, "Character.SetByCaller.BaseDamage");
 	UE_DEFINE_GAMEPLAY_TAG(Character_SetByCaller_UsedComboCount, "Character.SetByCaller.UsedComboCount");

@@ -35,6 +35,10 @@ namespace JujutsuGameplayTags
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Event_Hit_Middle);
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Event_Hit_Heavy);
 
+	/** Character Ability/Status (Enemy death 등) */
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_Death);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Status_Dead);
+
 	/** Character SetByCaller tags */
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_SetByCaller_BaseDamage);
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_SetByCaller_UsedComboCount);

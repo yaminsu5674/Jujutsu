@@ -3,6 +3,8 @@
 #include "AbilitySystem/JujutsuAttributeSet.h"
 #include "GameplayEffectExtension.h"
 #include "JujutsuDebugHelper.h"
+#include "JujutsuFunctionLibrary.h"
+#include "JujutsuGameplayTags.h"
 
 UJujutsuAttributeSet::UJujutsuAttributeSet()
 {
@@ -45,9 +47,9 @@ void UJujutsuAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCal
 		Debug::Print(DebugString, FColor::Green);
 
 		// TODO: Notify the UI
-		// TODO: Handle character death
 		if (NewCurrentHealth == 0.f)
 		{
+			UJujutsuFunctionLibrary::AddGameplayTagToActorIfNone(Data.Target.GetAvatarActor(), JujutsuGameplayTags::Character_Status_Dead);
 		}
 	}
 }
