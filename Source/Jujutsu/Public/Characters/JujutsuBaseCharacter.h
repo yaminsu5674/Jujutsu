@@ -10,6 +10,7 @@
 class USpringArmComponent;
 class UCameraComponent;
 class UBoxComponent;
+class UCharacterUIComponent;
 class UJujutsuAbilitySystemComponent;
 class UJujutsuAttributeSet;
 class UDataAsset_StartUpDataBase;
@@ -55,6 +56,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	UJujutsuCharacterCombatComponent* CharacterCombatComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
+	UCharacterUIComponent* CharacterUIComponent;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
 	UBoxComponent* LeftHandCollisionBox;
 
@@ -97,6 +101,8 @@ public:
 	FORCEINLINE UJujutsuAttributeSet* GetJujutsuAttributeSet() const { return JujutsuAttributeSet; }
 
 	FORCEINLINE UJujutsuCharacterCombatComponent* GetCharacterCombatComponent() const { return CharacterCombatComponent; }
+
+	FORCEINLINE UCharacterUIComponent* GetCharacterUIComponent() const { return CharacterUIComponent; }
 
 	UBoxComponent* GetLeftHandCollisionBox() const { return LeftHandCollisionBox; }
 	UBoxComponent* GetRightHandCollisionBox() const { return RightHandCollisionBox; }
