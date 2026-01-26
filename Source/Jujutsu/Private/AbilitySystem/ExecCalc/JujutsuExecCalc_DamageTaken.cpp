@@ -55,7 +55,7 @@ void UJujutsuExecCalc_DamageTaken::Execute_Implementation(const FGameplayEffectC
 			/* Debug::Print(TEXT("BaseDamage"), BaseDamage); */
 		}
 
-		if (TagMagnitude.Key.MatchesTagExact(JujutsuGameplayTags::Character_SetByCaller_AttackType_Light))
+		if (TagMagnitude.Key.MatchesTagExact(JujutsuGameplayTags::Character_SetByCaller_UsedComboCount))
 		{
 			UsedComboCount = static_cast<int32>(TagMagnitude.Value);
 			/* Debug::Print(TEXT("UsedComboCount"), static_cast<float>(UsedComboCount)); */

@@ -39,7 +39,7 @@ protected:
 	UFUNCTION(BlueprintPure, Category = "Jujutsu|Ability")
 	UJujutsuAbilitySystemComponent* GetJujutsuAbilitySystemComponentFromActorInfo() const;
 
-	/** BaseDamage 멤버를 사용해 데미지용 GE 스펙 생성. InUsedComboCount는 공격 타입 태그의 SetByCaller 값으로 전달 */
+	/** BaseDamage 멤버를 사용해 데미지용 GE 스펙 생성. InUsedComboCount는 Character_SetByCaller_UsedComboCount로 SetByCaller 전달 */
 	UFUNCTION(BlueprintPure, Category = "Jujutsu|Ability")
 	FGameplayEffectSpecHandle MakeDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> EffectClass, FGameplayTag InCurrentAttackTypeTag, int32 InUsedComboCount);
 

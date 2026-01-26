@@ -22,6 +22,5 @@ namespace JujutsuGameplayTags
 
 	/** Character SetByCaller tags */
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_SetByCaller_BaseDamage);
-	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_SetByCaller_AttackType_Light);
-	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_SetByCaller_AttackType_Heavy);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_SetByCaller_UsedComboCount);
 }

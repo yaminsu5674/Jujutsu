@@ -65,10 +65,10 @@ FGameplayEffectSpecHandle UJujutsuGameplayAbility::MakeDamageEffectSpecHandle(TS
 		BaseDamage
 	);
 
-	if (InCurrentAttackTypeTag.IsValid())
-	{
-		EffectSpecHandle.Data->SetSetByCallerMagnitude(InCurrentAttackTypeTag, InUsedComboCount);
-	}
+	EffectSpecHandle.Data->SetSetByCallerMagnitude(
+		JujutsuGameplayTags::Character_SetByCaller_UsedComboCount,
+		static_cast<float>(InUsedComboCount)
+	);
 
 	return EffectSpecHandle;
 }
