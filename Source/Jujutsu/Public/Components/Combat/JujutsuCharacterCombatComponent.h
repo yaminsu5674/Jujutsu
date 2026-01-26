@@ -21,4 +21,12 @@ public:
 	/** 양손·양발 콜리전 박스 4개를 한 번에 켜거나 끔 */
 	UFUNCTION(BlueprintCallable, Category = "Jujutsu|Combat")
 	void ToggleBodyCollision(bool bShouldEnable);
+
+	/** 바디 콜리전 BeginOverlap 시 호출 (히트 시) */
+	virtual void OnHitTargetActor(AActor* HitActor);
+	/** 바디 콜리전 EndOverlap 시 호출 (타겟에서 벗어남) */
+	virtual void OnPulledFromTargetActor(AActor* InteractedActor);
+
+protected:
+	virtual void BeginPlay() override;
 };

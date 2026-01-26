@@ -15,6 +15,8 @@ class UJujutsuAttributeSet;
 class UDataAsset_StartUpDataBase;
 class UJujutsuCharacterCombatComponent;
 
+DECLARE_DELEGATE_OneParam(FOnTargetInteractedDelegate, AActor*);
+
 UCLASS()
 class JUJUTSU_API AJujutsuBaseCharacter : public ACharacter, public IAbilitySystemInterface
 {
@@ -85,6 +87,11 @@ protected:
 	void OnBodyCollisionBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 public:
+	/** 바디 콜리전이 다른 Pawn과 BeginOverlap 시 브로드캐스트 */
+	FOnTargetInteractedDelegate OnBodyHitTarget;
+	/** 바디 콜리전이 다른 Pawn과 EndOverlap 시 브로드캐스트 */
+	FOnTargetInteractedDelegate OnBodyPulledFromTarget;
+
 	FORCEINLINE UJujutsuAbilitySystemComponent* GetJujutsuAbilitySystemComponent() const { return JujutsuAbilitySystemComponent; }
 
 	FORCEINLINE UJujutsuAttributeSet* GetJujutsuAttributeSet() const { return JujutsuAttributeSet; }

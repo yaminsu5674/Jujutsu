@@ -5,6 +5,17 @@
 #include "Components/BoxComponent.h"
 #include "JujutsuDebugHelper.h"
 
+void UJujutsuCharacterCombatComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (AJujutsuBaseCharacter* BaseCharacter = GetOwningPawn<AJujutsuBaseCharacter>())
+	{
+		BaseCharacter->OnBodyHitTarget.BindUObject(this, &ThisClass::OnHitTargetActor);
+		BaseCharacter->OnBodyPulledFromTarget.BindUObject(this, &ThisClass::OnPulledFromTargetActor);
+	}
+}
+
 void UJujutsuCharacterCombatComponent::ToggleBodyCollision(bool bShouldEnable)
 {
 	AJujutsuBaseCharacter* BaseCharacter = GetOwningPawn<AJujutsuBaseCharacter>();
@@ -16,4 +27,20 @@ void UJujutsuCharacterCombatComponent::ToggleBodyCollision(bool bShouldEnable)
 	if (UBoxComponent* Box = BaseCharacter->GetRightHandCollisionBox()) { Box->SetCollisionEnabled(NewState); }
 	if (UBoxComponent* Box = BaseCharacter->GetLeftFootCollisionBox())  { Box->SetCollisionEnabled(NewState); }
 	if (UBoxComponent* Box = BaseCharacter->GetRightFootCollisionBox()) { Box->SetCollisionEnabled(NewState); }
+}
+
+void UJujutsuCharacterCombatComponent::OnHitTargetActor(AActor* HitActor)
+{
+	if (APawn* OwningPawn = GetOwningPawn(); OwningPawn && HitActor)
+	{
+		Debug::Print(OwningPawn->GetActorNameOrLabel() + TEXT(" hit ") + HitActor->GetActorNameOrLabel(), FColor::Green);
+	}
+}
+
+void UJujutsuCharacterCombatComponent::OnPulledFromTargetActor(AActor* InteractedActor)
+{
+	if (APawn* OwningPawn = GetOwningPawn(); OwningPawn && InteractedActor)
+	{
+		Debug::Print(OwningPawn->GetActorNameOrLabel() + TEXT(" pulled from ") + InteractedActor->GetActorNameOrLabel(), FColor::Red);
+	}
 }

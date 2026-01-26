@@ -145,7 +145,7 @@ void AJujutsuBaseCharacter::OnBodyCollisionBoxBeginOverlap(UPrimitiveComponent* 
 	{
 		if (HitPawn != this)
 		{
-			// TODO: 히트 처리 로직
+			OnBodyHitTarget.ExecuteIfBound(OtherActor);
 		}
 	}
 }
@@ -156,7 +156,7 @@ void AJujutsuBaseCharacter::OnBodyCollisionBoxEndOverlap(UPrimitiveComponent* Ov
 	{
 		if (HitPawn != this)
 		{
-			// TODO: 히트 처리 로직
+			OnBodyPulledFromTarget.ExecuteIfBound(OtherActor);
 		}
 	}
 }
