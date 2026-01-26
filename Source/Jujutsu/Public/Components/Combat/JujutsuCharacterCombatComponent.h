@@ -6,6 +6,7 @@
 #include "Components/JujutsuPawnExtensionComponentBase.h"
 #include "JujutsuCharacterCombatComponent.generated.h"
 
+class AActor;
 class AJujutsuBaseCharacter;
 
 /**
@@ -29,4 +30,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+	/** 현재 오버랩 중인 액터 (MeleeHit 중복 발동 방지·콜리전 끌 때 비움) */
+	TArray<AActor*> OverlappedActors;
 };

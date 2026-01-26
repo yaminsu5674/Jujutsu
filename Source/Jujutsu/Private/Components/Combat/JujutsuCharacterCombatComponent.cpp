@@ -3,7 +3,8 @@
 #include "Components/Combat/JujutsuCharacterCombatComponent.h"
 #include "Characters/JujutsuBaseCharacter.h"
 #include "Components/BoxComponent.h"
-#include "JujutsuDebugHelper.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "JujutsuGameplayTags.h"
 
 void UJujutsuCharacterCombatComponent::BeginPlay()
 {
@@ -27,20 +28,38 @@ void UJujutsuCharacterCombatComponent::ToggleBodyCollision(bool bShouldEnable)
 	if (UBoxComponent* Box = BaseCharacter->GetRightHandCollisionBox()) { Box->SetCollisionEnabled(NewState); }
 	if (UBoxComponent* Box = BaseCharacter->GetLeftFootCollisionBox())  { Box->SetCollisionEnabled(NewState); }
 	if (UBoxComponent* Box = BaseCharacter->GetRightFootCollisionBox()) { Box->SetCollisionEnabled(NewState); }
+
+	if (!bShouldEnable)
+	{
+		OverlappedActors.Empty();
+	}
 }
 
 void UJujutsuCharacterCombatComponent::OnHitTargetActor(AActor* HitActor)
 {
-	if (APawn* OwningPawn = GetOwningPawn(); OwningPawn && HitActor)
+	if (!HitActor) return;
+
+	if (OverlappedActors.Contains(HitActor))
 	{
-		Debug::Print(OwningPawn->GetActorNameOrLabel() + TEXT(" hit ") + HitActor->GetActorNameOrLabel(), FColor::Green);
+		return;
 	}
+
+	OverlappedActors.AddUnique(HitActor);
+
+	APawn* OwningPawn = GetOwningPawn();
+	if (!OwningPawn) return;
+
+	FGameplayEventData Data;
+	Data.Instigator = OwningPawn;
+	Data.Target = HitActor;
+
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+		OwningPawn,
+		JujutsuGameplayTags::Character_Event_MeleeHit,
+		Data
+	);
 }
 
 void UJujutsuCharacterCombatComponent::OnPulledFromTargetActor(AActor* InteractedActor)
 {
-	if (APawn* OwningPawn = GetOwningPawn(); OwningPawn && InteractedActor)
-	{
-		Debug::Print(OwningPawn->GetActorNameOrLabel() + TEXT(" pulled from ") + InteractedActor->GetActorNameOrLabel(), FColor::Red);
-	}
 }

@@ -16,4 +16,7 @@ namespace JujutsuGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Combo_A, "Character.Ability.Combo.A");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Combo_S, "Character.Ability.Combo.S");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Combo_D, "Character.Ability.Combo.D");
+
+	/** Character Event tags */
+	UE_DEFINE_GAMEPLAY_TAG(Character_Event_MeleeHit, "Character.Event.MeleeHit");
 }
