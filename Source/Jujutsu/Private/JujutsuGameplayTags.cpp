@@ -22,4 +22,6 @@ namespace JujutsuGameplayTags
 
 	/** Character SetByCaller tags */
 	UE_DEFINE_GAMEPLAY_TAG(Character_SetByCaller_BaseDamage, "Character.SetByCaller.BaseDamage");
+	UE_DEFINE_GAMEPLAY_TAG(Character_SetByCaller_AttackType_Light, "Character.SetByCaller.AttackType.Light");
+	UE_DEFINE_GAMEPLAY_TAG(Character_SetByCaller_AttackType_Heavy, "Character.SetByCaller.AttackType.Heavy");
 }

@@ -45,7 +45,7 @@ UJujutsuAbilitySystemComponent* UJujutsuGameplayAbility::GetJujutsuAbilitySystem
 	return Cast<UJujutsuAbilitySystemComponent>(GetAbilitySystemComponentFromActorInfo());
 }
 
-FGameplayEffectSpecHandle UJujutsuGameplayAbility::MakeDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> EffectClass, float InBaseDamage, FGameplayTag InCurrentAttackTypeTag, int32 InCurrentComboCount)
+FGameplayEffectSpecHandle UJujutsuGameplayAbility::MakeDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> EffectClass, FGameplayTag InCurrentAttackTypeTag, int32 InUsedComboCount)
 {
 	check(EffectClass);
 
@@ -61,12 +61,12 @@ FGameplayEffectSpecHandle UJujutsuGameplayAbility::MakeDamageEffectSpecHandle(TS
 
 	EffectSpecHandle.Data->SetSetByCallerMagnitude(
 		JujutsuGameplayTags::Character_SetByCaller_BaseDamage,
-		InBaseDamage
+		BaseDamage
 	);
 
 	if (InCurrentAttackTypeTag.IsValid())
 	{
-		EffectSpecHandle.Data->SetSetByCallerMagnitude(InCurrentAttackTypeTag, InCurrentComboCount);
+		EffectSpecHandle.Data->SetSetByCallerMagnitude(InCurrentAttackTypeTag, InUsedComboCount);
 	}
 
 	return EffectSpecHandle;

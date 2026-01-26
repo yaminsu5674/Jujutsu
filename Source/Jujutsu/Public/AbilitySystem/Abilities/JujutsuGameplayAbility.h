@@ -35,12 +35,17 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "JujutsuAbility")
 	EJujutsuAbilityActivationPolicy AbilityActivationPolicy = EJujutsuAbilityActivationPolicy::OnTriggered;
 
+	/** 이 어빌리티로 줄 데미지의 기본값 (스킬마다 에디터에서 지정) */
+	UPROPERTY(EditDefaultsOnly, Category = "Jujutsu|Damage", meta = (ClampMin = "0"))
+	float BaseDamage = 10.f;
+
 	UFUNCTION(BlueprintPure, Category = "Jujutsu|Ability")
 	UJujutsuCharacterCombatComponent* GetCharacterCombatComponentFromActorInfo() const;
 
 	UFUNCTION(BlueprintPure, Category = "Jujutsu|Ability")
 	UJujutsuAbilitySystemComponent* GetJujutsuAbilitySystemComponentFromActorInfo() const;
 
+	/** BaseDamage 멤버를 사용해 데미지용 GE 스펙 생성. InUsedComboCount는 공격 타입 태그의 SetByCaller 값으로 전달 */
 	UFUNCTION(BlueprintPure, Category = "Jujutsu|Ability")
-	FGameplayEffectSpecHandle MakeDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> EffectClass, float InBaseDamage, FGameplayTag InCurrentAttackTypeTag, int32 InCurrentComboCount);
+	FGameplayEffectSpecHandle MakeDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> EffectClass, FGameplayTag InCurrentAttackTypeTag, int32 InUsedComboCount);
 };
