@@ -26,6 +26,9 @@ namespace JujutsuGameplayTags
 	/** Character Event Hit (피격 이벤트 부모. 하위 Light/Stun/Middle/Heavy 전부 Hit으로 적용하려면 MatchesTag(Character_Event_Hit) 사용) */
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Event_Hit);
 
+	/** 공격자에게만 전달. "때렸다 맞췄다" — 블루프린트에서 이 이벤트 대기 후 Data.Target에게 피격반응/데미지 */
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Event_HitSuccess);
+
 	/** Character Event Hit 하위 (피격 이벤트 타입) */
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Event_Hit_Light);
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Event_Hit_Stun);

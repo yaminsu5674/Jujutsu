@@ -50,12 +50,13 @@ void UJujutsuCharacterCombatComponent::OnHitTargetActor(AActor* HitActor)
 	if (!OwningPawn) return;
 
 	FGameplayEventData Data;
-	Data.Instigator = OwningPawn;
-	Data.Target = HitActor;
+	Data.Instigator = OwningPawn;  // 때린 쪽
+	Data.Target = HitActor;        // 맞은 쪽
 
+	// 공격자에게만 HitSuccess 전달 → 블루프린트에서 이 이벤트 대기 후 Data.Target에게 피격반응/데미지 적용
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
 		OwningPawn,
-		JujutsuGameplayTags::Character_Event_Hit,
+		JujutsuGameplayTags::Character_Event_HitSuccess,
 		Data
 	);
 }

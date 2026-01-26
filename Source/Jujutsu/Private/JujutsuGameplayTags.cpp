@@ -26,6 +26,9 @@ namespace JujutsuGameplayTags
 	/** Character Event Hit (부모. Character.Event.Hit — 하위 전부 매칭) */
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_Hit, "Character.Event.Hit");
 
+	/** 공격자 전용. Character.Event.HitSuccess */
+	UE_DEFINE_GAMEPLAY_TAG(Character_Event_HitSuccess, "Character.Event.HitSuccess");
+
 	/** Character Event Hit 하위 (피격 이벤트 타입) */
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_Hit_Light, "Character.Event.Hit.Light");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_Hit_Stun, "Character.Event.Hit.Stun");
