@@ -38,6 +38,9 @@ protected:
 	AJujutsuBaseCharacter* GetCharacterFromActorInfo() const;
 
 	UFUNCTION(BlueprintPure, Category = "Jujutsu|Ability")
+	AController* GetCharacterControllerFromActorInfo() const;
+
+	UFUNCTION(BlueprintPure, Category = "Jujutsu|Ability")
 	UJujutsuCharacterCombatComponent* GetCharacterCombatComponentFromActorInfo() const;
 
 	UFUNCTION(BlueprintPure, Category = "Jujutsu|Ability")

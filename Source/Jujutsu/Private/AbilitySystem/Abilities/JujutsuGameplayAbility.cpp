@@ -41,6 +41,12 @@ AJujutsuBaseCharacter* UJujutsuGameplayAbility::GetCharacterFromActorInfo() cons
 	return Cast<AJujutsuBaseCharacter>(GetAvatarActorFromActorInfo());
 }
 
+AController* UJujutsuGameplayAbility::GetCharacterControllerFromActorInfo() const
+{
+	APawn* Avatar = Cast<APawn>(GetAvatarActorFromActorInfo());
+	return Avatar ? Avatar->GetController() : nullptr;
+}
+
 UJujutsuCharacterCombatComponent* UJujutsuGameplayAbility::GetCharacterCombatComponentFromActorInfo() const
 {
 	AActor* Avatar = GetAvatarActorFromActorInfo();
