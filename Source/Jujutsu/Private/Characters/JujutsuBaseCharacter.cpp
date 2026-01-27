@@ -14,6 +14,8 @@
 #include "DataAssets/StartUpData/DataAsset_StartUpDataBase.h"
 #include "Components/Combat/JujutsuCharacterCombatComponent.h"
 #include "Components/UI/CharacterUIComponent.h"
+#include "Components/WidgetComponent.h"
+#include "Widgets/JujutsuWidgetBase.h"
 #include "Abilities/GameplayAbility.h"
 
 // Sets default values
@@ -55,6 +57,9 @@ AJujutsuBaseCharacter::AJujutsuBaseCharacter()
 
 	CharacterUIComponent = CreateDefaultSubobject<UCharacterUIComponent>(TEXT("CharacterUIComponent"));
 
+	CharacterHealthWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("CharacterHealthWidgetComponent"));
+	CharacterHealthWidgetComponent->SetupAttachment(GetMesh());
+
 	LeftHandCollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("LeftHandCollisionBox"));
 	LeftHandCollisionBox->SetupAttachment(GetMesh());
 	LeftHandCollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -85,10 +90,23 @@ UAbilitySystemComponent* AJujutsuBaseCharacter::GetAbilitySystemComponent() cons
 	return GetJujutsuAbilitySystemComponent();
 }
 
+void AJujutsuBaseCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	// 위젯은 보통 BeginPlay 시점쯤 생성됨. 여기서 바인딩해두면 대미지 시 체력바 갱신 가능.
+	if (CharacterHealthWidgetComponent)
+	{
+		if (UJujutsuWidgetBase* HealthWidget = Cast<UJujutsuWidgetBase>(CharacterHealthWidgetComponent->GetWidget()))
+		{
+			HealthWidget->InitCharacterCreatedWidget(this);
+		}
+	}
+}
+
 void AJujutsuBaseCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
-
 
 	if (JujutsuAbilitySystemComponent)
 	{
@@ -96,6 +114,15 @@ void AJujutsuBaseCharacter::PossessedBy(AController* NewController)
 		ensureMsgf(!CharacterStartUpData.IsNull(), TEXT("Forgot to assign start up data to %s"), *GetName());
 
 		AJujutsuHeroController* HeroController = Cast<AJujutsuHeroController>(NewController);
+
+		// GE 적용 시 OnCurrentHealthChanged.Broadcast 호출됨. 위젯이 그 시점에 이미 바인딩돼 있어야 초기 체력을 받음. PossessedBy가 BeginPlay보다 먼저 오면 위젯이 아직 null일 수 있으므로 여기서 한 번 더 시도.
+		if (CharacterHealthWidgetComponent)
+		{
+			if (UJujutsuWidgetBase* HealthWidget = Cast<UJujutsuWidgetBase>(CharacterHealthWidgetComponent->GetWidget()))
+			{
+				HealthWidget->InitCharacterCreatedWidget(this);
+			}
+		}
 
 		if (!CharacterStartUpData.IsNull())
 		{
@@ -108,7 +135,6 @@ void AJujutsuBaseCharacter::PossessedBy(AController* NewController)
 				LoadedData->GiveToAbilitySystemComponent(JujutsuAbilitySystemComponent);
 			}
 		}
-
 	}
 }
 

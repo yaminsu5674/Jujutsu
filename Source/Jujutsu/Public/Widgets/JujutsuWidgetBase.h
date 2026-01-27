@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "JujutsuWidgetBase.generated.h"
 
+class AActor;
 class UCharacterUIComponent;
 
 /**
@@ -16,6 +17,11 @@ UCLASS()
 class JUJUTSU_API UJujutsuWidgetBase : public UUserWidget
 {
 	GENERATED_BODY()
+
+public:
+	/** CharacterHealthWidgetComponent에서 BeginPlay 시 호출. 캐릭터 체력 위젯 등 오너 캐릭터 바인딩용 */
+	UFUNCTION(BlueprintNativeEvent, Category = "Jujutsu|Widget")
+	void InitCharacterCreatedWidget(AActor* OwningCharacter);
 
 protected:
 	virtual void NativeOnInitialized() override;
