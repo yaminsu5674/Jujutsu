@@ -23,6 +23,10 @@ void AJujutsuHeroController::OnPossess(APawn* InPawn)
 	Super::OnPossess(InPawn);
 }
 
+void AJujutsuHeroController::OnCharacterASCInitComplete_Implementation()
+{
+}
+
 void AJujutsuHeroController::BindInputActions(UInputComponent* PlayerInputComponent)
 {
 	checkf(InputConfigDataAsset,TEXT("Forgot to assign a valid data asset as input config"));

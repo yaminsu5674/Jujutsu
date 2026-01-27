@@ -3,6 +3,7 @@
 #include "DataAssets/StartUpData/DataAsset_StartUpDataBase.h"
 #include "AbilitySystem/JujutsuAbilitySystemComponent.h"
 #include "AbilitySystem/Abilities/JujutsuGameplayAbility.h"
+#include "Abilities/GameplayAbility.h"
 #include "GameplayEffect.h"
 
 void UDataAsset_StartUpDataBase::GiveToAbilitySystemComponent(UJujutsuAbilitySystemComponent* InASCToGive, int32 ApplyLevel)
@@ -38,6 +39,17 @@ void UDataAsset_StartUpDataBase::GiveToAbilitySystemComponent(UJujutsuAbilitySys
 		AbilitySpec.DynamicAbilityTags.AddTag(AbilitySet.InputTag);
 
 		InASCToGive->GiveAbility(AbilitySpec);
+	}
+}
+
+void UDataAsset_StartUpDataBase::AppendToActivateOnGivenAbilities(const TArray<TSubclassOf<UGameplayAbility>>& InAbilities)
+{
+	for (const TSubclassOf<UGameplayAbility>& AbilityClass : InAbilities)
+	{
+		if (AbilityClass && AbilityClass->IsChildOf(UJujutsuGameplayAbility::StaticClass()))
+		{
+			ActivateOnGivenAbilities.Add(StaticCast<TSubclassOf<UJujutsuGameplayAbility>>(AbilityClass));
+		}
 	}
 }
 

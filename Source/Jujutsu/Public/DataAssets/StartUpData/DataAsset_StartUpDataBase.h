@@ -7,6 +7,7 @@
 #include "GameplayTagContainer.h"
 #include "AbilitySystem/Abilities/JujutsuGameplayAbility.h"
 #include "GameplayEffect.h"
+#include "Abilities/GameplayAbility.h"
 #include "DataAsset_StartUpDataBase.generated.h"
 
 class UJujutsuAbilitySystemComponent;
@@ -36,6 +37,9 @@ class JUJUTSU_API UDataAsset_StartUpDataBase : public UDataAsset
 
 public:
 	virtual void GiveToAbilitySystemComponent(UJujutsuAbilitySystemComponent* InASCToGive, int32 ApplyLevel = 1);
+
+	/** ActivateOnGivenAbilities 뒤에 InAbilities를 append (플레이어컨트롤러 배열 등) */
+	void AppendToActivateOnGivenAbilities(const TArray<TSubclassOf<UGameplayAbility>>& InAbilities);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "StartUpData")

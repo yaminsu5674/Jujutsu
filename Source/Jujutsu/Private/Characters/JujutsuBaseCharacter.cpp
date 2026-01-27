@@ -14,6 +14,7 @@
 #include "DataAssets/StartUpData/DataAsset_StartUpDataBase.h"
 #include "Components/Combat/JujutsuCharacterCombatComponent.h"
 #include "Components/UI/CharacterUIComponent.h"
+#include "Abilities/GameplayAbility.h"
 
 // Sets default values
 AJujutsuBaseCharacter::AJujutsuBaseCharacter()
@@ -94,13 +95,20 @@ void AJujutsuBaseCharacter::PossessedBy(AController* NewController)
 		JujutsuAbilitySystemComponent->InitAbilityActorInfo(this, this);
 		ensureMsgf(!CharacterStartUpData.IsNull(), TEXT("Forgot to assign start up data to %s"), *GetName());
 
+		AJujutsuHeroController* HeroController = Cast<AJujutsuHeroController>(NewController);
+
 		if (!CharacterStartUpData.IsNull())
 		{
 			if (UDataAsset_StartUpDataBase* LoadedData = CharacterStartUpData.LoadSynchronous())
 			{
+				if (HeroController && !HeroController->GetAbilitiesToGrantWithCharacterInit().IsEmpty())
+				{
+					LoadedData->AppendToActivateOnGivenAbilities(HeroController->GetAbilitiesToGrantWithCharacterInit());
+				}
 				LoadedData->GiveToAbilitySystemComponent(JujutsuAbilitySystemComponent);
 			}
 		}
+
 	}
 }
 
