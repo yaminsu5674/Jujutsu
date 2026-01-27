@@ -114,6 +114,10 @@ public:
 
 	FORCEINLINE UWidgetComponent* GetCharacterHealthWidgetComponent() const { return CharacterHealthWidgetComponent; }
 
+	/** 체력 위젯 컴포넌트를 제거(파괴)한다. 블루프린트에서 호출 가능. */
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	void RemoveHealthWidgetComponent();
+
 	UBoxComponent* GetLeftHandCollisionBox() const { return LeftHandCollisionBox; }
 	UBoxComponent* GetRightHandCollisionBox() const { return RightHandCollisionBox; }
 	UBoxComponent* GetLeftFootCollisionBox() const { return LeftFootCollisionBox; }

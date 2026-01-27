@@ -197,3 +197,12 @@ void AJujutsuBaseCharacter::OnBodyCollisionBoxEndOverlap(UPrimitiveComponent* Ov
 		}
 	}
 }
+
+void AJujutsuBaseCharacter::RemoveHealthWidgetComponent()
+{
+	if (CharacterHealthWidgetComponent)
+	{
+		CharacterHealthWidgetComponent->DestroyComponent();
+		CharacterHealthWidgetComponent = nullptr;
+	}
+}
