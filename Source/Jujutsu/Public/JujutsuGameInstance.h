@@ -4,9 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "Characters/JujutsuBaseCharacter.h"
 #include "JujutsuGameInstance.generated.h"
-
-class AJujutsuBaseCharacter;
 
 UCLASS()
 class JUJUTSU_API UJujutsuGameInstance : public UGameInstance
@@ -15,21 +14,21 @@ class JUJUTSU_API UJujutsuGameInstance : public UGameInstance
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Jujutsu|GameInstance")
-	AJujutsuBaseCharacter* GetHeroCharacter() const { return HeroCharacter; }
+	TSubclassOf<AJujutsuBaseCharacter> GetHeroCharacterClass() const { return HeroCharacterClass; }
 
 	UFUNCTION(BlueprintCallable, Category = "Jujutsu|GameInstance")
-	void SetHeroCharacter(AJujutsuBaseCharacter* InCharacter) { HeroCharacter = InCharacter; }
+	void SetHeroCharacterClass(TSubclassOf<AJujutsuBaseCharacter> InClass) { HeroCharacterClass = InClass; }
 
 	UFUNCTION(BlueprintCallable, Category = "Jujutsu|GameInstance")
-	AJujutsuBaseCharacter* GetEnemyCharacter() const { return EnemyCharacter; }
+	TSubclassOf<AJujutsuBaseCharacter> GetEnemyCharacterClass() const { return EnemyCharacterClass; }
 
 	UFUNCTION(BlueprintCallable, Category = "Jujutsu|GameInstance")
-	void SetEnemyCharacter(AJujutsuBaseCharacter* InCharacter) { EnemyCharacter = InCharacter; }
+	void SetEnemyCharacterClass(TSubclassOf<AJujutsuBaseCharacter> InClass) { EnemyCharacterClass = InClass; }
 
 private:
 	UPROPERTY()
-	TObjectPtr<AJujutsuBaseCharacter> HeroCharacter;
+	TSubclassOf<AJujutsuBaseCharacter> HeroCharacterClass;
 
 	UPROPERTY()
-	TObjectPtr<AJujutsuBaseCharacter> EnemyCharacter;
+	TSubclassOf<AJujutsuBaseCharacter> EnemyCharacterClass;
 };
