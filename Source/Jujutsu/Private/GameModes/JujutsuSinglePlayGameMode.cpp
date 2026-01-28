@@ -6,6 +6,9 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/Pawn.h"
 
+// Debug
+#include "JujutsuDebugHelper.h"
+
 
 UClass* AJujutsuSinglePlayGameMode::GetDefaultPawnClassForController_Implementation(AController* InController)
 {
@@ -49,4 +52,9 @@ void AJujutsuSinglePlayGameMode::StartPlay()
 	{
 		Enemy->SpawnDefaultController();
 	}
+}
+
+void AJujutsuSinglePlayGameMode::OnAllCharactersReady()
+{
+	Debug::Print(TEXT("All ready for setting"));
 }

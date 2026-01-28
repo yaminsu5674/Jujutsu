@@ -26,6 +26,9 @@ protected:
 	/** 게임 시작 시 AI 적 스폰 */
 	virtual void StartPlay() override;
 
+	/** 캐릭터 전원 준비 시 디버그 출력 */
+	virtual void OnAllCharactersReady() override;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Enemy")
 	FVector EnemySpawnLocation = FVector(300.f, 0.f, 100.f);
 

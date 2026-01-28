@@ -17,6 +17,8 @@
 #include "Components/WidgetComponent.h"
 #include "Widgets/JujutsuWidgetBase.h"
 #include "Abilities/GameplayAbility.h"
+#include "GameFramework/GameModeBase.h"
+#include "GameModes/JujutsuPlayGameMode.h"
 // Debug
 #include "JujutsuDebugHelper.h"
 
@@ -102,6 +104,17 @@ void AJujutsuBaseCharacter::BeginPlay()
 		if (UJujutsuWidgetBase* HealthWidget = Cast<UJujutsuWidgetBase>(CharacterHealthWidgetComponent->GetWidget()))
 		{
 			HealthWidget->InitCharacterCreatedWidget(this);
+		}
+	}
+
+	if (UWorld* World = GetWorld())
+	{
+		if (AGameModeBase* GM = World->GetAuthGameMode())
+		{
+			if (AJujutsuPlayGameMode* PlayGM = Cast<AJujutsuPlayGameMode>(GM))
+			{
+				PlayGM->NotifyCharacterReady(this);
+			}
 		}
 	}
 }
