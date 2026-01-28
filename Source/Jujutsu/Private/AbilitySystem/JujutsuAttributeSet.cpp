@@ -4,9 +4,11 @@
 #include "Characters/JujutsuBaseCharacter.h"
 #include "Components/UI/CharacterUIComponent.h"
 #include "GameplayEffectExtension.h"
-#include "JujutsuDebugHelper.h"
 #include "JujutsuFunctionLibrary.h"
 #include "JujutsuGameplayTags.h"
+
+// Debug
+#include "JujutsuDebugHelper.h"
 
 UJujutsuAttributeSet::UJujutsuAttributeSet()
 {
