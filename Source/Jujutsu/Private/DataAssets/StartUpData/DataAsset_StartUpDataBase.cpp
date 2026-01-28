@@ -5,6 +5,9 @@
 #include "AbilitySystem/Abilities/JujutsuGameplayAbility.h"
 #include "Abilities/GameplayAbility.h"
 #include "GameplayEffect.h"
+#include "Controllers/JujutsuHeroController.h"
+#include "GameFramework/Controller.h"
+#include "GameFramework/Pawn.h"
 
 void UDataAsset_StartUpDataBase::GiveToAbilitySystemComponent(UJujutsuAbilitySystemComponent* InASCToGive, int32 ApplyLevel)
 {
@@ -12,6 +15,7 @@ void UDataAsset_StartUpDataBase::GiveToAbilitySystemComponent(UJujutsuAbilitySys
 
 	GrantAbilities(ActivateOnGivenAbilities, InASCToGive, ApplyLevel);
 	GrantAbilities(ReactiveAbilities, InASCToGive, ApplyLevel);
+	GrantAbilitiesFromPlayerController(InASCToGive, ApplyLevel);
 
 	if (!StartUpGameplayEffects.IsEmpty())
 	{
@@ -42,14 +46,29 @@ void UDataAsset_StartUpDataBase::GiveToAbilitySystemComponent(UJujutsuAbilitySys
 	}
 }
 
-void UDataAsset_StartUpDataBase::AppendToActivateOnGivenAbilities(const TArray<TSubclassOf<UGameplayAbility>>& InAbilities)
+void UDataAsset_StartUpDataBase::GrantAbilitiesFromPlayerController(UJujutsuAbilitySystemComponent* InASCToGive, int32 ApplyLevel)
 {
-	for (const TSubclassOf<UGameplayAbility>& AbilityClass : InAbilities)
+	if (!InASCToGive) return;
+
+	AActor* Avatar = InASCToGive->GetAvatarActor();
+	AController* Controller = nullptr;
+	if (APawn* AvatarPawn = Cast<APawn>(Avatar))
 	{
-		if (AbilityClass && AbilityClass->IsChildOf(UJujutsuGameplayAbility::StaticClass()))
-		{
-			ActivateOnGivenAbilities.Add(StaticCast<TSubclassOf<UJujutsuGameplayAbility>>(AbilityClass));
-		}
+		Controller = AvatarPawn->GetController();
+	}
+
+	AJujutsuHeroController* HeroController = Cast<AJujutsuHeroController>(Controller);
+	if (!HeroController) return;
+
+	const TArray<TSubclassOf<UGameplayAbility>>& ControllerAbilities = HeroController->GetAbilitiesToGrantWithCharacterInit();
+	for (const TSubclassOf<UGameplayAbility>& AbilityClass : ControllerAbilities)
+	{
+		if (!AbilityClass || !AbilityClass->IsChildOf(UJujutsuGameplayAbility::StaticClass())) continue;
+
+		FGameplayAbilitySpec AbilitySpec(AbilityClass);
+		AbilitySpec.SourceObject = Avatar;
+		AbilitySpec.Level = ApplyLevel;
+		InASCToGive->GiveAbility(AbilitySpec);
 	}
 }
 

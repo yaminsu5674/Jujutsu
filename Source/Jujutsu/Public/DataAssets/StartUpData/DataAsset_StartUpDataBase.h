@@ -38,8 +38,8 @@ class JUJUTSU_API UDataAsset_StartUpDataBase : public UDataAsset
 public:
 	virtual void GiveToAbilitySystemComponent(UJujutsuAbilitySystemComponent* InASCToGive, int32 ApplyLevel = 1);
 
-	/** ActivateOnGivenAbilities 뒤에 InAbilities를 append (플레이어컨트롤러 배열 등) */
-	void AppendToActivateOnGivenAbilities(const TArray<TSubclassOf<UGameplayAbility>>& InAbilities);
+	/** ASC 아바타의 플레이어 컨트롤러(JujutsuHeroController)에서 어빌리티 목록을 가져와 해당 ASC에 부여 */
+	void GrantAbilitiesFromPlayerController(UJujutsuAbilitySystemComponent* InASCToGive, int32 ApplyLevel = 1);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "StartUpData")
