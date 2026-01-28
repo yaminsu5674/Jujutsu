@@ -17,6 +17,7 @@
 #include "Components/WidgetComponent.h"
 #include "Widgets/JujutsuWidgetBase.h"
 #include "Abilities/GameplayAbility.h"
+#include "JujutsuDebugHelper.h"
 
 // Sets default values
 AJujutsuBaseCharacter::AJujutsuBaseCharacter()
@@ -102,6 +103,8 @@ void AJujutsuBaseCharacter::BeginPlay()
 			HealthWidget->InitCharacterCreatedWidget(this);
 		}
 	}
+
+	Debug::Print(TEXT("BeginPlay"));
 }
 
 void AJujutsuBaseCharacter::PossessedBy(AController* NewController)
@@ -136,6 +139,8 @@ void AJujutsuBaseCharacter::PossessedBy(AController* NewController)
 			}
 		}
 	}
+
+	Debug::Print(TEXT("PossessedBy"));
 }
 
 #if WITH_EDITOR

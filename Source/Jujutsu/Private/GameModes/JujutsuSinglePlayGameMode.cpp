@@ -8,8 +8,8 @@
 
 void AJujutsuSinglePlayGameMode::PostLogin(APlayerController* NewPlayer)
 {
-	SpawnHeroAndEnemyAndAssignControllers(NewPlayer);
 	Super::PostLogin(NewPlayer);
+	SpawnHeroAndEnemyAndAssignControllers(NewPlayer);
 }
 
 void AJujutsuSinglePlayGameMode::PostControllerAssignment()
