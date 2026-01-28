@@ -3,31 +3,34 @@
 #include "GameModes/JujutsuSinglePlayGameMode.h"
 #include "JujutsuGameInstance.h"
 #include "Characters/JujutsuBaseCharacter.h"
-#include "GameFramework/PlayerController.h"
-#include "GameFramework/Character.h"
+#include "GameFramework/Controller.h"
+#include "GameFramework/Pawn.h"
 
-void AJujutsuSinglePlayGameMode::PostLogin(APlayerController* NewPlayer)
+
+UClass* AJujutsuSinglePlayGameMode::GetDefaultPawnClassForController_Implementation(AController* InController)
 {
-	Super::PostLogin(NewPlayer);
-	SpawnHeroAndEnemyAndAssignControllers(NewPlayer);
+	if (UJujutsuGameInstance* GI = GetGameInstance<UJujutsuGameInstance>())
+	{
+		if (TSubclassOf<AJujutsuBaseCharacter> HeroClass = GI->GetHeroCharacterClass())
+		{
+			return HeroClass.Get();
+		}
+	}
+	return Super::GetDefaultPawnClassForController_Implementation(InController);
 }
 
-void AJujutsuSinglePlayGameMode::PostControllerAssignment()
+void AJujutsuSinglePlayGameMode::StartPlay()
 {
-	// 할당 완료 후 C++ 서브클래스에서 오버라이드. 기본은 빈 구현.
-}
+	Super::StartPlay();
 
-void AJujutsuSinglePlayGameMode::SpawnHeroAndEnemyAndAssignControllers(APlayerController* PlayerController)
-{
-	UJujutsuGameInstance* GI = Cast<UJujutsuGameInstance>(GetGameInstance());
-	if (!GI || !PlayerController || !GetWorld())
+	UWorld* World = GetWorld();
+	if (!World)
 	{
 		return;
 	}
 
-	TSubclassOf<AJujutsuBaseCharacter> HeroClass = GI->GetHeroCharacterClass();
-	TSubclassOf<AJujutsuBaseCharacter> EnemyClass = GI->GetEnemyCharacterClass();
-	if (!HeroClass || !EnemyClass)
+	UJujutsuGameInstance* GI = GetGameInstance<UJujutsuGameInstance>();
+	if (!GI || !GI->GetEnemyCharacterClass())
 	{
 		return;
 	}
@@ -35,21 +38,15 @@ void AJujutsuSinglePlayGameMode::SpawnHeroAndEnemyAndAssignControllers(APlayerCo
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-	// 플레이어 캐릭터 스폰 후 플레이어 컨트롤러로 소유
-	FTransform HeroTransform(HeroSpawnRotation, HeroSpawnLocation, FVector::OneVector);
-	AJujutsuBaseCharacter* HeroPawn = GetWorld()->SpawnActor<AJujutsuBaseCharacter>(HeroClass, HeroTransform, SpawnParams);
-	if (HeroPawn)
-	{
-		PlayerController->Possess(HeroPawn);
-	}
+	AJujutsuBaseCharacter* Enemy = World->SpawnActor<AJujutsuBaseCharacter>(
+		GI->GetEnemyCharacterClass(),
+		EnemySpawnLocation,
+		EnemySpawnRotation,
+		SpawnParams
+	);
 
-	// 적 캐릭터 스폰 후 기본 AI 컨트롤러 스폰·소유 (캐릭터에 설정된 AIControllerClass 사용)
-	FTransform EnemyTransform(EnemySpawnRotation, EnemySpawnLocation, FVector::OneVector);
-	AJujutsuBaseCharacter* Enemy = GetWorld()->SpawnActor<AJujutsuBaseCharacter>(EnemyClass, EnemyTransform, SpawnParams);
 	if (Enemy)
 	{
 		Enemy->SpawnDefaultController();
 	}
-
-	PostControllerAssignment();
 }

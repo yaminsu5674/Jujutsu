@@ -6,34 +6,29 @@
 #include "GameModes/JujutsuPlayGameMode.h"
 #include "JujutsuSinglePlayGameMode.generated.h"
 
-class UJujutsuGameInstance;
 class AJujutsuBaseCharacter;
-class APlayerController;
+class UJujutsuGameInstance;
 
-/** 플레이 모드 상속. 싱글 플레이용 대전. */
+/**
+ * 싱글플레이 전용 게임모드
+ * - 플레이어 캐릭터: GameInstance 선택 결과 기반 (GetDefaultPawnClassForController)
+ * - 적 캐릭터: StartPlay에서 AI로 스폰
+ */
 UCLASS()
 class JUJUTSU_API AJujutsuSinglePlayGameMode : public AJujutsuPlayGameMode
 {
 	GENERATED_BODY()
 
 protected:
-	virtual void PostLogin(APlayerController* NewPlayer) override;
+	/** 플레이어가 사용할 Pawn 클래스 결정 (GameInstance HeroCharacterClass 사용) */
+	virtual UClass* GetDefaultPawnClassForController_Implementation(AController* InController) override;
 
-	/** 플레이어·적 스폰 후 컨트롤러 할당까지 끝난 뒤 호출. C++ 서브클래스에서 오버라이드. */
-	virtual void PostControllerAssignment();
+	/** 게임 시작 시 AI 적 스폰 */
+	virtual void StartPlay() override;
 
-private:
-	void SpawnHeroAndEnemyAndAssignControllers(APlayerController* PlayerController);
+	UPROPERTY(EditDefaultsOnly, Category = "Enemy")
+	FVector EnemySpawnLocation = FVector(300.f, 0.f, 100.f);
 
-	UPROPERTY(EditDefaultsOnly, Category = "Jujutsu|SinglePlay|Spawn")
-	FVector HeroSpawnLocation = FVector(0.f, 0.f, 100.f);
-
-	UPROPERTY(EditDefaultsOnly, Category = "Jujutsu|SinglePlay|Spawn")
-	FRotator HeroSpawnRotation = FRotator::ZeroRotator;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Jujutsu|SinglePlay|Spawn")
-	FVector EnemySpawnLocation = FVector(400.f, 0.f, 100.f);
-
-	UPROPERTY(EditDefaultsOnly, Category = "Jujutsu|SinglePlay|Spawn")
+	UPROPERTY(EditDefaultsOnly, Category = "Enemy")
 	FRotator EnemySpawnRotation = FRotator::ZeroRotator;
 };
