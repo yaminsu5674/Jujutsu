@@ -9,6 +9,22 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GameplayEffect.h"
 #include "JujutsuGameplayTags.h"
+#include "JujutsuSkillLibrary.h"
+
+void UJujutsuGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+{
+	// Asset.Tags가 Character_Ability_Attack_* 인 어빌리티는 타겟 방향으로 회전
+	for (const FGameplayTag& Tag : AbilityTags)
+	{
+		if (Tag.MatchesTag(JujutsuGameplayTags::Character_Ability_Attack))
+		{
+			UJujutsuSkillLibrary::SetActorRotationToTarget(GetCharacterFromActorInfo());
+			break;
+		}
+	}
+
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+}
 
 void UJujutsuGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
