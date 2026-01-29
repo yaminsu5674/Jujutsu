@@ -3,6 +3,8 @@
 #include "GameModes/JujutsuSinglePlayGameMode.h"
 #include "JujutsuGameInstance.h"
 #include "Characters/JujutsuBaseCharacter.h"
+#include "Components/Combat/JujutsuCharacterCombatComponent.h"
+#include "EngineUtils.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/Pawn.h"
 
@@ -56,5 +58,26 @@ void AJujutsuSinglePlayGameMode::StartPlay()
 
 void AJujutsuSinglePlayGameMode::OnAllCharactersReady()
 {
-	Debug::Print(TEXT("All ready for setting"));
+	//Debug::Print(TEXT("All ready for setting"));
+
+	UWorld* World = GetWorld();
+	if (!World) return;
+
+	TArray<AJujutsuBaseCharacter*> Characters;
+	for (TActorIterator<AJujutsuBaseCharacter> It(World); It; ++It)
+	{
+		Characters.Add(*It);
+		if (Characters.Num() >= 2) break;
+	}
+
+	if (Characters.Num() == 2 && Characters[0] && Characters[1])
+	{
+		UJujutsuCharacterCombatComponent* Combat0 = Characters[0]->GetCharacterCombatComponent();
+		UJujutsuCharacterCombatComponent* Combat1 = Characters[1]->GetCharacterCombatComponent();
+		if (Combat0 && Combat1)
+		{
+			Combat0->Target = Characters[1];
+			Combat1->Target = Characters[0];
+		}
+	}
 }

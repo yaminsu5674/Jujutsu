@@ -28,6 +28,10 @@ public:
 	/** 바디 콜리전 EndOverlap 시 호출 (타겟에서 벗어남) */
 	virtual void OnPulledFromTargetActor(AActor* InteractedActor);
 
+	/** 현재 타겟 (약한 참조). 타겟 락 등에서 여기서 관리 */
+	UPROPERTY(BlueprintReadOnly, Category = "Jujutsu|Combat")
+	TWeakObjectPtr<AJujutsuBaseCharacter> Target;
+
 protected:
 	virtual void BeginPlay() override;
 
