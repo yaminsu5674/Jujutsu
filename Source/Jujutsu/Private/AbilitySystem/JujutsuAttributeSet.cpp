@@ -65,14 +65,6 @@ void UJujutsuAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCal
 
 		SetCurrentHealth(NewCurrentHealth);
 
-		const FString DebugString = FString::Printf(
-			TEXT("Old Health: %f, Damage Done: %f, NewCurrentHealth: %f"),
-			OldHealth,
-			DamageDone,
-			NewCurrentHealth
-		);
-		Debug::Print(DebugString, FColor::Green);
-
 		if (UIComp)
 		{
 			UIComp->OnCurrentHealthChanged.Broadcast(GetCurrentHealth() / GetMaxHealth());
