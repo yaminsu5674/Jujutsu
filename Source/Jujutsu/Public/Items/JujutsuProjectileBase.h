@@ -9,6 +9,7 @@
 #include "JujutsuTypes/JujutsuEnumTypes.h"
 #include "JujutsuProjectileBase.generated.h"
 
+class AJujutsuBaseCharacter;
 class USphereComponent;
 class USceneComponent;
 class UNiagaraComponent;
@@ -45,6 +46,10 @@ public:
 	/** BeginPlay 시점에 이미 Target과 오버랩 중이면 감지하여 OnProjectileOverlapBegin 호출 */
 	UFUNCTION(BlueprintCallable, Category = "Projectile")
 	void CheckOverlap();
+
+	/** 발사: Target이 유효하면 타겟 방향, 아니면 본인 Forward 방향으로 이동·속도·수명 적용하여 발사 (Owner 미사용) */
+	UFUNCTION(BlueprintCallable, Category = "Projectile")
+	void LaunchProjectile(AJujutsuBaseCharacter* Target);
 
 protected:
 	virtual void BeginPlay() override;

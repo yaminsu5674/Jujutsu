@@ -22,3 +22,15 @@ void UJujutsuSkillLibrary::SetActorRotationToTarget(AJujutsuBaseCharacter* InCha
 
 	InCharacter->SetActorRotation(FRotator(0.f, LookAtRot.Yaw, 0.f));
 }
+
+FVector UJujutsuSkillLibrary::GetSpawnLocationFromCharacter(AActor* Actor, FVector Offset)
+{
+	if (!Actor) return FVector::ZeroVector;
+
+	const FVector BaseLoc = Actor->GetActorLocation();
+	const FVector Forward = Actor->GetActorForwardVector() * Offset.X;
+	const FVector Right = Actor->GetActorRightVector() * Offset.Y;
+	const FVector Up = Actor->GetActorUpVector() * Offset.Z;
+
+	return BaseLoc + Forward + Right + Up;
+}

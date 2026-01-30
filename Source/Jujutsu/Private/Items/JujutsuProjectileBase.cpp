@@ -7,7 +7,10 @@
 #include "JujutsuFunctionLibrary.h"
 #include "JujutsuGameplayTags.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "Characters/JujutsuBaseCharacter.h"
 #include "GameFramework/Pawn.h"
+#include "JujutsuFunctionLibrary.h"
+#include "JujutsuGameplayTags.h"
 
 // Debug
 #include "JujutsuDebugHelper.h"
@@ -68,6 +71,15 @@ void AJujutsuProjectileBase::Destroyed()
 void AJujutsuProjectileBase::CheckOverlap()
 {
 	// BeginPlay 시점에 이미 겹쳐 있는 액터 처리 (오버랩 이벤트로만 처리)
+}
+
+void AJujutsuProjectileBase::LaunchProjectile(AJujutsuBaseCharacter* Target)
+{
+	if (!ProjectileMovementComp) return;
+
+	// Target이 유효하면 타겟 방향, 아니면 본인(발사체) Forward 방향으로 발사
+	ProjectileMovementComp->SetDirection(Target, ProjectileMovementParams.Speed);
+	ProjectileMovementComp->ApplyBehaviorSettings(true, true, InitialLifeSpan);
 }
 
 void AJujutsuProjectileBase::OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
