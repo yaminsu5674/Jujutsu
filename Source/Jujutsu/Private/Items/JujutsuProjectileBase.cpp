@@ -55,9 +55,14 @@ void AJujutsuProjectileBase::BeginPlay()
 	ProjectileMovementComp->SetUpdatedComponent(ProjectileCollisionSphere);
 	ProjectileMovementComp->MaxSpeed = ProjectileMovementParams.Speed;
 
-	if (GetOwner())
+	// 시전자(Owner/Instigator)와는 오버랩·이동 시 충돌 무시 (어빌리티에서 스폰 시 Instigator 설정하는 경우 많음)
+	if (AActor* OwnerActor = GetOwner())
 	{
-		ProjectileCollisionSphere->IgnoreActorWhenMoving(GetOwner(), true);
+		ProjectileCollisionSphere->IgnoreActorWhenMoving(OwnerActor, true);
+	}
+	if (APawn* InstigatorPawn = GetInstigator())
+	{
+		ProjectileCollisionSphere->IgnoreActorWhenMoving(InstigatorPawn, true);
 	}
 
 	CheckOverlap();
@@ -86,7 +91,8 @@ void AJujutsuProjectileBase::OnProjectileBeginOverlap(UPrimitiveComponent* Overl
 {
 	Debug::Print(FString::Printf(TEXT("OnProjectileBeginOverlap: %s"), OtherActor ? *OtherActor->GetName() : TEXT("null")), FColor::Green);
 
-	if (OtherActor == GetOwner()) return;
+	// 시전자(Owner/Instigator)는 오버랩 무시
+	if (OtherActor == GetOwner() || OtherActor == GetInstigator()) return;
 	if (OverlappedActors.Contains(OtherActor)) return;
 
 	OverlappedActors.AddUnique(OtherActor);
