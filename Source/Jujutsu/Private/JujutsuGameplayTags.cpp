@@ -11,14 +11,17 @@ namespace JujutsuGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_A, "InputTag.A");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_S, "InputTag.S");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_D, "InputTag.D");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_ER, "InputTag.ER");
 
 	/** Character Ability Attack (부모) */
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Attack, "Character.Ability.Attack");
 
-	/** Character Ability Attack Combo */
+	/** Character Ability Attack Combo (부모) */
+	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Attack_Combo, "Character.Ability.Attack.Combo");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Attack_Combo_A, "Character.Ability.Attack.Combo.A");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Attack_Combo_S, "Character.Ability.Attack.Combo.S");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Attack_Combo_D, "Character.Ability.Attack.Combo.D");
+	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Attack_Projectile, "Character.Ability.Attack.Projectile");
 
 	/** Character Ability HitReact (피격 타입) */
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_HitReact_Stun, "Character.Ability.HitReact.Stun");
@@ -37,6 +40,10 @@ namespace JujutsuGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_Hit_Stun, "Character.Event.Hit.Stun");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_Hit_Middle, "Character.Event.Hit.Middle");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_Hit_Heavy, "Character.Event.Hit.Heavy");
+
+	/** Skill Event */
+	UE_DEFINE_GAMEPLAY_TAG(Skill_Event_StopAnim, "Skill.Event.StopAnim");
+	UE_DEFINE_GAMEPLAY_TAG(Skill_Event_SpawnProjectile, "Skill.Event.Projectile");
 
 	/** Character Ability/Status (Enemy death 등) */
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Death, "Character.Ability.Death");
