@@ -3,12 +3,15 @@
 #include "Items/JujutsuProjectileBase.h"
 #include "Components/SphereComponent.h"
 #include "NiagaraComponent.h"
+#include "NiagaraSystem.h"
 #include "Items/CustomProjectileMovement.h"
 #include "JujutsuFunctionLibrary.h"
 #include "JujutsuGameplayTags.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Characters/JujutsuBaseCharacter.h"
+#include "Components/Combat/JujutsuCharacterCombatComponent.h"
 #include "GameFramework/Pawn.h"
+#include "JujutsuSkillLibrary.h"
 #include "JujutsuFunctionLibrary.h"
 #include "JujutsuGameplayTags.h"
 
@@ -55,7 +58,18 @@ void AJujutsuProjectileBase::BeginPlay()
 	ProjectileMovementComp->SetUpdatedComponent(ProjectileCollisionSphere);
 	ProjectileMovementComp->MaxSpeed = ProjectileMovementParams.Speed;
 
-	// 시전자(Owner/Instigator)와는 오버랩·이동 시 충돌 무시 (어빌리티에서 스폰 시 Instigator 설정하는 경우 많음)
+	// 시전자(Caster 또는 Owner/Instigator)와는 오버랩·이동 시 충돌 무시
+	if (AJujutsuBaseCharacter* CasterChar = Caster)
+	{
+		ProjectileCollisionSphere->IgnoreActorWhenMoving(CasterChar, true);
+		if (UJujutsuCharacterCombatComponent* Combat = CasterChar->GetCharacterCombatComponent())
+		{
+			if (AActor* TargetActor = Combat->Target.Get())
+			{
+				UJujutsuSkillLibrary::SetObjectRotationToTarget(GetRootComponent(), TargetActor);
+			}
+		}
+	}
 	if (AActor* OwnerActor = GetOwner())
 	{
 		ProjectileCollisionSphere->IgnoreActorWhenMoving(OwnerActor, true);
@@ -63,6 +77,16 @@ void AJujutsuProjectileBase::BeginPlay()
 	if (APawn* InstigatorPawn = GetInstigator())
 	{
 		ProjectileCollisionSphere->IgnoreActorWhenMoving(InstigatorPawn, true);
+	}
+
+	// 나이아가라 이펙트 실행
+	if (ProjectileNiagaraComponent)
+	{
+		if (ProjectileNiagaraSystem)
+		{
+			ProjectileNiagaraComponent->SetAsset(ProjectileNiagaraSystem);
+		}
+		ProjectileNiagaraComponent->Activate(true);
 	}
 
 	CheckOverlap();
@@ -85,14 +109,17 @@ void AJujutsuProjectileBase::LaunchProjectile(AJujutsuBaseCharacter* Target)
 	// Target이 유효하면 타겟 방향, 아니면 본인(발사체) Forward 방향으로 발사
 	ProjectileMovementComp->SetDirection(Target, ProjectileMovementParams.Speed);
 	ProjectileMovementComp->ApplyBehaviorSettings(true, true, InitialLifeSpan);
+
+	// 발사 후 시전자 참조 해제
+	Caster = nullptr;
 }
 
 void AJujutsuProjectileBase::OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	Debug::Print(FString::Printf(TEXT("OnProjectileBeginOverlap: %s"), OtherActor ? *OtherActor->GetName() : TEXT("null")), FColor::Green);
 
-	// 시전자(Owner/Instigator)는 오버랩 무시
-	if (OtherActor == GetOwner() || OtherActor == GetInstigator()) return;
+	// 시전자(Caster/Owner/Instigator)는 오버랩 무시
+	if (OtherActor == Caster || OtherActor == GetOwner() || OtherActor == GetInstigator()) return;
 	if (OverlappedActors.Contains(OtherActor)) return;
 
 	OverlappedActors.AddUnique(OtherActor);

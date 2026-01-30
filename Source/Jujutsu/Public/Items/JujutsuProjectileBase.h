@@ -10,6 +10,7 @@
 #include "JujutsuProjectileBase.generated.h"
 
 class AJujutsuBaseCharacter;
+class UNiagaraSystem;
 class USphereComponent;
 class USceneComponent;
 class UNiagaraComponent;
@@ -60,6 +61,10 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Projectile")
 	UNiagaraComponent* ProjectileNiagaraComponent;
 
+	/** 재생할 나이아가라 이펙트 (지정 시 BeginPlay에서 컴포넌트에 설정 후 재생) */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile")
+	TObjectPtr<UNiagaraSystem> ProjectileNiagaraSystem;
+
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Projectile")
 	UCustomProjectileMovement* ProjectileMovementComp;
 
@@ -68,6 +73,10 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile", meta = (AllowPrivateAccess = "true"))
 	float Damage = 0.f;
+
+	/** 시전자. 블루프린트 Spawn Actor from Class 시 인풋 핀으로 설정. LaunchProjectile 호출 시 참조 해제됨. */
+	UPROPERTY(BlueprintReadWrite, Category = "Projectile", meta = (ExposeOnSpawn = "true"))
+	TObjectPtr<AJujutsuBaseCharacter> Caster;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Projectile", meta = (ExposeOnSpawn = "true"))
 	FGameplayEffectSpecHandle ProjectileDamageEffectSpecHandle;

@@ -3,6 +3,7 @@
 #include "JujutsuSkillLibrary.h"
 #include "Characters/JujutsuBaseCharacter.h"
 #include "Components/Combat/JujutsuCharacterCombatComponent.h"
+#include "Components/SceneComponent.h"
 #include "GameFramework/PlayerController.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -21,6 +22,19 @@ void UJujutsuSkillLibrary::SetActorRotationToTarget(AJujutsuBaseCharacter* InCha
 	FRotator LookAtRot = UKismetMathLibrary::FindLookAtRotation(CharLoc, TargetLoc);
 
 	InCharacter->SetActorRotation(FRotator(0.f, LookAtRot.Yaw, 0.f));
+}
+
+void UJujutsuSkillLibrary::SetObjectRotationToTarget(USceneComponent* Object, AActor* Target)
+{
+	if (!Object || !Target) return;
+
+	FVector ObjectLocation = Object->GetComponentLocation();
+	FVector TargetLocation = Target->GetActorLocation();
+	FVector Direction = (TargetLocation - ObjectLocation).GetSafeNormal();
+
+	FRotator LookAtRotation = Direction.Rotation();
+	FRotator OnlyYawRotation = FRotator(0.f, LookAtRotation.Yaw + 90.0f, 0.f);
+	Object->SetWorldRotation(OnlyYawRotation);
 }
 
 FVector UJujutsuSkillLibrary::GetSpawnLocationFromCharacter(AActor* Actor, FVector Offset)

@@ -6,7 +6,9 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "JujutsuSkillLibrary.generated.h"
 
+class AActor;
 class AJujutsuBaseCharacter;
+class USceneComponent;
 
 /**
  * 스킬/전투 관련 블루프린트·네이티브 유틸
@@ -20,6 +22,10 @@ public:
 	/** 베이스캐릭터의 CombatComponent에서 타겟을 찾고, 있으면 그 방향으로 캐릭터(및 컨트롤러) 회전 */
 	UFUNCTION(BlueprintCallable, Category = "Jujutsu|SkillLibrary")
 	static void SetActorRotationToTarget(AJujutsuBaseCharacter* InCharacter);
+
+	/** Object를 Target을 바라보도록 회전 (Yaw만 적용, +90도 오프셋) */
+	UFUNCTION(BlueprintCallable, Category = "Jujutsu|SkillLibrary", meta = (DisplayName = "Set Object Rotation To Target"))
+	static void SetObjectRotationToTarget(USceneComponent* Object, AActor* Target);
 
 	/**
 	 * 액터를 기준으로 발사체 스폰 월드 위치를 반환.
