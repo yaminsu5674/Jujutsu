@@ -18,7 +18,8 @@ public class Jujutsu : ModuleRules
 			"GameplayTags",
 			"GameplayTasks",
 			"GameplayAbilities",
-			"UMG" });
+			"UMG",
+			"Niagara" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
