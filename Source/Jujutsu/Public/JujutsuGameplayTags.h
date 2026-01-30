@@ -15,14 +15,10 @@ namespace JujutsuGameplayTags
 
 	/** Character Ability Attack (부모. Attack_Combo_* 등 하위 전부 매칭) */
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_Attack);
-
-	/** Character Ability Attack Combo (부모. Combo_A/S/D 등 하위 매칭) */
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_Attack_Combo);
-	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_Attack_Combo_A);
-	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_Attack_Combo_S);
-	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_Attack_Combo_D);
-	/** Character Ability Attack Projectile */
-	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_Attack_Projectile);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_Attack_Jujutsu);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_Attack_Special);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_Attack_Final);
 
 	/** Character Ability HitReact (피격 타입) */
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_HitReact_Stun);
@@ -43,8 +39,7 @@ namespace JujutsuGameplayTags
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Event_Hit_Heavy);
 
 	/** Skill Event (몽타주/스킬 노티파이 등) */
-	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Skill_Event_StopAnim);
-	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Skill_Event_Projectile);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Skill_Event_Notify);
 
 	/** Character Ability/Status (Enemy death 등) */
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_Death);
