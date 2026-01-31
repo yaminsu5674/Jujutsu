@@ -4,11 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "GameplayEffectTypes.h"
 #include "JujutsuSkillLibrary.generated.h"
 
 class AActor;
 class AJujutsuBaseCharacter;
 class USceneComponent;
+class UGameplayEffect;
 
 /**
  * 스킬/전투 관련 블루프린트·네이티브 유틸
@@ -35,4 +37,12 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Jujutsu|SkillLibrary", meta = (DisplayName = "Get Spawn Location From Character"))
 	static FVector GetSpawnLocationFromCharacter(AActor* Actor, FVector Offset);
+
+	/** SourceActor의 ASC로 데미지용 GE 스펙 생성. BaseDamage·UsedComboCount는 SetByCaller로 전달. 어빌리티가 아닌 곳에서 데미지 적용 시 사용 */
+	UFUNCTION(BlueprintCallable, Category = "Jujutsu|SkillLibrary", meta = (DisplayName = "Make Damage Effect Spec Handle"))
+	static FGameplayEffectSpecHandle MakeDamageEffectSpecHandle(AActor* SourceActor, TSubclassOf<UGameplayEffect> EffectClass, float BaseDamage, int32 InUsedComboCount, int32 Level = 1);
+
+	/** SourceActor의 ASC로 스펙을 TargetActor의 ASC에 적용. MakeDamageEffectSpecHandle으로 만든 스펙 적용 시 사용 */
+	UFUNCTION(BlueprintCallable, Category = "Jujutsu|SkillLibrary", meta = (DisplayName = "Apply Effect Spec Handle To Target"))
+	static FActiveGameplayEffectHandle ApplyEffectSpecHandleToTarget(AActor* SourceActor, AActor* TargetActor, const FGameplayEffectSpecHandle& InSpecHandle);
 };
