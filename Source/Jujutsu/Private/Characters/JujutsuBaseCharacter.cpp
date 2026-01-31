@@ -13,6 +13,7 @@
 #include "AbilitySystem/JujutsuAttributeSet.h"
 #include "DataAssets/StartUpData/DataAsset_StartUpDataBase.h"
 #include "Components/Combat/JujutsuCharacterCombatComponent.h"
+#include "Components/Push/JujutsuPushComponent.h"
 #include "Components/UI/CharacterUIComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Widgets/JujutsuWidgetBase.h"
@@ -58,6 +59,8 @@ AJujutsuBaseCharacter::AJujutsuBaseCharacter()
  JujutsuAttributeSet = CreateDefaultSubobject<UJujutsuAttributeSet>(TEXT("JujutsuAttributeSet"));
 
 	CharacterCombatComponent = CreateDefaultSubobject<UJujutsuCharacterCombatComponent>(TEXT("CharacterCombatComponent"));
+
+	PushComponent = CreateDefaultSubobject<UJujutsuPushComponent>(TEXT("PushComponent"));
 
 	CharacterUIComponent = CreateDefaultSubobject<UCharacterUIComponent>(TEXT("CharacterUIComponent"));
 

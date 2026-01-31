@@ -15,6 +15,7 @@ class UJujutsuAbilitySystemComponent;
 class UJujutsuAttributeSet;
 class UDataAsset_StartUpDataBase;
 class UJujutsuCharacterCombatComponent;
+class UJujutsuPushComponent;
 class UWidgetComponent;
 
 DECLARE_DELEGATE_OneParam(FOnTargetInteractedDelegate, AActor*);
@@ -60,6 +61,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	UJujutsuCharacterCombatComponent* CharacterCombatComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Push", meta = (AllowPrivateAccess = "true"))
+	UJujutsuPushComponent* PushComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
 	UCharacterUIComponent* CharacterUIComponent;
@@ -109,6 +113,8 @@ public:
 	FORCEINLINE UJujutsuAttributeSet* GetJujutsuAttributeSet() const { return JujutsuAttributeSet; }
 
 	FORCEINLINE UJujutsuCharacterCombatComponent* GetCharacterCombatComponent() const { return CharacterCombatComponent; }
+
+	FORCEINLINE UJujutsuPushComponent* GetPushComponent() const { return PushComponent; }
 
 	FORCEINLINE UCharacterUIComponent* GetCharacterUIComponent() const { return CharacterUIComponent; }
 
