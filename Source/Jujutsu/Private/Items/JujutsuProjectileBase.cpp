@@ -8,9 +8,11 @@
 #include "JujutsuFunctionLibrary.h"
 #include "JujutsuGameplayTags.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
 #include "Characters/JujutsuBaseCharacter.h"
 #include "Components/Combat/JujutsuCharacterCombatComponent.h"
 #include "GameFramework/Pawn.h"
+#include "GameplayEffect.h"
 #include "JujutsuSkillLibrary.h"
 #include "JujutsuFunctionLibrary.h"
 #include "JujutsuGameplayTags.h"
@@ -123,25 +125,54 @@ void AJujutsuProjectileBase::OnProjectileBeginOverlap_Implementation(UPrimitiveC
 {
 	Debug::Print(FString::Printf(TEXT("OnProjectileBeginOverlap: %s"), OtherActor ? *OtherActor->GetName() : TEXT("null")), FColor::Green);
 
-	// 시전자(Caster/Owner/Instigator)는 오버랩 무시
-	if (OtherActor == Caster || OtherActor == GetOwner() || OtherActor == GetInstigator()) return;
+	if (!OtherActor || OtherActor == GetOwner() || OtherActor == Caster || OtherActor == GetInstigator()) return;
 	if (OverlappedActors.Contains(OtherActor)) return;
 
 	OverlappedActors.AddUnique(OtherActor);
 	bIsOverlapping = true;
 
-	if (APawn* HitPawn = Cast<APawn>(OtherActor))
-	{
-		// FGameplayEventData Data;
-		// Data.Instigator = GetInstigator();
-		// Data.Target = HitPawn;
-		// HandleApplyProjectileDamage(HitPawn, Data);
-	}
+	// 데미지 이펙트 적용: MakeDamageEffectSpecHandle → ApplyGameplayEffectSpecHandleToTarget (DamageEffectClass 지정 시)
+	// if (DamageEffectClass)
+	// {
+	// 	AActor* SourceActor = GetInstigator() ? GetInstigator() : Caster.Get();
+	// 	UAbilitySystemComponent* SourceASC = SourceActor ? UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(SourceActor) : nullptr;
+	// 	if (SourceASC)
+	// 	{
+	// 		FGameplayEffectSpecHandle SpecHandle = UJujutsuSkillLibrary::MakeDamageEffectSpecHandle(
+	// 			SourceASC,
+	// 			DamageEffectClass,
+	// 			Damage,
+	// 			0.f,  // UsedComboCount (발사체는 0)
+	// 			this,
+	// 			1.f   // EffectLevel
+	// 		);
+	// 		if (SpecHandle.IsValid())
+	// 		{
+	// 			FActiveGameplayEffectHandle Handle = UJujutsuSkillLibrary::ApplyGameplayEffectSpecHandleToTarget(SourceActor, OtherActor, SpecHandle);
+	// 			if (Handle.IsValid())
+	// 			{
+	// 				ActiveDamageHandles.Add(OtherActor, Handle);
+	// 			}
+	// 		}
+	// 	}
+	// }
 }
 
 void AJujutsuProjectileBase::OnProjectileEndOverlap_Implementation(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	Debug::Print(FString::Printf(TEXT("OnProjectileEndOverlap: %s"), OtherActor ? *OtherActor->GetName() : TEXT("null")), FColor::Yellow);
+
+	// if (OtherActor)
+	// {
+	// 	if (FActiveGameplayEffectHandle* Handle = ActiveDamageHandles.Find(OtherActor))
+	// 	{
+	// 		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
+	// 		{
+	// 			TargetASC->RemoveActiveGameplayEffect(*Handle);
+	// 		}
+	// 		ActiveDamageHandles.Remove(OtherActor);
+	// 	}
+	// }
 
 	OverlappedActors.Remove(OtherActor);
 	bIsOverlapping = (OverlappedActors.Num() > 0);

@@ -10,6 +10,7 @@
 #include "JujutsuProjectileBase.generated.h"
 
 class AJujutsuBaseCharacter;
+class UGameplayEffect;
 class UNiagaraSystem;
 class USphereComponent;
 class USceneComponent;
@@ -83,6 +84,10 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Projectile", meta = (ExposeOnSpawn = "true"))
 	TObjectPtr<AJujutsuBaseCharacter> Caster;
 
+	/** 오버랩 중인 타겟에게 적용할 데미지 게임플레이 이펙트 (지정 시 BeginOverlap에서 적용, EndOverlap에서 제거) */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile|Damage")
+	TSubclassOf<UGameplayEffect> DamageEffectClass;
+
 	UPROPERTY(BlueprintReadOnly, Category = "Projectile", meta = (ExposeOnSpawn = "true"))
 	FGameplayEffectSpecHandle ProjectileDamageEffectSpecHandle;
 
@@ -105,6 +110,9 @@ protected:
 protected:
 	/** 현재 오버랩 중인 액터 목록. 자식 클래스에서 EndProjectile 등에서 활용 가능 */
 	TArray<AActor*> OverlappedActors;
+
+	/** 오버랩 중인 액터별 적용된 데미지 이펙트 핸들. EndOverlap 시 제거용 */
+	TMap<TObjectPtr<AActor>, FActiveGameplayEffectHandle> ActiveDamageHandles;
 
 private:
 	// void HandleApplyProjectileDamage(APawn* InHitPawn, const FGameplayEventData& InPayload);
