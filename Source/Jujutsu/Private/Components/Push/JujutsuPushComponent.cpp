@@ -34,6 +34,10 @@ void UJujutsuPushComponent::RequestPush(const FPushRequest& Request)
 	bActive = true;
 	SetComponentTickEnabled(true);
 
+	// 밀림 중에는 중력 비활성화
+	SavedGravityScale = MoveComp->GravityScale;
+	MoveComp->GravityScale = 0.f;
+
 	if (ActivePush.Mode == EPushMode::AttachToSource && ActivePush.Source.IsValid())
 	{
 		PrevSourceLocation = ActivePush.Source->GetActorLocation();
@@ -52,6 +56,12 @@ void UJujutsuPushComponent::EndPush()
 	ElapsedTime = 0.f;
 	ActivePush = FPushRequest();
 	SetComponentTickEnabled(false);
+
+	// 중력 복원
+	if (MoveComp.IsValid())
+	{
+		MoveComp->GravityScale = SavedGravityScale;
+	}
 }
 
 void UJujutsuPushComponent::TickComponent(
