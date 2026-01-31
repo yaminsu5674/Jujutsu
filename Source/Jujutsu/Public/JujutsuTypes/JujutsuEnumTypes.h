@@ -25,3 +25,10 @@ enum class EProjectileMoveType : uint8
 	Single,		// 단발형: 한 번 발사되어 날아가는 타입
 	Rush,		// 돌진형: 이동/정지를 반복하며 벽을 무시하는 타입
 };
+
+UENUM(BlueprintType)
+enum class EPushMode : uint8
+{
+	AttachToSource,
+	Impulse
+};
