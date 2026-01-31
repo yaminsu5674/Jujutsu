@@ -18,17 +18,9 @@ void AJujutsuPushingProjectile::OnProjectileBeginOverlap(UPrimitiveComponent* Ov
 	if (AJujutsuBaseCharacter* HitChar = Cast<AJujutsuBaseCharacter>(OtherActor))
 	{
 		PushComp = HitChar->GetPushComponent();
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, FString::Printf(TEXT("HitChar: %s"), *HitChar->GetName()));
-		}
 	}
 	else
 	{
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, FString::Printf(TEXT("OtherActor: %s"), *OtherActor->GetName()));
-		}
 		PushComp = OtherActor->FindComponentByClass<UJujutsuPushComponent>();
 	}
 

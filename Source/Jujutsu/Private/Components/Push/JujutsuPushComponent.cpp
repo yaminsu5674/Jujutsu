@@ -42,7 +42,7 @@ void UJujutsuPushComponent::RequestPush(const FPushRequest& Request)
 
 void UJujutsuPushComponent::StopPush()
 {
-	Debug::Print(FString::Printf(TEXT("StopPush: %s"), GetOwner() ? *GetOwner()->GetName() : TEXT("null")), FColor::Orange);
+	// Debug::Print(FString::Printf(TEXT("StopPush: %s"), GetOwner() ? *GetOwner()->GetName() : TEXT("null")), FColor::Orange);
 	EndPush();
 }
 
