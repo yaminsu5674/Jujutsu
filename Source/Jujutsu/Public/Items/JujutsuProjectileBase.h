@@ -44,6 +44,11 @@ public:
 
 	virtual void Destroyed() override;
 
+	/** 발사체 수명 종료 시 호출. C++/블루프린트 오버라이드 가능. (Destroyed 직전 호출) */
+	UFUNCTION(BlueprintNativeEvent, Category = "Projectile")
+	void EndProjectile();
+	virtual void EndProjectile_Implementation();
+
 	/** BeginPlay 시점에 이미 Target과 오버랩 중이면 감지하여 OnProjectileOverlapBegin 호출 */
 	UFUNCTION(BlueprintCallable, Category = "Projectile")
 	void CheckOverlap();
@@ -95,8 +100,10 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Projectile Overlap FX"))
 	void BP_OnProjectileOverlapFX(const FVector& HitLocation);
 
+protected:
+	/** 현재 오버랩 중인 액터 목록. 자식 클래스에서 EndProjectile 등에서 활용 가능 */
+	TArray<AActor*> OverlappedActors;
+
 private:
 	// void HandleApplyProjectileDamage(APawn* InHitPawn, const FGameplayEventData& InPayload);
-
-	TArray<AActor*> OverlappedActors;
 };

@@ -94,7 +94,12 @@ void AJujutsuProjectileBase::BeginPlay()
 
 void AJujutsuProjectileBase::Destroyed()
 {
+	EndProjectile();
 	Super::Destroyed();
+}
+
+void AJujutsuProjectileBase::EndProjectile_Implementation()
+{
 }
 
 void AJujutsuProjectileBase::CheckOverlap()

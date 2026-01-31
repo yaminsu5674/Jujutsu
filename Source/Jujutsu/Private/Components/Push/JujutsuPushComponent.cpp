@@ -4,6 +4,9 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
+// Debug
+#include "JujutsuDebugHelper.h"
+
 UJujutsuPushComponent::UJujutsuPushComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
@@ -39,6 +42,7 @@ void UJujutsuPushComponent::RequestPush(const FPushRequest& Request)
 
 void UJujutsuPushComponent::StopPush()
 {
+	Debug::Print(FString::Printf(TEXT("StopPush: %s"), GetOwner() ? *GetOwner()->GetName() : TEXT("null")), FColor::Orange);
 	EndPush();
 }
 

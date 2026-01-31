@@ -37,18 +37,52 @@ void AJujutsuPushingProjectile::OnProjectileBeginOverlap(UPrimitiveComponent* Ov
 		FPushRequest Request;
 		Request.Mode = EPushMode::AttachToSource;
 		Request.Source = this;
-		Request.Duration = TNumericLimits<float>::Max(); // 발사체 수명 동안 유지 (Source 파괴 시 EndPush)
+		Request.Duration = TNumericLimits<float>::Max(); // 발사체 수명 동안 유지 (EndProjectile 시 StopPush)
 		PushComp->RequestPush(Request);
-		if (GEngine)
+	}
+}
+
+void AJujutsuPushingProjectile::OnProjectileEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (OtherActor)
+	{
+		UJujutsuPushComponent* PushComp = nullptr;
+		if (AJujutsuBaseCharacter* HitChar = Cast<AJujutsuBaseCharacter>(OtherActor))
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, FString::Printf(TEXT("PushComp: %s"), *PushComp->GetName()));
+			PushComp = HitChar->GetPushComponent();
+		}
+		else
+		{
+			PushComp = OtherActor->FindComponentByClass<UJujutsuPushComponent>();
+		}
+		if (PushComp)
+		{
+			PushComp->StopPush();
 		}
 	}
-	else
+	Super::OnProjectileEndOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex);
+}
+
+void AJujutsuPushingProjectile::EndProjectile_Implementation()
+{
+	Super::EndProjectile_Implementation();
+
+	for (AActor* OverlappedActor : OverlappedActors)
 	{
-		if (GEngine)
+		if (!OverlappedActor) continue;
+
+		UJujutsuPushComponent* PushComp = nullptr;
+		if (AJujutsuBaseCharacter* HitChar = Cast<AJujutsuBaseCharacter>(OverlappedActor))
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, FString::Printf(TEXT("PushComp is null")));
+			PushComp = HitChar->GetPushComponent();
+		}
+		else
+		{
+			PushComp = OverlappedActor->FindComponentByClass<UJujutsuPushComponent>();
+		}
+		if (PushComp)
+		{
+			PushComp->StopPush();
 		}
 	}
 }
