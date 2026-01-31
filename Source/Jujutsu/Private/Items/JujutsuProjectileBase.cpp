@@ -119,7 +119,7 @@ void AJujutsuProjectileBase::LaunchProjectile(AJujutsuBaseCharacter* Target)
 	Caster = nullptr;
 }
 
-void AJujutsuProjectileBase::OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AJujutsuProjectileBase::OnProjectileBeginOverlap_Implementation(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	Debug::Print(FString::Printf(TEXT("OnProjectileBeginOverlap: %s"), OtherActor ? *OtherActor->GetName() : TEXT("null")), FColor::Green);
 
@@ -139,7 +139,7 @@ void AJujutsuProjectileBase::OnProjectileBeginOverlap(UPrimitiveComponent* Overl
 	}
 }
 
-void AJujutsuProjectileBase::OnProjectileEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+void AJujutsuProjectileBase::OnProjectileEndOverlap_Implementation(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	Debug::Print(FString::Printf(TEXT("OnProjectileEndOverlap: %s"), OtherActor ? *OtherActor->GetName() : TEXT("null")), FColor::Yellow);
 

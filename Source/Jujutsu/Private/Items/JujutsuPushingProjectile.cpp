@@ -8,9 +8,9 @@ AJujutsuPushingProjectile::AJujutsuPushingProjectile()
 {
 }
 
-void AJujutsuPushingProjectile::OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AJujutsuPushingProjectile::OnProjectileBeginOverlap_Implementation(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	Super::OnProjectileBeginOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
+	Super::OnProjectileBeginOverlap_Implementation(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
 
 	if (!OtherActor) return;
 
@@ -34,7 +34,7 @@ void AJujutsuPushingProjectile::OnProjectileBeginOverlap(UPrimitiveComponent* Ov
 	}
 }
 
-void AJujutsuPushingProjectile::OnProjectileEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+void AJujutsuPushingProjectile::OnProjectileEndOverlap_Implementation(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	if (OtherActor)
 	{
@@ -52,7 +52,7 @@ void AJujutsuPushingProjectile::OnProjectileEndOverlap(UPrimitiveComponent* Over
 			PushComp->StopPush();
 		}
 	}
-	Super::OnProjectileEndOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex);
+	Super::OnProjectileEndOverlap_Implementation(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex);
 }
 
 void AJujutsuPushingProjectile::EndProjectile_Implementation()
