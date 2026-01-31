@@ -99,7 +99,7 @@ void UJujutsuPushComponent::TickAttachPush(float DeltaTime)
 	}
 
 	const FVector CurrentLoc = ActivePush.Source->GetActorLocation();
-	const FVector Delta = CurrentLoc - PrevSourceLocation;
+	const FVector Delta = (CurrentLoc - PrevSourceLocation) * ActivePush.FollowScale;
 
 	ACharacter* Char = OwnerCharacter.Get();
 	if (!Char) { EndPush(); return; }

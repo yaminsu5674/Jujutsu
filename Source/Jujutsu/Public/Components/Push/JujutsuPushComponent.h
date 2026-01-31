@@ -32,6 +32,10 @@ struct FPushRequest
 	UPROPERTY(BlueprintReadWrite)
 	TWeakObjectPtr<AActor> Source;
 
+	/** AttachToSource 모드에서 Source 이동량에 곱하는 비율. 1=동일 속도, 0.5=절반 속도(발사체가 앞서 나감) */
+	UPROPERTY(BlueprintReadWrite)
+	float FollowScale = 1.f;
+
 	UPROPERTY(BlueprintReadWrite)
 	FGameplayTag PushType;
 };

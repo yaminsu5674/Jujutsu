@@ -30,6 +30,7 @@ void AJujutsuPushingProjectile::OnProjectileBeginOverlap_Implementation(UPrimiti
 		Request.Mode = EPushMode::AttachToSource;
 		Request.Source = this;
 		Request.Duration = TNumericLimits<float>::Max(); // 발사체 수명 동안 유지 (EndProjectile 시 StopPush)
+		Request.FollowScale = FollowScale;
 		PushComp->RequestPush(Request);
 	}
 }

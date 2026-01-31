@@ -21,6 +21,10 @@ public:
 
 	virtual void EndProjectile_Implementation() override;
 
+	/** AttachToSource 모드에서 Source 이동량에 곱하는 비율. 1=동일 속도, 0.5=절반 속도(발사체가 앞서 나감) */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile|Push")
+	float FollowScale = 1.f;
+
 protected:
 	virtual void OnProjectileBeginOverlap_Implementation(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
 	virtual void OnProjectileEndOverlap_Implementation(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) override;
