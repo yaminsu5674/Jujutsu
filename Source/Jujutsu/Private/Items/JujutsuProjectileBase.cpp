@@ -117,7 +117,7 @@ void AJujutsuProjectileBase::LaunchProjectile(AJujutsuBaseCharacter* Target)
 	ProjectileMovementComp->SetDirection(Target, ProjectileMovementParams.Speed);
 	ProjectileMovementComp->ApplyBehaviorSettings(true, true, InitialLifeSpan);
 
-	// 발사 후 시전자 참조 해제
+	// SimpleDamage Exec 사용 시 데미지에 Caster 불필요. 참조 해제
 	Caster = nullptr;
 }
 
@@ -131,48 +131,39 @@ void AJujutsuProjectileBase::OnProjectileBeginOverlap_Implementation(UPrimitiveC
 	OverlappedActors.AddUnique(OtherActor);
 	bIsOverlapping = true;
 
-	// 데미지 이펙트 적용: MakeDamageEffectSpecHandle → ApplyGameplayEffectSpecHandleToTarget (DamageEffectClass 지정 시)
-	// if (DamageEffectClass)
-	// {
-	// 	AActor* SourceActor = GetInstigator() ? GetInstigator() : Caster.Get();
-	// 	UAbilitySystemComponent* SourceASC = SourceActor ? UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(SourceActor) : nullptr;
-	// 	if (SourceASC)
-	// 	{
-	// 		FGameplayEffectSpecHandle SpecHandle = UJujutsuSkillLibrary::MakeDamageEffectSpecHandle(
-	// 			SourceASC,
-	// 			DamageEffectClass,
-	// 			Damage,
-	// 			0.f,  // UsedComboCount (발사체는 0)
-	// 			this,
-	// 			1.f   // EffectLevel
-	// 		);
-	// 		if (SpecHandle.IsValid())
-	// 		{
-	// 			FActiveGameplayEffectHandle Handle = UJujutsuSkillLibrary::ApplyGameplayEffectSpecHandleToTarget(SourceActor, OtherActor, SpecHandle);
-	// 			if (Handle.IsValid())
-	// 			{
-	// 				ActiveDamageHandles.Add(OtherActor, Handle);
-	// 			}
-	// 		}
-	// 	}
-	// }
+	// 데미지 이펙트 적용: SimpleDamage Exec용. Source(Caster) 불필요. 타겟 ASC가 스펙 만들어 자기에게 적용.
+	if (DamageEffectClass)
+	{
+		FActiveGameplayEffectHandle Handle = UJujutsuSkillLibrary::ApplyDamageEffectToTarget(
+			OtherActor,
+			DamageEffectClass,
+			Damage,
+			0,   // UsedComboCount (발사체는 0)
+			1,   // Level
+			this // InstigatorForContext (히트 결과 등용, null 가능)
+		);
+		if (Handle.IsValid())
+		{
+			ActiveDamageHandles.Add(OtherActor, Handle);
+		}
+	}
 }
 
 void AJujutsuProjectileBase::OnProjectileEndOverlap_Implementation(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	Debug::Print(FString::Printf(TEXT("OnProjectileEndOverlap: %s"), OtherActor ? *OtherActor->GetName() : TEXT("null")), FColor::Yellow);
 
-	// if (OtherActor)
-	// {
-	// 	if (FActiveGameplayEffectHandle* Handle = ActiveDamageHandles.Find(OtherActor))
-	// 	{
-	// 		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
-	// 		{
-	// 			TargetASC->RemoveActiveGameplayEffect(*Handle);
-	// 		}
-	// 		ActiveDamageHandles.Remove(OtherActor);
-	// 	}
-	// }
+	if (OtherActor)
+	{
+		if (FActiveGameplayEffectHandle* Handle = ActiveDamageHandles.Find(OtherActor))
+		{
+			if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
+			{
+				TargetASC->RemoveActiveGameplayEffect(*Handle);
+			}
+			ActiveDamageHandles.Remove(OtherActor);
+		}
+	}
 
 	OverlappedActors.Remove(OtherActor);
 	bIsOverlapping = (OverlappedActors.Num() > 0);

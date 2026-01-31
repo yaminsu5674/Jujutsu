@@ -89,3 +89,32 @@ FActiveGameplayEffectHandle UJujutsuSkillLibrary::ApplyEffectSpecHandleToTarget(
 
 	return SourceASC->ApplyGameplayEffectSpecToTarget(*InSpecHandle.Data, TargetASC);
 }
+
+FActiveGameplayEffectHandle UJujutsuSkillLibrary::ApplyDamageEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> EffectClass, float BaseDamage, int32 InUsedComboCount, int32 Level, AActor* InstigatorForContext)
+{
+	if (!TargetActor || !EffectClass) return FActiveGameplayEffectHandle();
+
+	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+	if (!TargetASC) return FActiveGameplayEffectHandle();
+
+	FGameplayEffectContextHandle ContextHandle = TargetASC->MakeEffectContext();
+	if (InstigatorForContext)
+	{
+		ContextHandle.AddSourceObject(InstigatorForContext);
+		ContextHandle.AddInstigator(InstigatorForContext, InstigatorForContext);
+	}
+
+	FGameplayEffectSpecHandle EffectSpecHandle = TargetASC->MakeOutgoingSpec(EffectClass, Level, ContextHandle);
+	if (!EffectSpecHandle.IsValid()) return FActiveGameplayEffectHandle();
+
+	EffectSpecHandle.Data->SetSetByCallerMagnitude(
+		JujutsuGameplayTags::Character_SetByCaller_BaseDamage,
+		BaseDamage
+	);
+	EffectSpecHandle.Data->SetSetByCallerMagnitude(
+		JujutsuGameplayTags::Character_SetByCaller_UsedComboCount,
+		static_cast<float>(InUsedComboCount)
+	);
+
+	return TargetASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data);
+}

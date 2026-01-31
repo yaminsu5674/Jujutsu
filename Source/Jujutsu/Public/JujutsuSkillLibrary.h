@@ -45,4 +45,11 @@ public:
 	/** SourceActor의 ASC로 스펙을 TargetActor의 ASC에 적용. MakeDamageEffectSpecHandle으로 만든 스펙 적용 시 사용 */
 	UFUNCTION(BlueprintCallable, Category = "Jujutsu|SkillLibrary", meta = (DisplayName = "Apply Effect Spec Handle To Target"))
 	static FActiveGameplayEffectHandle ApplyEffectSpecHandleToTarget(AActor* SourceActor, AActor* TargetActor, const FGameplayEffectSpecHandle& InSpecHandle);
+
+	/**
+	 * Source(시전자) ASC 없이 타겟에게 데미지 GE 적용. SimpleDamage Exec용.
+	 * TargetActor의 ASC가 스펙을 만들고 자기 자신에게 적용. InstigatorForContext는 컨텍스트용(예: 발사체), null 가능.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Jujutsu|SkillLibrary", meta = (DisplayName = "Apply Damage Effect To Target (No Source)"))
+	static FActiveGameplayEffectHandle ApplyDamageEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> EffectClass, float BaseDamage, int32 InUsedComboCount, int32 Level = 1, AActor* InstigatorForContext = nullptr);
 };

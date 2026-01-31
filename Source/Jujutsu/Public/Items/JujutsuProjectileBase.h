@@ -80,7 +80,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile", meta = (AllowPrivateAccess = "true"))
 	float Damage = 0.f;
 
-	/** 시전자. 블루프린트 Spawn Actor from Class 시 인풋 핀으로 설정. LaunchProjectile 호출 시 참조 해제됨. */
+	/** 시전자. 블루프린트 Spawn Actor from Class 시 인풋 핀으로 설정. LaunchProjectile 호출 시 참조 해제. (SimpleDamage 사용 시 데미지에는 미사용) */
 	UPROPERTY(BlueprintReadWrite, Category = "Projectile", meta = (ExposeOnSpawn = "true"))
 	TObjectPtr<AJujutsuBaseCharacter> Caster;
 
