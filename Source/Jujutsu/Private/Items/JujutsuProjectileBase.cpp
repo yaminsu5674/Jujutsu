@@ -168,32 +168,3 @@ void AJujutsuProjectileBase::OnProjectileEndOverlap_Implementation(UPrimitiveCom
 	OverlappedActors.Remove(OtherActor);
 	bIsOverlapping = (OverlappedActors.Num() > 0);
 }
-
-// void AJujutsuProjectileBase::HandleApplyProjectileDamage(APawn* InHitPawn, const FGameplayEventData& InPayload)
-// {
-// 	checkf(ProjectileDamageEffectSpecHandle.IsValid(), TEXT("Forgot to assign a valid spec handle to the projectile: %s"), *GetActorNameOrLabel());
-//
-// 	BP_OnProjectileOverlapFX(InHitPawn ? InHitPawn->GetActorLocation() : GetActorLocation());
-//
-// 	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(InHitPawn);
-// 	if (!TargetASC) return;
-//
-// 	UAbilitySystemComponent* InstigatorASC = GetInstigator()
-// 		? UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetInstigator())
-// 		: nullptr;
-// 	if (!InstigatorASC) return;
-//
-// 	FActiveGameplayEffectHandle ActiveHandle = InstigatorASC->ApplyGameplayEffectSpecToTarget(
-// 		*ProjectileDamageEffectSpecHandle.Data,
-// 		TargetASC
-// 	);
-//
-// 	if (ActiveHandle.WasSuccessfullyApplied())
-// 	{
-// 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
-// 			InHitPawn,
-// 			JujutsuGameplayTags::Character_Event_Hit,
-// 			InPayload
-// 		);
-// 	}
-// }
