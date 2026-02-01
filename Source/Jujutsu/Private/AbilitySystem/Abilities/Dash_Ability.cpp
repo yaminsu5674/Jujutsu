@@ -12,14 +12,29 @@ void UDash_Ability::ActivateAbility(const FGameplayAbilitySpecHandle Handle, con
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
+	CachedAbilityHandle = Handle;
+	CachedActorInfo = ActorInfo;
+	CachedActivationInfo = ActivationInfo;
+	bDashFinished = false;
+	bEndAbilityRequested = false;
+	bIsAirDashing = false;
+	bIsGroundDashing = false;
+	if (UWorld* World = GetWorld())
+	{
+		World->GetTimerManager().ClearTimer(DashGravityRestoreHandle);
+		World->GetTimerManager().ClearTimer(DashFrictionRestoreHandle);
+	}
+
 	AJujutsuBaseCharacter* Character = GetCharacterFromActorInfo();
 	if (!Character) return;
 
-	const bool bIsMoving = Character->GetVelocity().Size2D() > MovingSpeedThreshold;
+	UCharacterMovementComponent* MoveComp = Character->GetCharacterMovement();
+	// 이동 키를 누르고 있는지 = 가속도(입력 반영)가 0이 아닌지로 판단
+	const bool bIsMoving = MoveComp && MoveComp->GetCurrentAcceleration().SizeSquared2D() > 0.f;
 	if (!bIsMoving)
 	{
 		UJujutsuSkillLibrary::SetActorRotationToTarget(Character);
-		if (UCharacterMovementComponent* MoveComp = Character->GetCharacterMovement())
+		if (MoveComp)
 		{
 			MoveComp->StopMovementImmediately();
 		}
@@ -59,7 +74,7 @@ void UDash_Ability::ApplyMovementForAirDash(AJujutsuBaseCharacter* Character)
 	FVector DashDir = Character->GetActorForwardVector();
 	DashDir.Z = 0.f;
 	DashDir = DashDir.GetSafeNormal();
-	Character->LaunchCharacter(DashDir * RunSpeed * DashSpeedMultiplier, true, true);
+	Character->LaunchCharacter(DashDir * RunSpeed * AirDashSpeedMultiplier, true, true);
 
 	bIsAirDashing = true;
 	if (UWorld* World = GetWorld())
@@ -97,7 +112,7 @@ void UDash_Ability::ApplyMovementForGroundDash(AJujutsuBaseCharacter* Character)
 		FVector Vel = MoveComp->Velocity;
 		Vel.X = Vel.Y = 0.f;
 		MoveComp->Velocity = Vel;
-		MoveComp->AddImpulse(DashDir * RunSpeed * DashSpeedMultiplier, true);
+		MoveComp->AddImpulse(DashDir * RunSpeed * GroundDashSpeedMultiplier, true);
 	}
 
 	bIsGroundDashing = true;
@@ -125,6 +140,12 @@ void UDash_Ability::RestoreMovementAfterAirDash()
 			MoveComp->GravityScale = SavedGravityScale;
 		}
 	}
+	bDashFinished = true;
+	if (bEndAbilityRequested)
+	{
+		bEndAbilityRequested = false;
+		EndAbility(CachedAbilityHandle, CachedActorInfo, CachedActivationInfo, true, false);
+	}
 }
 
 void UDash_Ability::RestoreMovementAfterGroundDash()
@@ -144,10 +165,23 @@ void UDash_Ability::RestoreMovementAfterGroundDash()
 			MoveComp->BrakingDecelerationWalking = SavedBrakingDecelerationWalking;
 		}
 	}
+	bDashFinished = true;
+	if (bEndAbilityRequested)
+	{
+		bEndAbilityRequested = false;
+		EndAbility(CachedAbilityHandle, CachedActorInfo, CachedActivationInfo, true, false);
+	}
 }
 
 void UDash_Ability::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
+	// 대시가 끝나기 전(키 뗐을 때) 호출되면 무시. Restore 끝에서 bEndAbilityRequested 보고 그때 EndAbility 수행
+	if (!bDashFinished)
+	{
+		bEndAbilityRequested = true;
+		return;
+	}
+
 	if (UWorld* World = GetWorld())
 	{
 		World->GetTimerManager().ClearTimer(DashGravityRestoreHandle);

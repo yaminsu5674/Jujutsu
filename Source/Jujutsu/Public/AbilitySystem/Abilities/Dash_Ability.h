@@ -24,11 +24,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Jujutsu|Dash")
 	UAnimMontage* DashMontage = nullptr;
 
+	/** 공중 대시 시 RunSpeed에 곱하는 배율. 낮추면 덜 급격하게 날아감 */
 	UPROPERTY(EditDefaultsOnly, Category = "Jujutsu|Dash", meta = (ClampMin = "0"))
-	float DashSpeedMultiplier = 3.f;
+	float AirDashSpeedMultiplier = 2.f;
 
+	/** 지상 대시 시 RunSpeed에 곱하는 배율 */
 	UPROPERTY(EditDefaultsOnly, Category = "Jujutsu|Dash", meta = (ClampMin = "0"))
-	float MovingSpeedThreshold = 1.f;
+	float GroundDashSpeedMultiplier = 3.f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Jujutsu|Dash", meta = (ClampMin = "0"))
 	float AirDashGravityRestoreDelay = 0.6f;
@@ -53,6 +55,17 @@ protected:
 	/** 타이머 콜백 또는 EndAbility에서 호출. 복원 후 플래그 클리어 */
 	void RestoreMovementAfterAirDash();
 	void RestoreMovementAfterGroundDash();
+
+	/** 대시가 온전히 끝났는지. true일 때만 EndAbility에서 실제 종료 */
+	bool bDashFinished = false;
+
+	/** EndAbility가 이미 호출됐는지(키 뗐는지). Restore 끝에서 true면 그때 EndAbility 수행 */
+	bool bEndAbilityRequested = false;
+
+	/** 타이머 콜백에서 EndAbility 호출 시 사용 */
+	FGameplayAbilitySpecHandle CachedAbilityHandle;
+	const FGameplayAbilityActorInfo* CachedActorInfo = nullptr;
+	FGameplayAbilityActivationInfo CachedActivationInfo;
 
 	bool bIsAirDashing = false;
 	bool bIsGroundDashing = false;
