@@ -22,6 +22,11 @@ namespace JujutsuGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Attack_Special, "Character.Ability.Attack.Special");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Attack_Final, "Character.Ability.Attack.Final");
 
+	/** Character Ability Move (부모) */
+	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Move, "Character.Ability.Move");
+	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Move_Jump, "Character.Ability.Move.Jump");
+	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Move_Dash, "Character.Ability.Move.Dash");
+
 	/** Character Ability HitReact (피격 타입) */
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_HitReact_Stun, "Character.Ability.HitReact.Stun");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_HitReact_Light, "Character.Ability.HitReact.Light");
@@ -45,6 +50,7 @@ namespace JujutsuGameplayTags
 
 	/** Character Ability/Status (Enemy death 등) */
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Death, "Character.Ability.Death");
+	UE_DEFINE_GAMEPLAY_TAG(Character_Status_Hit, "Character.Status.Hit");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Status_Dead, "Character.Status.Dead");
 
 	/** Character SetByCaller tags */

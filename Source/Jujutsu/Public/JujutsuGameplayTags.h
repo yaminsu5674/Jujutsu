@@ -20,6 +20,11 @@ namespace JujutsuGameplayTags
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_Attack_Special);
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_Attack_Final);
 
+	/** Character Ability Move (부모. Move.Jump, Move.Dash 등 하위 전부 매칭) */
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_Move);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_Move_Jump);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_Move_Dash);
+
 	/** Character Ability HitReact (피격 타입) */
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_HitReact_Stun);
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_HitReact_Light);
@@ -43,6 +48,7 @@ namespace JujutsuGameplayTags
 
 	/** Character Ability/Status (Enemy death 등) */
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_Death);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Status_Hit);
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Status_Dead);
 
 	/** Character SetByCaller tags */

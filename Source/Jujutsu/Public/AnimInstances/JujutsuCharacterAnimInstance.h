@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AnimInstances/JujutsuBaseAnimInstance.h"
+#include "GameplayTagContainer.h"
 #include "JujutsuCharacterAnimInstance.generated.h"
 
 class AJujutsuBaseCharacter;
@@ -19,6 +20,7 @@ class JUJUTSU_API UJujutsuCharacterAnimInstance : public UJujutsuBaseAnimInstanc
 
 public:
 	virtual void NativeInitializeAnimation() override;
+	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 	virtual void NativeThreadSafeUpdateAnimation(float DeltaSeconds) override;
 
 protected:
@@ -33,4 +35,13 @@ protected:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "AnimData|LocomotionData")
 	bool bHasAcceleration;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "AnimData|LocomotionData")
+	bool bIsFalling;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimData|State")
+	bool bIsHit = false;
+
+	UFUNCTION(BlueprintCallable, Category = "AnimData|GameplayTags")
+	bool HasGameplayTag(FGameplayTag Tag) const;
 };
