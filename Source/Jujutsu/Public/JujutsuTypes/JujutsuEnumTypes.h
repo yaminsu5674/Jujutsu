@@ -6,6 +6,13 @@
 #include "JujutsuEnumTypes.generated.h"
 
 UENUM(BlueprintType)
+enum class EJujutsuAbilityInputType : uint8
+{
+	Pressed,	// 키 누르면 활성화, 한 번 실행
+	Keep		// 키 누르고 있는 동안 활성, 키 떼면 EndAbility
+};
+
+UENUM(BlueprintType)
 enum class EJujutsuAbilityActivationPolicy : uint8
 {
 	OnTriggered,

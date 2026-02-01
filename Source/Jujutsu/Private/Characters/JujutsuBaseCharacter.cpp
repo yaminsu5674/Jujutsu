@@ -28,36 +28,36 @@
 AJujutsuBaseCharacter::AJujutsuBaseCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UJujutsuCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
- // Set this character to call Tick() every frame. You can turn this off to improve performance if you don't need it.
- PrimaryActorTick.bCanEverTick = false;
- PrimaryActorTick.bStartWithTickEnabled = false;
+	// Set this character to call Tick() every frame. You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bStartWithTickEnabled = false;
 
- GetMesh()->bReceivesDecals = false;
- GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
-	
- GetCapsuleComponent()->InitCapsuleSize(42.f,96.f);
+	GetMesh()->bReceivesDecals = false;
+	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
+		
+	GetCapsuleComponent()->InitCapsuleSize(42.f,96.f);
 
- bUseControllerRotationPitch = false;
- bUseControllerRotationYaw = false;
- bUseControllerRotationRoll = false;
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = false;
+	bUseControllerRotationRoll = false;
 
- CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
- CameraBoom->SetupAttachment(GetRootComponent());
- CameraBoom->TargetArmLength = 200.f;
- CameraBoom->SocketOffset = FVector(0.f,55.f,65.f);
- CameraBoom->bUsePawnControlRotation = true;
+	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	CameraBoom->SetupAttachment(GetRootComponent());
+	CameraBoom->TargetArmLength = 200.f;
+	CameraBoom->SocketOffset = FVector(0.f,55.f,65.f);
+	CameraBoom->bUsePawnControlRotation = true;
 
- FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
- FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
- FollowCamera->bUsePawnControlRotation = false;
+	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
+	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
+	FollowCamera->bUsePawnControlRotation = false;
 
- GetCharacterMovement()->bOrientRotationToMovement = true;
- GetCharacterMovement()->RotationRate = FRotator(0.f,500.f,0.f);
- GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetCharacterMovement()->RotationRate = FRotator(0.f,500.f,0.f);
+	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 
- JujutsuAbilitySystemComponent = CreateDefaultSubobject<UJujutsuAbilitySystemComponent>(TEXT("JujutsuAbilitySystemComponent"));
+	JujutsuAbilitySystemComponent = CreateDefaultSubobject<UJujutsuAbilitySystemComponent>(TEXT("JujutsuAbilitySystemComponent"));
 
- JujutsuAttributeSet = CreateDefaultSubobject<UJujutsuAttributeSet>(TEXT("JujutsuAttributeSet"));
+	JujutsuAttributeSet = CreateDefaultSubobject<UJujutsuAttributeSet>(TEXT("JujutsuAttributeSet"));
 
 	CharacterCombatComponent = CreateDefaultSubobject<UJujutsuCharacterCombatComponent>(TEXT("CharacterCombatComponent"));
 

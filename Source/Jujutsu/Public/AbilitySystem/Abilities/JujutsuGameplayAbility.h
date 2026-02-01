@@ -31,6 +31,14 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "JujutsuAbility")
 	EJujutsuAbilityActivationPolicy AbilityActivationPolicy = EJujutsuAbilityActivationPolicy::OnTriggered;
 
+	/** 키 타입: Pressed=누르면 한 번 실행, Keep=누르고 있는 동안 활성·키 떼면 EndAbility */
+	UPROPERTY(EditDefaultsOnly, Category = "JujutsuAbility")
+	EJujutsuAbilityInputType AbilityInputType = EJujutsuAbilityInputType::Pressed;
+
+public:
+	FORCEINLINE EJujutsuAbilityInputType GetAbilityInputType() const { return AbilityInputType; }
+
+protected:
 	/** 이 어빌리티로 줄 데미지의 기본값 (스킬마다 에디터에서 지정) */
 	UPROPERTY(EditDefaultsOnly, Category = "Jujutsu|Damage", meta = (ClampMin = "0"))
 	float BaseDamage = 10.f;
