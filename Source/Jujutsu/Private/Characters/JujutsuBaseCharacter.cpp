@@ -51,7 +51,7 @@ AJujutsuBaseCharacter::AJujutsuBaseCharacter()
 
  GetCharacterMovement()->bOrientRotationToMovement = true;
  GetCharacterMovement()->RotationRate = FRotator(0.f,500.f,0.f);
- GetCharacterMovement()->MaxWalkSpeed = 400.f;
+ GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
  GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 
  JujutsuAbilitySystemComponent = CreateDefaultSubobject<UJujutsuAbilitySystemComponent>(TEXT("JujutsuAbilitySystemComponent"));

@@ -27,6 +27,10 @@ void UJujutsuCharacterAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaS
 	}
 
 	GroundSpeed = OwningCharacter->GetVelocity().Size2D();
+	if (OwningCharacter->RunSpeed > SMALL_NUMBER)
+	{
+		GroundSpeed /= OwningCharacter->RunSpeed;
+	}
 
 	bHasAcceleration = OwningMovementComponent->GetCurrentAcceleration().SizeSquared2D() > 0.f;
 
