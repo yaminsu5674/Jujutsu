@@ -37,6 +37,9 @@ protected:
 	bool bHasAcceleration;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "AnimData|LocomotionData")
+	float VerticalSpeed;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "AnimData|LocomotionData")
 	bool bIsFalling;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimData|State")
