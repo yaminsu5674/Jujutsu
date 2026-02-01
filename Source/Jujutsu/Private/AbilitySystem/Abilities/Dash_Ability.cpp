@@ -52,6 +52,11 @@ void UDash_Ability::ActivateAbility(const FGameplayAbilitySpecHandle Handle, con
 		ApplyMovementForGroundDash(Character);
 	}
 
+	if (UJujutsuCharacterMovementComponent* JutsuMove = Cast<UJujutsuCharacterMovementComponent>(MoveComp))
+	{
+		MoveComp->MaxWalkSpeed = JutsuMove->RunSpeed;
+	}
+
 	if (DashMontage && AnimInst)
 	{
 		Character->PlayAnimMontage(DashMontage);
@@ -194,6 +199,14 @@ void UDash_Ability::EndAbility(const FGameplayAbilitySpecHandle Handle, const FG
 	if (bIsGroundDashing)
 	{
 		RestoreMovementAfterGroundDash();
+	}
+
+	if (AJujutsuBaseCharacter* Character = GetCharacterFromActorInfo())
+	{
+		if (UJujutsuCharacterMovementComponent* JutsuMove = Cast<UJujutsuCharacterMovementComponent>(Character->GetCharacterMovement()))
+		{
+			JutsuMove->MaxWalkSpeed = JutsuMove->WalkSpeed;
+		}
 	}
 
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
