@@ -39,7 +39,7 @@ void UJujutsuCharacterAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaS
 	bHasAcceleration = OwningMovementComponent->GetCurrentAcceleration().SizeSquared2D() > 0.f;
 
 	VerticalSpeed = OwningCharacter->GetVelocity().Z;
-	bIsFalling = VerticalSpeed < -1.f;
+	bIsFalling = OwningMovementComponent->IsFalling();
 }
 
 void UJujutsuCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)

@@ -25,6 +25,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Jujutsu|SkillLibrary")
 	static void SetActorRotationToTarget(AJujutsuBaseCharacter* InCharacter);
 
+	/** 캐릭터 무브먼트의 중력 on/off. bEnable true면 중력 켜짐(GravityScale=1), false면 꺼짐(GravityScale=0) */
+	UFUNCTION(BlueprintCallable, Category = "Jujutsu|SkillLibrary", meta = (DisplayName = "Set Gravity Enabled"))
+	static void SetGravityEnabled(AJujutsuBaseCharacter* InCharacter, bool bEnable);
+
 	/** Object를 Target을 바라보도록 회전 (Yaw만 적용, +90도 오프셋) */
 	UFUNCTION(BlueprintCallable, Category = "Jujutsu|SkillLibrary", meta = (DisplayName = "Set Object Rotation To Target"))
 	static void SetObjectRotationToTarget(USceneComponent* Object, AActor* Target);

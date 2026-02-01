@@ -21,6 +21,10 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData|Movement", meta = (ClampMin = "0"))
 	float RunSpeed = 600.f;
 
+	/** 부모 GravityScale에 적용되는 기본값. 생성자에서 적용. 스킬 등에서 중력 껐다 켤 때 복원값으로 사용 */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData|Movement", meta = (ClampMin = "0"))
+	float DefaultGravityScale = 2.8f;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "CharacterData|Movement", meta = (ClampMin = "0"))
 	int32 JumpCount = 0;
 

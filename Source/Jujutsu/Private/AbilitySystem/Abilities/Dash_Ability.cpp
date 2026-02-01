@@ -50,12 +50,12 @@ void UDash_Ability::ActivateAbility(const FGameplayAbilitySpecHandle Handle, con
 	else
 	{
 		ApplyMovementForGroundDash(Character);
+		if (UJujutsuCharacterMovementComponent* JutsuMove = Cast<UJujutsuCharacterMovementComponent>(MoveComp))
+		{
+			MoveComp->MaxWalkSpeed = JutsuMove->RunSpeed;
+		}
 	}
 
-	if (UJujutsuCharacterMovementComponent* JutsuMove = Cast<UJujutsuCharacterMovementComponent>(MoveComp))
-	{
-		MoveComp->MaxWalkSpeed = JutsuMove->RunSpeed;
-	}
 
 	if (DashMontage && AnimInst)
 	{

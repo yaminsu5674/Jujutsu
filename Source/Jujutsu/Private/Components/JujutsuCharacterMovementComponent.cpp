@@ -6,4 +6,5 @@ UJujutsuCharacterMovementComponent::UJujutsuCharacterMovementComponent(const FOb
 	: Super(ObjectInitializer)
 {
 	MaxWalkSpeed = WalkSpeed;
+	GravityScale = DefaultGravityScale;
 }

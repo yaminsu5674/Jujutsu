@@ -13,12 +13,14 @@
 
 void UJujutsuGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
-	// Asset.Tags가 Character_Ability_Attack_* 인 어빌리티는 타겟 방향으로 회전
-	for (const FGameplayTag& Tag : AbilityTags)
+	// Asset.Tags가 Character_Ability_Attack_* 인 어빌리티는 타겟 방향으로 회전 + 중력 끔
+	for (const FGameplayTag& Tag : GetAssetTags())
 	{
 		if (Tag.MatchesTag(JujutsuGameplayTags::Character_Ability_Attack))
 		{
-			UJujutsuSkillLibrary::SetActorRotationToTarget(GetCharacterFromActorInfo());
+			AJujutsuBaseCharacter* Character = GetCharacterFromActorInfo();
+			UJujutsuSkillLibrary::SetActorRotationToTarget(Character);
+			UJujutsuSkillLibrary::SetGravityEnabled(Character, false);
 			break;
 		}
 	}
@@ -41,6 +43,16 @@ void UJujutsuGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* Act
 
 void UJujutsuGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
+	// Character_Ability_Attack 하위 어빌리티는 종료 시 중력 다시 켬
+	for (const FGameplayTag& Tag : GetAssetTags())
+	{
+		if (Tag.MatchesTag(JujutsuGameplayTags::Character_Ability_Attack))
+		{
+			UJujutsuSkillLibrary::SetGravityEnabled(GetCharacterFromActorInfo(), true);
+			break;
+		}
+	}
+
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
 	if (AbilityActivationPolicy == EJujutsuAbilityActivationPolicy::OnGiven)

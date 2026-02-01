@@ -5,7 +5,9 @@
 #include "AbilitySystemComponent.h"
 #include "Characters/JujutsuBaseCharacter.h"
 #include "Components/Combat/JujutsuCharacterCombatComponent.h"
+#include "Components/JujutsuCharacterMovementComponent.h"
 #include "Components/SceneComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PlayerController.h"
 #include "GameplayEffect.h"
 #include "JujutsuGameplayTags.h"
@@ -26,6 +28,31 @@ void UJujutsuSkillLibrary::SetActorRotationToTarget(AJujutsuBaseCharacter* InCha
 	FRotator LookAtRot = UKismetMathLibrary::FindLookAtRotation(CharLoc, TargetLoc);
 
 	InCharacter->SetActorRotation(FRotator(0.f, LookAtRot.Yaw, 0.f));
+}
+
+void UJujutsuSkillLibrary::SetGravityEnabled(AJujutsuBaseCharacter* InCharacter, bool bEnable)
+{
+	if (!InCharacter) return;
+
+	UCharacterMovementComponent* MoveComp = InCharacter->GetCharacterMovement();
+	if (!MoveComp) return;
+
+	if (bEnable)
+	{
+		if (const UJujutsuCharacterMovementComponent* JutsuMove = Cast<UJujutsuCharacterMovementComponent>(MoveComp))
+		{
+			MoveComp->GravityScale = JutsuMove->DefaultGravityScale;
+		}
+		else
+		{
+			MoveComp->GravityScale = 1.f;
+		}
+	}
+	else
+	{
+		MoveComp->StopMovementImmediately();
+		MoveComp->GravityScale = 0.f;
+	}
 }
 
 void UJujutsuSkillLibrary::SetObjectRotationToTarget(USceneComponent* Object, AActor* Target)
