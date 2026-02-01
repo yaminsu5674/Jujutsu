@@ -45,6 +45,10 @@ protected:
 	virtual void PossessedBy(AController* NewController) override;
 	//~ End APawn Interface
 
+	//~ Begin ACharacter Interface.
+	virtual void Landed(const FHitResult& Hit) override;
+	//~ End ACharacter Interface
+
 #if WITH_EDITOR
 	//~ Begin UObject Interface.
 	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;

@@ -21,5 +21,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData|Movement", meta = (ClampMin = "0"))
 	float RunSpeed = 600.f;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "CharacterData|Movement", meta = (ClampMin = "0"))
+	int32 JumpCount = 0;
+
 	UJujutsuCharacterMovementComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 };

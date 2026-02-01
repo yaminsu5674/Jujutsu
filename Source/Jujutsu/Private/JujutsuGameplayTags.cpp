@@ -8,6 +8,8 @@ namespace JujutsuGameplayTags
 {
 	/** Input Tags */
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Move, "InputTag.Move");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Jump, "InputTag.Jump");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_SuperJump, "InputTag.SuperJump");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_A, "InputTag.A");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_S, "InputTag.S");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_D, "InputTag.D");

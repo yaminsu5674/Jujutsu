@@ -123,6 +123,16 @@ void AJujutsuBaseCharacter::BeginPlay()
 	}
 }
 
+void AJujutsuBaseCharacter::Landed(const FHitResult& Hit)
+{
+	Super::Landed(Hit);
+
+	if (UJujutsuCharacterMovementComponent* JutsuMove = Cast<UJujutsuCharacterMovementComponent>(GetCharacterMovement()))
+	{
+		JutsuMove->JumpCount = 0;
+	}
+}
+
 void AJujutsuBaseCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
