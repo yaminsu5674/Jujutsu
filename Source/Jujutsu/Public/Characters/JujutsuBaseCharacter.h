@@ -15,6 +15,7 @@ class UJujutsuAbilitySystemComponent;
 class UJujutsuAttributeSet;
 class UDataAsset_StartUpDataBase;
 class UJujutsuCharacterCombatComponent;
+class UJujutsuCharacterMovementComponent;
 class UJujutsuPushComponent;
 class UWidgetComponent;
 
@@ -27,7 +28,7 @@ class JUJUTSU_API AJujutsuBaseCharacter : public ACharacter, public IAbilitySyst
 
 public:
 	// Sets default values for this character's properties
-	AJujutsuBaseCharacter();
+	AJujutsuBaseCharacter(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	//~ Begin IAbilitySystemInterface Interface.
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
@@ -103,12 +104,6 @@ protected:
 	void OnBodyCollisionBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData|Movement", meta = (ClampMin = "0"))
-	float WalkSpeed = 400.f;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData|Movement", meta = (ClampMin = "0"))
-	float RunSpeed = 600.f;
-
 	/** 바디 콜리전이 다른 Pawn과 BeginOverlap 시 브로드캐스트 */
 	FOnTargetInteractedDelegate OnBodyHitTarget;
 	/** 바디 콜리전이 다른 Pawn과 EndOverlap 시 브로드캐스트 */

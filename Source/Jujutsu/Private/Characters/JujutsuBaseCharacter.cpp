@@ -5,6 +5,7 @@
 #include "Characters/JujutsuBaseCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/BoxComponent.h"
+#include "Components/JujutsuCharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -24,7 +25,8 @@
 #include "JujutsuDebugHelper.h"
 
 // Sets default values
-AJujutsuBaseCharacter::AJujutsuBaseCharacter()
+AJujutsuBaseCharacter::AJujutsuBaseCharacter(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer.SetDefaultSubobjectClass<UJujutsuCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
  // Set this character to call Tick() every frame. You can turn this off to improve performance if you don't need it.
  PrimaryActorTick.bCanEverTick = false;
@@ -51,7 +53,6 @@ AJujutsuBaseCharacter::AJujutsuBaseCharacter()
 
  GetCharacterMovement()->bOrientRotationToMovement = true;
  GetCharacterMovement()->RotationRate = FRotator(0.f,500.f,0.f);
- GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
  GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 
  JujutsuAbilitySystemComponent = CreateDefaultSubobject<UJujutsuAbilitySystemComponent>(TEXT("JujutsuAbilitySystemComponent"));

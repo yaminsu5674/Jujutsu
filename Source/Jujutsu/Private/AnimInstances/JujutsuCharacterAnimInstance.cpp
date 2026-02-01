@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
 #include "Characters/JujutsuBaseCharacter.h"
+#include "Components/JujutsuCharacterMovementComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "JujutsuGameplayTags.h"
 
@@ -27,9 +28,12 @@ void UJujutsuCharacterAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaS
 	}
 
 	GroundSpeed = OwningCharacter->GetVelocity().Size2D();
-	if (OwningCharacter->RunSpeed > SMALL_NUMBER)
+	if (const UJujutsuCharacterMovementComponent* JutsuMove = Cast<UJujutsuCharacterMovementComponent>(OwningMovementComponent))
 	{
-		GroundSpeed /= OwningCharacter->RunSpeed;
+		if (JutsuMove->RunSpeed > SMALL_NUMBER)
+		{
+			GroundSpeed /= JutsuMove->RunSpeed;
+		}
 	}
 
 	bHasAcceleration = OwningMovementComponent->GetCurrentAcceleration().SizeSquared2D() > 0.f;
