@@ -3,6 +3,7 @@
 
 
 #include "Characters/JujutsuBaseCharacter.h"
+#include "AbilitySystemBlueprintLibrary.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/JujutsuCharacterMovementComponent.h"
@@ -21,6 +22,7 @@
 #include "Abilities/GameplayAbility.h"
 #include "GameFramework/GameModeBase.h"
 #include "GameModes/JujutsuPlayGameMode.h"
+#include "JujutsuGameplayTags.h"
 // Debug
 #include "JujutsuDebugHelper.h"
 
@@ -131,6 +133,8 @@ void AJujutsuBaseCharacter::Landed(const FHitResult& Hit)
 	{
 		JutsuMove->JumpCount = 0;
 	}
+
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, JujutsuGameplayTags::Character_Event_Land, FGameplayEventData());
 }
 
 void AJujutsuBaseCharacter::PossessedBy(AController* NewController)

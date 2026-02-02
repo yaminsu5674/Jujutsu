@@ -39,6 +39,9 @@ namespace JujutsuGameplayTags
 	/** Character Event Hit (부모. Character.Event.Hit — 하위 전부 매칭) */
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_Hit, "Character.Event.Hit");
 
+	/** Character Event Land (착지 이벤트) */
+	UE_DEFINE_GAMEPLAY_TAG(Character_Event_Land, "Character.Event.Land");
+
 	/** 공격자 전용. Character.Event.HitSuccess */
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_HitSuccess, "Character.Event.HitSuccess");
 
