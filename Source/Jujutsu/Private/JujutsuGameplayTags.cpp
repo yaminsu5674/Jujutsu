@@ -30,7 +30,8 @@ namespace JujutsuGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Move_Jump, "Character.Ability.Move.Jump");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Move_Dash, "Character.Ability.Move.Dash");
 
-	/** Character Ability HitReact (피격 타입) */
+	/** Character Ability HitReact (부모. Character.Ability.HitReact) */
+	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_HitReact, "Character.Ability.HitReact");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_HitReact_Stun, "Character.Ability.HitReact.Stun");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_HitReact_Light, "Character.Ability.HitReact.Light");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_HitReact_Middle, "Character.Ability.HitReact.Middle");
