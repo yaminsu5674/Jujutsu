@@ -4,6 +4,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "Characters/JujutsuBaseCharacter.h"
+#include "GameFramework/Character.h"
 #include "Components/Combat/JujutsuCharacterCombatComponent.h"
 #include "Components/JujutsuCharacterMovementComponent.h"
 #include "Components/SceneComponent.h"
@@ -53,6 +54,23 @@ void UJujutsuSkillLibrary::SetGravityEnabled(AJujutsuBaseCharacter* InCharacter,
 		MoveComp->StopMovementImmediately();
 		MoveComp->GravityScale = 0.f;
 	}
+}
+
+void UJujutsuSkillLibrary::LaunchCharacterFromSourceToTarget(AActor* SourceActor, ACharacter* TargetCharacter, float HorizontalForce, float VerticalForce)
+{
+	if (!SourceActor || !TargetCharacter) return;
+
+	FVector Dir2D = SourceActor->GetVelocity();
+	Dir2D.Z = 0.f;
+	if (Dir2D.IsNearlyZero())
+	{
+		Dir2D = SourceActor->GetActorForwardVector();
+		Dir2D.Z = 0.f;
+	}
+	Dir2D = Dir2D.GetSafeNormal();
+
+	FVector LaunchVelocity(Dir2D.X * HorizontalForce, Dir2D.Y * HorizontalForce, VerticalForce);
+	TargetCharacter->LaunchCharacter(LaunchVelocity, true, true);
 }
 
 void UJujutsuSkillLibrary::SetObjectRotationToTarget(USceneComponent* Object, AActor* Target)

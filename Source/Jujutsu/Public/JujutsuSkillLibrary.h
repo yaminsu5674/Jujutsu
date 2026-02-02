@@ -8,6 +8,7 @@
 #include "JujutsuSkillLibrary.generated.h"
 
 class AActor;
+class ACharacter;
 class AJujutsuBaseCharacter;
 class USceneComponent;
 class UGameplayEffect;
@@ -28,6 +29,10 @@ public:
 	/** 캐릭터 무브먼트의 중력 on/off. bEnable true면 중력 켜짐(GravityScale=1), false면 꺼짐(GravityScale=0) */
 	UFUNCTION(BlueprintCallable, Category = "Jujutsu|SkillLibrary", meta = (DisplayName = "Set Gravity Enabled"))
 	static void SetGravityEnabled(AJujutsuBaseCharacter* InCharacter, bool bEnable);
+
+	/** 소스 액터의 이동 방향으로 타겟 캐릭터를 LaunchCharacter. 방향 XY 정규화 후 Z=1, 수평/수직 힘으로 세기 조절 */
+	UFUNCTION(BlueprintCallable, Category = "Jujutsu|SkillLibrary")
+	static void LaunchCharacterFromSourceToTarget(AActor* SourceActor, ACharacter* TargetCharacter, float HorizontalForce, float VerticalForce);
 
 	/** Object를 Target을 바라보도록 회전 (Yaw만 적용, +90도 오프셋) */
 	UFUNCTION(BlueprintCallable, Category = "Jujutsu|SkillLibrary", meta = (DisplayName = "Set Object Rotation To Target"))
