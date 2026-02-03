@@ -43,6 +43,10 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Jujutsu|Combat")
 	FGameplayTag HitEventTag;
 
+	/** HitEventTag 설정. 블루프린트에서 호출 가능 */
+	UFUNCTION(BlueprintCallable, Category = "Jujutsu|Combat")
+	void SetHitEventTag(FGameplayTag InTag);
+
 protected:
 	virtual void BeginPlay() override;
 

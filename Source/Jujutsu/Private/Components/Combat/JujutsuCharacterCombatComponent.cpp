@@ -11,6 +11,11 @@ UJujutsuCharacterCombatComponent::UJujutsuCharacterCombatComponent()
 	HitEventTag = JujutsuGameplayTags::Character_Event_Hit_Light;
 }
 
+void UJujutsuCharacterCombatComponent::SetHitEventTag(FGameplayTag InTag)
+{
+	HitEventTag = InTag;
+}
+
 void UJujutsuCharacterCombatComponent::BeginPlay()
 {
 	Super::BeginPlay();
