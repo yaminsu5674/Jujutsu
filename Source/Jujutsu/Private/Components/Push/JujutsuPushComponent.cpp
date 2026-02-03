@@ -41,6 +41,20 @@ void UJujutsuPushComponent::RequestPush(const FPushRequest& Request)
 	if (ActivePush.Mode == EPushMode::AttachToSource && ActivePush.Source.IsValid())
 	{
 		PrevSourceLocation = ActivePush.Source->GetActorLocation();
+
+		// OffsetDistance > 0이면 시작 시 Source로부터 그 거리만큼 떨어진 위치로 이동
+		if (ActivePush.OffsetDistance > 0.f && OwnerCharacter.IsValid())
+		{
+			FVector OffsetDir = ActivePush.Source->GetActorForwardVector();
+			OffsetDir.Z = 0.f;
+			if (!OffsetDir.IsNearlyZero())
+			{
+				OffsetDir = OffsetDir.GetSafeNormal();
+				FVector TargetPos = PrevSourceLocation + OffsetDir * ActivePush.OffsetDistance;
+				TargetPos.Z = OwnerCharacter->GetActorLocation().Z; // 높이는 유지
+				OwnerCharacter->SetActorLocation(TargetPos);
+			}
+		}
 	}
 }
 

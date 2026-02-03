@@ -36,6 +36,10 @@ struct FPushRequest
 	UPROPERTY(BlueprintReadWrite)
 	float FollowScale = 1.f;
 
+	/** AttachToSource 모드에서 시작 시 Source로부터 떨어질 거리. 0=Source에 딱 붙음, >0이면 Source Forward 방향으로 그 거리만큼 떨어진 위치에서 따라감 */
+	UPROPERTY(BlueprintReadWrite)
+	float OffsetDistance = 0.f;
+
 	UPROPERTY(BlueprintReadWrite)
 	FGameplayTag PushType;
 };
