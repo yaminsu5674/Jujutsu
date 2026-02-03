@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/JujutsuPawnExtensionComponentBase.h"
+#include "GameplayTagContainer.h"
 #include "JujutsuTypes/JujutsuEnumTypes.h"
 #include "JujutsuCharacterCombatComponent.generated.h"
 
@@ -20,6 +21,7 @@ class JUJUTSU_API UJujutsuCharacterCombatComponent : public UJujutsuPawnExtensio
 	GENERATED_BODY()
 
 public:
+	UJujutsuCharacterCombatComponent();
 	/** 전부 켜기/끄기 */
 	UFUNCTION(BlueprintCallable, Category = "Jujutsu|Combat")
 	void ToggleBodyCollision(bool bShouldEnable);
@@ -36,6 +38,10 @@ public:
 	/** 현재 타겟 (약한 참조). 타겟 락 등에서 여기서 관리 */
 	UPROPERTY(BlueprintReadOnly, Category = "Jujutsu|Combat")
 	TWeakObjectPtr<AJujutsuBaseCharacter> Target;
+
+	/** 바디 콜리전 히트 시 피격자에게 전달할 이벤트 태그 */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Jujutsu|Combat")
+	FGameplayTag HitEventTag;
 
 protected:
 	virtual void BeginPlay() override;

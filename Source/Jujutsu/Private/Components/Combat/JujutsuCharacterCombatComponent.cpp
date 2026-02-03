@@ -6,6 +6,11 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "JujutsuGameplayTags.h"
 
+UJujutsuCharacterCombatComponent::UJujutsuCharacterCombatComponent()
+{
+	HitEventTag = JujutsuGameplayTags::Character_Event_Hit_Light;
+}
+
 void UJujutsuCharacterCombatComponent::BeginPlay()
 {
 	Super::BeginPlay();
@@ -86,11 +91,17 @@ void UJujutsuCharacterCombatComponent::OnHitTargetActor(AActor* HitActor)
 	Data.Target = HitActor;        // 맞은 쪽
 
 	// 공격자에게만 HitSuccess 전달 → 블루프린트에서 이 이벤트 대기 후 Data.Target에게 피격반응/데미지 적용
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
-		OwningPawn,
-		JujutsuGameplayTags::Character_Event_HitSuccess,
-		Data
-	);
+	// UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+	// 	OwningPawn,
+	// 	JujutsuGameplayTags::Character_Event_HitSuccess,
+	// 	Data
+	// );
+
+	// 피격자에게 HitEventTag 전달
+	if (HitEventTag.IsValid())
+	{
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(HitActor, HitEventTag, Data);
+	}
 }
 
 void UJujutsuCharacterCombatComponent::OnPulledFromTargetActor(AActor* InteractedActor)

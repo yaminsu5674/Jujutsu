@@ -18,4 +18,7 @@ class JUJUTSU_API UJujutsuAbilitySystemComponent : public UAbilitySystemComponen
 public:
 	void OnAbilityInputPressed(const FGameplayTag& InInputTag);
 	void OnAbilityInputReleased(const FGameplayTag& InInputTag);
+
+protected:
+	virtual int32 HandleGameplayEvent(FGameplayTag EventTag, const FGameplayEventData* Payload) override;
 };

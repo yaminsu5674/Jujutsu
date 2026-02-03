@@ -2,7 +2,21 @@
 
 #include "AbilitySystem/JujutsuAbilitySystemComponent.h"
 #include "AbilitySystem/Abilities/JujutsuGameplayAbility.h"
+#include "JujutsuGameplayTags.h"
 #include "JujutsuTypes/JujutsuEnumTypes.h"
+
+int32 UJujutsuAbilitySystemComponent::HandleGameplayEvent(FGameplayTag EventTag, const FGameplayEventData* Payload)
+{
+	// Character.Event.Hit (하위 포함) 수신 시 실행 중인 Character.Ability.HitReact (하위 포함) 어빌리티 취소
+	if (EventTag.MatchesTag(JujutsuGameplayTags::Character_Event_Hit))
+	{
+		FGameplayTagContainer CancelTags;
+		CancelTags.AddTag(JujutsuGameplayTags::Character_Ability_HitReact);
+		CancelAbilities(&CancelTags, nullptr, nullptr);
+	}
+
+	return Super::HandleGameplayEvent(EventTag, Payload);
+}
 
 void UJujutsuAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InInputTag)
 {
