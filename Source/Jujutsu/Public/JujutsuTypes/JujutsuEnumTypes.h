@@ -39,3 +39,12 @@ enum class EPushMode : uint8
 	AttachToSource,
 	Impulse
 };
+
+UENUM(BlueprintType)
+enum class EBodyCollisionPart : uint8
+{
+	LeftHand,
+	RightHand,
+	LeftFoot,
+	RightFoot
+};

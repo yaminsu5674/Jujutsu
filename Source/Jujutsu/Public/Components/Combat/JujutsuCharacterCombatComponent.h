@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/JujutsuPawnExtensionComponentBase.h"
+#include "JujutsuTypes/JujutsuEnumTypes.h"
 #include "JujutsuCharacterCombatComponent.generated.h"
 
 class AActor;
@@ -19,9 +20,13 @@ class JUJUTSU_API UJujutsuCharacterCombatComponent : public UJujutsuPawnExtensio
 	GENERATED_BODY()
 
 public:
-	/** 양손·양발 콜리전 박스 4개를 한 번에 켜거나 끔 */
+	/** 전부 켜기/끄기 */
 	UFUNCTION(BlueprintCallable, Category = "Jujutsu|Combat")
 	void ToggleBodyCollision(bool bShouldEnable);
+
+	/** 지정한 부위(1~4개)의 콜리전만 켜거나 끔. Parts 비어있으면 전부 켜기/끄기 */
+	UFUNCTION(BlueprintCallable, Category = "Jujutsu|Combat", meta = (AutoCreateRefTerm = "Parts"))
+	void ToggleBodyCollisionParts(bool bShouldEnable, const TArray<EBodyCollisionPart>& Parts);
 
 	/** 바디 콜리전 BeginOverlap 시 호출 (히트 시) */
 	virtual void OnHitTargetActor(AActor* HitActor);
