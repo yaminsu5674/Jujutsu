@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/JujutsuPawnExtensionComponentBase.h"
 #include "GameplayTagContainer.h"
+#include "GameplayEffect.h"
 #include "JujutsuTypes/JujutsuEnumTypes.h"
 #include "JujutsuCharacterCombatComponent.generated.h"
 
@@ -43,9 +44,21 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Jujutsu|Combat")
 	FGameplayTag HitEventTag;
 
+	/** 바디 콜리전 히트 시 피격자에게 적용할 데미지 게임플레이 이펙트 (지정 시 OnHitTargetActor에서 적용) */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Jujutsu|Combat|Damage")
+	TSubclassOf<UGameplayEffect> DamageEffectClass;
+
+	/** DamageEffectClass 사용 시 적용할 기본 데미지 */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Jujutsu|Combat|Damage", meta = (ClampMin = "0"))
+	float Damage = 100.f;
+
 	/** HitEventTag 설정. 블루프린트에서 호출 가능 */
 	UFUNCTION(BlueprintCallable, Category = "Jujutsu|Combat")
 	void SetHitEventTag(FGameplayTag InTag);
+
+	/** 베이스 데미지 설정. 블루프린트에서 호출 가능 */
+	UFUNCTION(BlueprintCallable, Category = "Jujutsu|Combat|Damage", meta = (ClampMin = "0"))
+	void SetBaseDamage(float InDamage);
 
 protected:
 	virtual void BeginPlay() override;

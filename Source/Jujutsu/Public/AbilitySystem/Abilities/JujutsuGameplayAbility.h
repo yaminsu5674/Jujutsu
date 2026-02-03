@@ -40,7 +40,7 @@ public:
 
 protected:
 	/** 이 어빌리티로 줄 데미지의 기본값 (스킬마다 에디터에서 지정) */
-	UPROPERTY(EditDefaultsOnly, Category = "Jujutsu|Damage", meta = (ClampMin = "0"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Jujutsu|Damage", meta = (ClampMin = "0"))
 	float BaseDamage = 10.f;
 
 	UFUNCTION(BlueprintPure, Category = "Jujutsu|Ability")

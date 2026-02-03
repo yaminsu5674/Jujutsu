@@ -5,6 +5,7 @@
 #include "Components/BoxComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "JujutsuGameplayTags.h"
+#include "JujutsuSkillLibrary.h"
 
 UJujutsuCharacterCombatComponent::UJujutsuCharacterCombatComponent()
 {
@@ -14,6 +15,11 @@ UJujutsuCharacterCombatComponent::UJujutsuCharacterCombatComponent()
 void UJujutsuCharacterCombatComponent::SetHitEventTag(FGameplayTag InTag)
 {
 	HitEventTag = InTag;
+}
+
+void UJujutsuCharacterCombatComponent::SetBaseDamage(float InDamage)
+{
+	Damage = FMath::Max(0.f, InDamage);
 }
 
 void UJujutsuCharacterCombatComponent::BeginPlay()
@@ -106,6 +112,19 @@ void UJujutsuCharacterCombatComponent::OnHitTargetActor(AActor* HitActor)
 	if (HitEventTag.IsValid())
 	{
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(HitActor, HitEventTag, Data);
+	}
+
+	// 데미지 적용
+	if (DamageEffectClass)
+	{
+		UJujutsuSkillLibrary::ApplyDamageEffectToTarget(
+			HitActor,
+			DamageEffectClass,
+			Damage,
+			0,   // UsedComboCount (바디 콜리전은 0)
+			1,   // Level
+			OwningPawn // InstigatorForContext (공격자)
+		);
 	}
 }
 
