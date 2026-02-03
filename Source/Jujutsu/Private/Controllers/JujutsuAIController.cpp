@@ -1,12 +1,9 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-
-
 #include "Controllers/JujutsuAIController.h"
 #include "Characters/JujutsuBaseCharacter.h"
-
-// Debug
-#include "JujutsuDebugHelper.h"
+#include "BehaviorTree/BlackboardComponent.h"
+#include "GameFramework/PlayerController.h"
 
 AJujutsuAIController::AJujutsuAIController()
 {
@@ -15,9 +12,18 @@ AJujutsuAIController::AJujutsuAIController()
 void AJujutsuAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
+}
 
-	if (AJujutsuBaseCharacter* AICharacter = Cast<AJujutsuBaseCharacter>(InPawn))
+void AJujutsuAIController::InitBlackboard()
+{
+	APlayerController* PC = GetWorld() ? GetWorld()->GetFirstPlayerController() : nullptr;
+	if (!PC || !PC->GetPawn()) return;
+
+	AJujutsuBaseCharacter* PlayerCharacter = Cast<AJujutsuBaseCharacter>(PC->GetPawn());
+	if (!PlayerCharacter) return;
+
+	if (UBlackboardComponent* BlackboardComponent = GetBlackboardComponent())
 	{
-		//Debug::Print(TEXT("Possessed by AI Controller"));
+		BlackboardComponent->SetValueAsObject(FName("TargetActor"), PlayerCharacter);
 	}
 }
