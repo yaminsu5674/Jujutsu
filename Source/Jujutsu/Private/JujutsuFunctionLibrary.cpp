@@ -40,9 +40,9 @@ bool UJujutsuFunctionLibrary::NativeDoesActorHaveTag(AActor* InActor, FGameplayT
 	return ASC->HasMatchingGameplayTag(TagToCheck);
 }
 
-void UJujutsuFunctionLibrary::BP_DoesActorHaveTag(AActor* InActor, FGameplayTag TagToCheck, EJujutsuConfirmType& OutConfirmType)
+bool UJujutsuFunctionLibrary::BP_DoesActorHaveTag(AActor* InActor, FGameplayTag TagToCheck)
 {
-	OutConfirmType = NativeDoesActorHaveTag(InActor, TagToCheck) ? EJujutsuConfirmType::Yes : EJujutsuConfirmType::No;
+	return NativeDoesActorHaveTag(InActor, TagToCheck);
 }
 
 UJujutsuCharacterCombatComponent* UJujutsuFunctionLibrary::NativeGetCharacterCombatComponentFromActor(AActor* InActor)

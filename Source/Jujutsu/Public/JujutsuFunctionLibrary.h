@@ -43,8 +43,8 @@ public:
 
 	static bool NativeDoesActorHaveTag(AActor* InActor, FGameplayTag TagToCheck);
 
-	UFUNCTION(BlueprintCallable, Category = "Jujutsu|FunctionLibrary", meta = (DisplayName = "Does Actor Have Tag", ExpandEnumAsExecs = "OutConfirmType"))
-	static void BP_DoesActorHaveTag(AActor* InActor, FGameplayTag TagToCheck, EJujutsuConfirmType& OutConfirmType);
+	UFUNCTION(BlueprintCallable, Category = "Jujutsu|FunctionLibrary", meta = (DisplayName = "Does Actor Have Tag"))
+	static bool BP_DoesActorHaveTag(AActor* InActor, FGameplayTag TagToCheck);
 
 	static UJujutsuCharacterCombatComponent* NativeGetCharacterCombatComponentFromActor(AActor* InActor);
 
