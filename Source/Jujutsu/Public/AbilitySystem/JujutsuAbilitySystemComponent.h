@@ -19,6 +19,9 @@ public:
 	void OnAbilityInputPressed(const FGameplayTag& InInputTag);
 	void OnAbilityInputReleased(const FGameplayTag& InInputTag);
 
+	UFUNCTION(BlueprintCallable, Category = "Jujutsu|Ability")
+	bool TryActivateAbilityByTag(FGameplayTag AbilityTagToActivate);
+
 protected:
 	virtual int32 HandleGameplayEvent(FGameplayTag EventTag, const FGameplayEventData* Payload) override;
 };
