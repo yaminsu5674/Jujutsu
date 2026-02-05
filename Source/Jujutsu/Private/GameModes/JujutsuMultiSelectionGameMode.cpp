@@ -1,3 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "GameModes/JujutsuMultiSelectionGameMode.h"
+
+AJujutsuMultiSelectionGameMode::AJujutsuMultiSelectionGameMode()
+{
+	bUseSeamlessTravel = true;
+}

@@ -9,6 +9,8 @@
 #include "JujutsuHeroController.generated.h"
 
 class UDataAsset_InputConfig;
+class AJujutsuBaseCharacter;
+class AJujutsuPlayerState;
 struct FInputActionValue;
 
 /**
@@ -30,6 +32,26 @@ public:
 
 	/** PossessedBy 시 스타트업데이터의 ActivateOnGivenAbilities에 append될 어빌리티 목록 (베이스캐릭터에서 사용) */
 	const TArray<TSubclassOf<UGameplayAbility>>& GetAbilitiesToGrantWithCharacterInit() const { return AbilitiesToGrantWithCharacterInit; }
+
+	/** 자신의 PlayerState에 저장된 HeroCharacterClass 가져오기 (PlayerState 없으면 null) */
+	UFUNCTION(BlueprintCallable, Category = "Jujutsu|Controller")
+	TSubclassOf<AJujutsuBaseCharacter> GetHeroCharacterClass() const;
+
+	/** 자신의 PlayerState에 HeroCharacterClass 저장 */
+	UFUNCTION(BlueprintCallable, Category = "Jujutsu|Controller")
+	void SetHeroCharacterClass(TSubclassOf<AJujutsuBaseCharacter> InClass);
+
+	/** 자신의 PlayerState에 저장된 EnemyCharacterClass 가져오기 (PlayerState 없으면 null) */
+	UFUNCTION(BlueprintCallable, Category = "Jujutsu|Controller")
+	TSubclassOf<AJujutsuBaseCharacter> GetEnemyCharacterClass() const;
+
+	/** 자신의 PlayerState에 EnemyCharacterClass 저장 */
+	UFUNCTION(BlueprintCallable, Category = "Jujutsu|Controller")
+	void SetEnemyCharacterClass(TSubclassOf<AJujutsuBaseCharacter> InClass);
+
+	/** 서버를 지정 레벨로 이동 (클라이언트 호출 시 서버 RPC로 전달됨). 예: /Game/Maps/MyMap */
+	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "Jujutsu|Controller")
+	void TravelServer(const FString& LevelPath);
 
 protected:
 	virtual void OnPossess(APawn* InPawn) override;

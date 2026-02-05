@@ -4,6 +4,7 @@
 
 #include "Controllers/JujutsuHeroController.h"
 #include "Characters/JujutsuBaseCharacter.h"
+#include "Controllers/JujutsuPlayerState.h"
 #include "AbilitySystem/JujutsuAbilitySystemComponent.h"
 #include "GameFramework/Character.h"
 #include "Camera/CameraComponent.h"
@@ -17,6 +18,48 @@
 
 AJujutsuHeroController::AJujutsuHeroController()
 {
+}
+
+TSubclassOf<AJujutsuBaseCharacter> AJujutsuHeroController::GetHeroCharacterClass() const
+{
+	if (AJujutsuPlayerState* PS = GetPlayerState<AJujutsuPlayerState>())
+	{
+		return PS->GetHeroCharacterClass();
+	}
+	return nullptr;
+}
+
+void AJujutsuHeroController::SetHeroCharacterClass(TSubclassOf<AJujutsuBaseCharacter> InClass)
+{
+	if (AJujutsuPlayerState* PS = GetPlayerState<AJujutsuPlayerState>())
+	{
+		PS->SetHeroCharacterClass(InClass);
+	}
+}
+
+TSubclassOf<AJujutsuBaseCharacter> AJujutsuHeroController::GetEnemyCharacterClass() const
+{
+	if (AJujutsuPlayerState* PS = GetPlayerState<AJujutsuPlayerState>())
+	{
+		return PS->GetEnemyCharacterClass();
+	}
+	return nullptr;
+}
+
+void AJujutsuHeroController::SetEnemyCharacterClass(TSubclassOf<AJujutsuBaseCharacter> InClass)
+{
+	if (AJujutsuPlayerState* PS = GetPlayerState<AJujutsuPlayerState>())
+	{
+		PS->SetEnemyCharacterClass(InClass);
+	}
+}
+
+void AJujutsuHeroController::TravelServer_Implementation(const FString& LevelPath)
+{
+	if (UWorld* World = GetWorld())
+	{
+		World->ServerTravel(LevelPath);
+	}
 }
 
 void AJujutsuHeroController::OnPossess(APawn* InPawn)
