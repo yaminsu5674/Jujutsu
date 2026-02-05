@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "GameplayTagContainer.h"
 #include "Abilities/GameplayAbility.h"
+#include "Engine/World.h"
 #include "JujutsuHeroController.generated.h"
 
 class UDataAsset_InputConfig;
@@ -49,7 +50,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Jujutsu|Controller")
 	void SetEnemyCharacterClass(TSubclassOf<AJujutsuBaseCharacter> InClass);
 
-	/** 서버를 지정 레벨로 이동 (클라이언트 호출 시 서버 RPC로 전달됨). 예: /Game/Maps/MyMap */
+	/** 서버를 지정 레벨로 이동. 블루프린트에서 레벨 에셋 선택 시 클라이언트에서 경로 변환 후 서버로 전달 */
+	UFUNCTION(BlueprintCallable, Category = "Jujutsu|Controller", meta = (AllowedClasses = "/Script/Engine.World"))
+	void TravelServerByLevel(const TSoftObjectPtr<UWorld>& Level);
+
+	/** 서버 RPC. 경로 문자열로 ServerTravel 호출 (내부용, TravelServerByLevel에서 호출) */
 	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "Jujutsu|Controller")
 	void TravelServer(const FString& LevelPath);
 

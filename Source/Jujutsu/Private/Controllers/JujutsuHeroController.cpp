@@ -54,11 +54,24 @@ void AJujutsuHeroController::SetEnemyCharacterClass(TSubclassOf<AJujutsuBaseChar
 	}
 }
 
+void AJujutsuHeroController::TravelServerByLevel(const TSoftObjectPtr<UWorld>& Level)
+{
+	const FString LevelPath = Level.ToSoftObjectPath().GetLongPackageName();
+	UE_LOG(LogTemp, Log, TEXT("[TravelServerByLevel] LevelPath=%s"), *LevelPath);
+	TravelServer(LevelPath);
+}
+
 void AJujutsuHeroController::TravelServer_Implementation(const FString& LevelPath)
 {
-	if (UWorld* World = GetWorld())
+	UE_LOG(LogTemp, Log, TEXT("[TravelServer_Implementation] LevelPath=%s, HasAuthority=%d"), *LevelPath, HasAuthority());
+	if (UWorld* World = GetWorld(); World && !LevelPath.IsEmpty())
 	{
-		World->ServerTravel(LevelPath);
+		World->SeamlessTravel(LevelPath, true);
+		UE_LOG(LogTemp, Log, TEXT("[TravelServer_Implementation] SeamlessTravel called"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[TravelServer_Implementation] Skipped - World=%d, LevelPathEmpty=%d"), World != nullptr, LevelPath.IsEmpty());
 	}
 }
 
