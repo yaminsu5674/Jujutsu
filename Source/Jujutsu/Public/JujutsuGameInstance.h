@@ -25,18 +25,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Jujutsu|GameInstance")
 	void SetEnemyCharacterClass(TSubclassOf<AJujutsuBaseCharacter> InClass) { EnemyCharacterClass = InClass; }
 
-	/** Seamless Travel로 플레이 맵 진입 (PlayerState 유지). 호스트 전용. */
-	UFUNCTION(BlueprintCallable, Category = "Jujutsu|GameInstance")
-	void StartListenServer(const FString& MapName);
-
-	/** 지정 IP 서버에 조인. GameInstance의 Hero/Enemy 선택이 서버 PlayerState로 전달됨. */
-	UFUNCTION(BlueprintCallable, Category = "Jujutsu|GameInstance")
-	void JoinAsClient(const FString& IPAddress);
-
-	/** Seamless Travel로 로비(멀티선택맵) 복귀 (PlayerState 유지). */
-	UFUNCTION(BlueprintCallable, Category = "Jujutsu|GameInstance")
-	void LeaveGame();
-
 private:
 	UPROPERTY()
 	TSubclassOf<AJujutsuBaseCharacter> HeroCharacterClass;
