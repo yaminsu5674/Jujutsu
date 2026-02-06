@@ -5,7 +5,9 @@
 #include "Controllers/JujutsuHeroController.h"
 #include "Characters/JujutsuBaseCharacter.h"
 #include "Controllers/JujutsuPlayerState.h"
+#include "JujutsuGameInstance.h"
 #include "AbilitySystem/JujutsuAbilitySystemComponent.h"
+#include "GameFramework/GameModeBase.h"
 #include "GameFramework/Character.h"
 #include "Camera/CameraComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -35,6 +37,10 @@ void AJujutsuHeroController::SetHeroCharacterClass(TSubclassOf<AJujutsuBaseChara
 	{
 		PS->SetHeroCharacterClass(InClass);
 	}
+	if (UJujutsuGameInstance* GI = GetGameInstance<UJujutsuGameInstance>())
+	{
+		GI->SetHeroCharacterClass(InClass);
+	}
 }
 
 TSubclassOf<AJujutsuBaseCharacter> AJujutsuHeroController::GetEnemyCharacterClass() const
@@ -51,6 +57,10 @@ void AJujutsuHeroController::SetEnemyCharacterClass(TSubclassOf<AJujutsuBaseChar
 	if (AJujutsuPlayerState* PS = GetPlayerState<AJujutsuPlayerState>())
 	{
 		PS->SetEnemyCharacterClass(InClass);
+	}
+	if (UJujutsuGameInstance* GI = GetGameInstance<UJujutsuGameInstance>())
+	{
+		GI->SetEnemyCharacterClass(InClass);
 	}
 }
 
@@ -72,6 +82,36 @@ void AJujutsuHeroController::TravelServer_Implementation(const FString& LevelPat
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("[TravelServer_Implementation] Skipped - World=%d, LevelPathEmpty=%d"), World != nullptr, LevelPath.IsEmpty());
+	}
+}
+
+void AJujutsuHeroController::ServerSetPlayerSelection_Implementation(TSubclassOf<AJujutsuBaseCharacter> HeroClass, TSubclassOf<AJujutsuBaseCharacter> EnemyClass)
+{
+	if (AJujutsuPlayerState* PS = GetPlayerState<AJujutsuPlayerState>())
+	{
+		PS->SetHeroCharacterClass(HeroClass);
+		PS->SetEnemyCharacterClass(EnemyClass);
+		if (AGameModeBase* GM = GetWorld() ? GetWorld()->GetAuthGameMode() : nullptr)
+		{
+			GM->RestartPlayer(this);
+		}
+	}
+}
+
+void AJujutsuHeroController::BeginPlay()
+{
+	Super::BeginPlay();
+	if (IsLocalController() && GetNetMode() == NM_Client)
+	{
+		if (UJujutsuGameInstance* GI = GetGameInstance<UJujutsuGameInstance>())
+		{
+			TSubclassOf<AJujutsuBaseCharacter> HeroClass = GI->GetHeroCharacterClass();
+			TSubclassOf<AJujutsuBaseCharacter> EnemyClass = GI->GetEnemyCharacterClass();
+			if (HeroClass || EnemyClass)
+			{
+				ServerSetPlayerSelection(HeroClass, EnemyClass);
+			}
+		}
 	}
 }
 

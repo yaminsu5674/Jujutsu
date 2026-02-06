@@ -58,7 +58,12 @@ public:
 	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "Jujutsu|Controller")
 	void TravelServer(const FString& LevelPath);
 
+	/** 조인 시 클라이언트의 GameInstance 선택을 서버 PlayerState로 전달. 클라이언트 전용 RPC. */
+	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "Jujutsu|Controller")
+	void ServerSetPlayerSelection(TSubclassOf<AJujutsuBaseCharacter> HeroClass, TSubclassOf<AJujutsuBaseCharacter> EnemyClass);
+
 protected:
+	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* InPawn) override;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Jujutsu|Controller", meta = (AllowPrivateAccess = "true"))

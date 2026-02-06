@@ -6,6 +6,8 @@
 #include "GameFramework/GameMode.h"
 #include "JujutsuBaseGameMode.generated.h"
 
+class AJujutsuPlayerState;
+
 /**
  * 
  */
@@ -13,5 +15,7 @@ UCLASS()
 class JUJUTSU_API AJujutsuBaseGameMode : public AGameMode
 {
 	GENERATED_BODY()
-	
+
+public:
+	AJujutsuBaseGameMode();
 };
