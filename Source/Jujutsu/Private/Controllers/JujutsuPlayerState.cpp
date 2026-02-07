@@ -2,6 +2,14 @@
 
 #include "Controllers/JujutsuPlayerState.h"
 
+void AJujutsuPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AJujutsuPlayerState, HeroCharacterClass);
+	DOREPLIFETIME(AJujutsuPlayerState, EnemyCharacterClass);
+	DOREPLIFETIME(AJujutsuPlayerState, bIsReady);
+}
+
 void AJujutsuPlayerState::CopyProperties(APlayerState* NewPlayerState)
 {
 	Super::CopyProperties(NewPlayerState);
@@ -9,5 +17,6 @@ void AJujutsuPlayerState::CopyProperties(APlayerState* NewPlayerState)
 	{
 		JPS->SetHeroCharacterClass(GetHeroCharacterClass());
 		JPS->SetEnemyCharacterClass(GetEnemyCharacterClass());
+		JPS->SetIsReady(GetIsReady());
 	}
 }

@@ -62,6 +62,18 @@ public:
 	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "Jujutsu|Controller")
 	void ServerSetPlayerSelection(TSubclassOf<AJujutsuBaseCharacter> HeroClass, TSubclassOf<AJujutsuBaseCharacter> EnemyClass);
 
+	/** 위젯에서 호출. 서버에 캐릭터 선택 전달 */
+	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "Jujutsu|Controller")
+	void Server_SetSelectedCharacter(TSubclassOf<AJujutsuBaseCharacter> InClass);
+
+	/** 위젯에서 호출. 서버에 준비 완료 전달 */
+	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "Jujutsu|Controller")
+	void Server_SetReady(bool bReady);
+
+	/** GameMode에서 호출. 클라이언트 화면에 카운트다운 표시 (DebugHelper) */
+	UFUNCTION(Client, Reliable, Category = "Jujutsu|Controller")
+	void Client_ShowCountdown(int32 SecondsRemaining);
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* InPawn) override;

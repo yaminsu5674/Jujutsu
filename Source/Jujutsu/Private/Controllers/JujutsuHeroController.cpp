@@ -5,6 +5,7 @@
 #include "Controllers/JujutsuHeroController.h"
 #include "Characters/JujutsuBaseCharacter.h"
 #include "Controllers/JujutsuPlayerState.h"
+#include "GameModes/JujutsuMultiSelectionGameMode.h"
 #include "JujutsuGameInstance.h"
 #include "AbilitySystem/JujutsuAbilitySystemComponent.h"
 #include "GameFramework/GameModeBase.h"
@@ -98,6 +99,35 @@ void AJujutsuHeroController::ServerSetPlayerSelection_Implementation(TSubclassOf
 	}
 }
 
+void AJujutsuHeroController::Server_SetSelectedCharacter_Implementation(TSubclassOf<AJujutsuBaseCharacter> InClass)
+{
+	if (AJujutsuPlayerState* PS = GetPlayerState<AJujutsuPlayerState>())
+	{
+		PS->SetHeroCharacterClass(InClass);
+	}
+}
+
+void AJujutsuHeroController::Server_SetReady_Implementation(bool bReady)
+{
+	if (AJujutsuPlayerState* PS = GetPlayerState<AJujutsuPlayerState>())
+	{
+		PS->SetIsReady(bReady);
+		UE_LOG(LogTemp, Log, TEXT("[Server_SetReady] Authority=%d IsLocal=%d bReady=%d PlayerId=%d"),
+			HasAuthority(), IsLocalController(), bReady, PS->GetPlayerId());
+		if (AJujutsuMultiSelectionGameMode* GM = GetWorld() ? Cast<AJujutsuMultiSelectionGameMode>(GetWorld()->GetAuthGameMode()) : nullptr)
+		{
+			GM->NotifyPlayerReadyStateChanged();
+		}
+	}
+}
+
+void AJujutsuHeroController::Client_ShowCountdown_Implementation(int32 SecondsRemaining)
+{
+	UE_LOG(LogTemp, Log, TEXT("[Client_ShowCountdown] IsLocal=%d NetMode=%d Seconds=%d - 받은 클라이언트"),
+		IsLocalController(), GetNetMode(), SecondsRemaining);
+	Debug::Print(FString::Printf(TEXT("3초 후에 게임실행된다 - %d"), SecondsRemaining), FColor::Yellow, 0);
+}
+
 void AJujutsuHeroController::BeginPlay()
 {
 	Super::BeginPlay();
@@ -126,15 +156,22 @@ void AJujutsuHeroController::OnCharacterASCInitComplete_Implementation()
 
 void AJujutsuHeroController::BindInputActions(UInputComponent* PlayerInputComponent)
 {
-	checkf(InputConfigDataAsset,TEXT("Forgot to assign a valid data asset as input config"));
+	if (!IsLocalController())
+	{
+		return;
+	}
+	checkf(InputConfigDataAsset, TEXT("Forgot to assign a valid data asset as input config"));
 
 	ULocalPlayer* LocalPlayer = GetLocalPlayer();
-	check(LocalPlayer);
+	if (!LocalPlayer)
+	{
+		return;
+	}
 
-	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
-	check(Subsystem);
-
-	Subsystem->AddMappingContext(InputConfigDataAsset->DefaultMappingContext,0);
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer))
+	{
+		Subsystem->AddMappingContext(InputConfigDataAsset->DefaultMappingContext, 0);
+	}
 
 	if (UJujutsuInputComponent* JujutsuInputComponent = Cast<UJujutsuInputComponent>(PlayerInputComponent))
 	{
