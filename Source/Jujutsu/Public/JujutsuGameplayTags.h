@@ -26,6 +26,7 @@ namespace JujutsuGameplayTags
 	/** Character Ability Move (부모. Move.Jump, Move.Dash 등 하위 전부 매칭) */
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_Move);
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_Move_Jump);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_Move_SuperJump);
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_Move_Dash);
 
 	/** Character Ability HitReact (부모. HitReact.Stun/Light/Middle/Heavy 등 하위 전부 매칭) */

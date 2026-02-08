@@ -28,6 +28,7 @@ namespace JujutsuGameplayTags
 	/** Character Ability Move (부모) */
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Move, "Character.Ability.Move");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Move_Jump, "Character.Ability.Move.Jump");
+	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Move_SuperJump, "Character.Ability.Move.SuperJump");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Move_Dash, "Character.Ability.Move.Dash");
 
 	/** Character Ability HitReact (부모. Character.Ability.HitReact) */
