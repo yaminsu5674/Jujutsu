@@ -13,6 +13,13 @@
 
 void UJujutsuGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
+	// Cooldown Gameplay Effect Class가 설정된 어빌리티는 활성화 시 자동으로 쿨다운 적용 (GAS 기본 동작)
+	if (GetCooldownGameplayEffect() && !CommitAbilityCooldown(Handle, ActorInfo, ActivationInfo, false))
+	{
+		EndAbility(Handle, ActorInfo, ActivationInfo, true, true);
+		return;
+	}
+
 	// Asset.Tags가 Character_Ability_Attack_* 인 어빌리티는 타겟 방향으로 회전 + 중력 끔
 	for (const FGameplayTag& Tag : GetAssetTags())
 	{

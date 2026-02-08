@@ -61,4 +61,7 @@ namespace JujutsuGameplayTags
 	/** Character SetByCaller tags */
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_SetByCaller_BaseDamage);
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_SetByCaller_UsedComboCount);
+
+	/** Cooldown tags (어빌리티 쿨다운 중 부여. Activation Blocked Tags에 등록) */
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown_Dash);
 }
