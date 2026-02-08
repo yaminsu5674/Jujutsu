@@ -10,11 +10,16 @@
 #include "BTTask_CustomMove.generated.h"
 
 class UBlackboardComponent;
+class AJujutsuBaseCharacter;
 
 struct FBTCustomMoveTaskMemory
 {
 	bool bWaitingForAbility = false;
 	FTimerHandle DashCancelTimerHandle;
+	/** 공중 2차 점프 타이머 (첫 점프 후 최고점 타이밍) */
+	FTimerHandle SecondJumpTimerHandle;
+	/** 이단점프: 1=첫점프 완료, 2차 대기 중 */
+	int32 RemainingJumpsCount = 0;
 };
 
 /**
@@ -67,9 +72,17 @@ public:
 	UPROPERTY(EditAnywhere, Category = "CustomMove|Jump", meta = (ClampMin = "0"))
 	float JumpHeightThreshold = 150.f;
 
-	/** 슈퍼점프를 사용할 높이 차이 (이보다 크면 슈퍼점프) */
+	/** 이 수평 거리 이내일 때만 점프 시도. 멀면 대시/걷기로 먼저 접근 */
+	UPROPERTY(EditAnywhere, Category = "CustomMove|Jump", meta = (ClampMin = "0"))
+	float JumpMaxHorizontalDistance = 600.f;
+
+	/** 이 높이 차이보다 크면 공중 2차 점프 (첫 점프 → 공중 최고점에서 2차 점프) */
 	UPROPERTY(EditAnywhere, Category = "CustomMove|Jump", meta = (ClampMin = "0"))
 	float SuperJumpHeightThreshold = 400.f;
+
+	/** 2차 점프 타이밍(초). 첫 점프 후 이 시간이 지나면 공중에서 2차 점프 (최고점 근사) */
+	UPROPERTY(EditAnywhere, Category = "CustomMove|Jump", meta = (ClampMin = "0"))
+	float AirJumpDelay = 0.35f;
 
 	/** 걷기 이동 입력 강도 */
 	UPROPERTY(EditAnywhere, Category = "CustomMove", meta = (ClampMin = "0", ClampMax = "1"))
@@ -98,4 +111,7 @@ protected:
 
 	/** AI 전용: 랜덤 시간 후 대시 Ability 취소 (키 입력 없이 종료) */
 	void ScheduleDashCancel(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory);
+
+	/** 이단점프: 첫 점프 후 AirJumpDelay 경과 시 공중 2차 점프 스케줄 */
+	void ScheduleSecondJump(AJujutsuBaseCharacter* Character, uint8* NodeMemory);
 };

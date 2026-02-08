@@ -45,19 +45,23 @@ void UBTTask_CustomMove::InitializeMemory(UBehaviorTreeComponent& OwnerComp, uin
 	{
 		Mem->bWaitingForAbility = false;
 		Mem->DashCancelTimerHandle.Invalidate();
+		Mem->SecondJumpTimerHandle.Invalidate();
+		Mem->RemainingJumpsCount = 0;
 	}
 }
 
 void UBTTask_CustomMove::CleanupMemory(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, EBTMemoryClear::Type CleanupType) const
 {
 	FBTCustomMoveTaskMemory* Mem = reinterpret_cast<FBTCustomMoveTaskMemory*>(NodeMemory);
-	if (Mem && Mem->DashCancelTimerHandle.IsValid())
+	if (Mem)
 	{
 		if (UWorld* World = OwnerComp.GetWorld())
 		{
 			World->GetTimerManager().ClearTimer(Mem->DashCancelTimerHandle);
+			World->GetTimerManager().ClearTimer(Mem->SecondJumpTimerHandle);
 		}
 		Mem->DashCancelTimerHandle.Invalidate();
+		Mem->SecondJumpTimerHandle.Invalidate();
 	}
 	Super::CleanupMemory(OwnerComp, NodeMemory, CleanupType);
 }
@@ -127,6 +131,39 @@ void UBTTask_CustomMove::ScheduleDashCancel(UBehaviorTreeComponent& OwnerComp, u
 	}
 }
 
+void UBTTask_CustomMove::ScheduleSecondJump(AJujutsuBaseCharacter* Character, uint8* NodeMemory)
+{
+	if (!Character || !JumpAbilityTag.IsValid()) return;
+
+	UWorld* World = Character->GetWorld();
+	if (!World) return;
+
+	FBTCustomMoveTaskMemory* Mem = reinterpret_cast<FBTCustomMoveTaskMemory*>(NodeMemory);
+	if (!Mem) return;
+
+	if (Mem->SecondJumpTimerHandle.IsValid())
+	{
+		World->GetTimerManager().ClearTimer(Mem->SecondJumpTimerHandle);
+	}
+
+	FGameplayTag TagToActivate = JumpAbilityTag;
+	World->GetTimerManager().SetTimer(Mem->SecondJumpTimerHandle, [Character, TagToActivate, NodeMemory]()
+	{
+		UJujutsuAbilitySystemComponent* ASC = Character ? Character->GetJujutsuAbilitySystemComponent() : nullptr;
+		if (ASC && TagToActivate.IsValid())
+		{
+			ASC->TryActivateAbilityByTag(TagToActivate, true); // 연속 점프 허용
+		}
+
+		FBTCustomMoveTaskMemory* MemPtr = reinterpret_cast<FBTCustomMoveTaskMemory*>(NodeMemory);
+		if (MemPtr)
+		{
+			MemPtr->SecondJumpTimerHandle.Invalidate();
+			MemPtr->RemainingJumpsCount = 0;
+		}
+	}, AirJumpDelay, false);
+}
+
 EBTNodeResult::Type UBTTask_CustomMove::ExecuteMoveDecision(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	AAIController* AIController = OwnerComp.GetAIOwner();
@@ -157,7 +194,6 @@ EBTNodeResult::Type UBTTask_CustomMove::ExecuteMoveDecision(UBehaviorTreeCompone
 	const float DistXY = FVector::Dist2D(MyLoc, TargetLoc);
 	const float HeightDiff = TargetLoc.Z - MyLoc.Z;
 
-	const bool bTargetInAir = TargetCharacter && TargetCharacter->GetCharacterMovement() && TargetCharacter->GetCharacterMovement()->IsFalling();
 	const bool bSelfInAir = Character->GetCharacterMovement() && Character->GetCharacterMovement()->IsFalling();
 
 	if (DistXY < AcceptableRadius && FMath::Abs(HeightDiff) < AcceptableRadius * 0.5f)
@@ -170,14 +206,35 @@ EBTNodeResult::Type UBTTask_CustomMove::ExecuteMoveDecision(UBehaviorTreeCompone
 	UJujutsuAbilitySystemComponent* ASC = Character->GetJujutsuAbilitySystemComponent();
 	if (!ASC) return EBTNodeResult::Failed;
 
-	// 1) 타겟이 공중에 있고, 자신은 지상에 있음 → 점프로 추격
-	if (bTargetInAir && !bSelfInAir && HeightDiff > JumpHeightThreshold)
+	// 1) 타겟이 나보다 위에 있고, 수평으로 가까울 때만 점프 (멀면 대시/걷기로 먼저 접근)
+	if (!bSelfInAir && HeightDiff > JumpHeightThreshold && DistXY <= JumpMaxHorizontalDistance)
 	{
-		FGameplayTag JumpTag = HeightDiff > SuperJumpHeightThreshold ? SuperJumpAbilityTag : JumpAbilityTag;
-		if (JumpTag.IsValid() && ASC->TryActivateAbilityByTag(JumpTag))
+		FBTCustomMoveTaskMemory* Mem = reinterpret_cast<FBTCustomMoveTaskMemory*>(NodeMemory);
+		const bool bUseDoubleJump = HeightDiff > SuperJumpHeightThreshold;
+
+		if (Mem && !bUseDoubleJump)
 		{
-			FBTCustomMoveTaskMemory* Mem = reinterpret_cast<FBTCustomMoveTaskMemory*>(NodeMemory);
-			if (Mem) Mem->bWaitingForAbility = true;
+			Mem->RemainingJumpsCount = 0;
+		}
+		else if (bUseDoubleJump && Mem && Mem->RemainingJumpsCount == 0)
+		{
+			Mem->RemainingJumpsCount = 2;
+		}
+
+		const bool bShouldJump = bUseDoubleJump ? (Mem && Mem->RemainingJumpsCount > 0) : true;
+		const bool bActivated = bShouldJump && JumpAbilityTag.IsValid() && ASC->TryActivateAbilityByTag(JumpAbilityTag);
+
+		if (bActivated)
+		{
+			if (Mem)
+			{
+				Mem->bWaitingForAbility = true;
+				if (bUseDoubleJump)
+				{
+					Mem->RemainingJumpsCount = 1;
+					ScheduleSecondJump(Character, NodeMemory);
+				}
+			}
 			return EBTNodeResult::InProgress;
 		}
 	}
@@ -216,6 +273,8 @@ EBTNodeResult::Type UBTTask_CustomMove::ExecuteTask(UBehaviorTreeComponent& Owne
 	{
 		Mem->bWaitingForAbility = false;
 		Mem->DashCancelTimerHandle.Invalidate();
+		Mem->SecondJumpTimerHandle.Invalidate();
+		Mem->RemainingJumpsCount = 0;
 	}
 
 	return ExecuteMoveDecision(OwnerComp, NodeMemory);
@@ -274,14 +333,13 @@ EBTNodeResult::Type UBTTask_CustomMove::AbortTask(UBehaviorTreeComponent& OwnerC
 	FBTCustomMoveTaskMemory* Mem = reinterpret_cast<FBTCustomMoveTaskMemory*>(NodeMemory);
 	if (Mem)
 	{
-		if (Mem->DashCancelTimerHandle.IsValid())
+		if (UWorld* World = OwnerComp.GetWorld())
 		{
-			if (UWorld* World = OwnerComp.GetWorld())
-			{
-				World->GetTimerManager().ClearTimer(Mem->DashCancelTimerHandle);
-			}
-			Mem->DashCancelTimerHandle.Invalidate();
+			World->GetTimerManager().ClearTimer(Mem->DashCancelTimerHandle);
+			World->GetTimerManager().ClearTimer(Mem->SecondJumpTimerHandle);
 		}
+		Mem->DashCancelTimerHandle.Invalidate();
+		Mem->SecondJumpTimerHandle.Invalidate();
 		Mem->bWaitingForAbility = false;
 	}
 

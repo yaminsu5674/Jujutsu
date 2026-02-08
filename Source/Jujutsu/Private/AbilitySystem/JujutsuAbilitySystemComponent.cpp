@@ -33,11 +33,9 @@ void UJujutsuAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& I
 	}
 }
 
-bool UJujutsuAbilitySystemComponent::TryActivateAbilityByTag(FGameplayTag AbilityTagToActivate)
+bool UJujutsuAbilitySystemComponent::TryActivateAbilityByTag(FGameplayTag AbilityTagToActivate, bool bAllowReactivation)
 {
 	check(AbilityTagToActivate.IsValid());
-
-	UE_LOG(LogTemp, Warning, TEXT("TryActivateAbilityByTag: received tag %s"), *AbilityTagToActivate.ToString());
 
 	TArray<FGameplayAbilitySpec*> FoundAbilitySpecs;
 	GetActivatableGameplayAbilitySpecsByAllMatchingTags(AbilityTagToActivate.GetSingleTagContainer(), FoundAbilitySpecs);
@@ -47,7 +45,7 @@ bool UJujutsuAbilitySystemComponent::TryActivateAbilityByTag(FGameplayTag Abilit
 		FGameplayAbilitySpec* SpecToActivate = FoundAbilitySpecs[0];
 		check(SpecToActivate);
 
-		if (!SpecToActivate->IsActive())
+		if (bAllowReactivation || !SpecToActivate->IsActive())
 		{
 			return TryActivateAbility(SpecToActivate->Handle);
 		}
