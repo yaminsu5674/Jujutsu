@@ -288,9 +288,16 @@ void UBTTask_CustomMove::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Node
 
 	if (Mem && Mem->bWaitingForAbility)
 	{
-		// 대시/점프 대기 중에도 이동 입력 적용 (대시 시 속도 차이, 걷기처럼 이동)
+		// 지상: 대시 대기 중 이동 입력
 		if (Character && !Character->GetCharacterMovement()->IsFalling())
 		{
+			Character->AddMovementInput(Character->GetActorForwardVector(), MoveInputStrength);
+		}
+		// 공중: 이단점프 구간(첫 점프 후~두 번째 점프 중)에만 수평 이동 (AirControl)
+		else if (Character && Character->GetCharacterMovement()->IsFalling() &&
+			(Mem->RemainingJumpsCount == 1 || (Mem->RemainingJumpsCount == 0 && IsMovementAbilityActive(OwnerComp))))
+		{
+			UJujutsuSkillLibrary::SetActorRotationToTarget(Character);
 			Character->AddMovementInput(Character->GetActorForwardVector(), MoveInputStrength);
 		}
 
