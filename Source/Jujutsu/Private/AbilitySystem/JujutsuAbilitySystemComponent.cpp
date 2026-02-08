@@ -37,14 +37,14 @@ bool UJujutsuAbilitySystemComponent::TryActivateAbilityByTag(FGameplayTag Abilit
 {
 	check(AbilityTagToActivate.IsValid());
 
+	UE_LOG(LogTemp, Warning, TEXT("TryActivateAbilityByTag: received tag %s"), *AbilityTagToActivate.ToString());
+
 	TArray<FGameplayAbilitySpec*> FoundAbilitySpecs;
 	GetActivatableGameplayAbilitySpecsByAllMatchingTags(AbilityTagToActivate.GetSingleTagContainer(), FoundAbilitySpecs);
 
 	if (!FoundAbilitySpecs.IsEmpty())
 	{
-		const int32 RandomAbilityIndex = FMath::RandRange(0, FoundAbilitySpecs.Num() - 1);
-		FGameplayAbilitySpec* SpecToActivate = FoundAbilitySpecs[RandomAbilityIndex];
-
+		FGameplayAbilitySpec* SpecToActivate = FoundAbilitySpecs[0];
 		check(SpecToActivate);
 
 		if (!SpecToActivate->IsActive())

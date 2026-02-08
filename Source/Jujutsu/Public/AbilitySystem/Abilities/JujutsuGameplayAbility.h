@@ -38,6 +38,10 @@ protected:
 public:
 	FORCEINLINE EJujutsuAbilityInputType GetAbilityInputType() const { return AbilityInputType; }
 
+	/** AI용: 이 어빌리티 사용 시 원하는 거리 (0 이하일 경우 사용 안 함 등) */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Jujutsu|AI", meta = (ClampMin = "0"))
+	float DesiredRange = 0.f;
+
 protected:
 	/** 이 어빌리티로 줄 데미지의 기본값 (스킬마다 에디터에서 지정) */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Jujutsu|Damage", meta = (ClampMin = "0"))
