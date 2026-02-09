@@ -60,6 +60,12 @@ void UJujutsuSkillLibrary::LaunchCharacterFromSourceToTarget(AActor* SourceActor
 {
 	if (!SourceActor || !TargetCharacter) return;
 
+	// Launch 전에 타겟 움직임·가속도 초기화 (대시 등 잔류 속도 제거)
+	if (UCharacterMovementComponent* MoveComp = TargetCharacter->GetCharacterMovement())
+	{
+		MoveComp->StopMovementImmediately();
+	}
+
 	FVector Dir2D = SourceActor->GetVelocity();
 	Dir2D.Z = 0.f;
 	if (Dir2D.IsNearlyZero())

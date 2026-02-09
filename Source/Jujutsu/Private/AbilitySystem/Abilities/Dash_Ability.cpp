@@ -5,6 +5,7 @@
 #include "Characters/JujutsuBaseCharacter.h"
 #include "Components/JujutsuCharacterMovementComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "JujutsuGameplayTags.h"
 #include "JujutsuSkillLibrary.h"
 #include "TimerManager.h"
 
@@ -180,6 +181,25 @@ void UDash_Ability::RestoreMovementAfterGroundDash()
 
 void UDash_Ability::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
+	// Character_Status_Hit(피격) 상태일 때는 즉시 가속도/마찰/중력 복구
+	if (ActorInfo && ActorInfo->AbilitySystemComponent.IsValid() && ActorInfo->AbilitySystemComponent->HasMatchingGameplayTag(JujutsuGameplayTags::Character_Status_Hit))
+	{
+		if (UWorld* World = GetWorld())
+		{
+			World->GetTimerManager().ClearTimer(DashGravityRestoreHandle);
+			World->GetTimerManager().ClearTimer(DashFrictionRestoreHandle);
+		}
+		if (bIsAirDashing)
+		{
+			RestoreMovementAfterAirDash();
+		}
+		if (bIsGroundDashing)
+		{
+			RestoreMovementAfterGroundDash();
+		}
+		bDashFinished = true;
+	}
+
 	// 대시가 끝나기 전(키 뗐을 때) 호출되면 무시. Restore 끝에서 bEndAbilityRequested 보고 그때 EndAbility 수행
 	if (!bDashFinished)
 	{
