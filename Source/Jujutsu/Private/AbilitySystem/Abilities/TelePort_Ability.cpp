@@ -6,7 +6,10 @@
 #include "Components/Combat/JujutsuCharacterCombatComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/PlayerController.h"
+#include "JujutsuDebugHelper.h"
 #include "JujutsuSkillLibrary.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Engine/World.h"
 
 void UTelePort_Ability::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
@@ -50,6 +53,7 @@ void UTelePort_Ability::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 
 	if (!bFoundValid)
 	{
+		Debug::Print(TEXT("TelePort: 유효한 순간이동 위치 없음 (타겟 공중/바닥미도달/충돌/간격실패)"), FColor::Orange, 0);
 		if (bCancelAbilityIfNoValidSlot)
 		{
 			EndAbility(Handle, ActorInfo, ActivationInfo, true, true);
@@ -65,6 +69,17 @@ void UTelePort_Ability::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 
 	// 타겟 방향 회전
 	UJujutsuSkillLibrary::SetActorRotationToTarget(Character);
+
+	// 카메라 즉시 스냅 (TargetLock lerp 대신 한 프레임에 캐릭터 뒤쪽으로)
+	if (APlayerController* PC = Cast<APlayerController>(GetCharacterControllerFromActorInfo()))
+	{
+		const FVector HeroLoc = Character->GetActorLocation();
+		const FVector TargetLoc = Target->GetActorLocation();
+		FRotator LookAtRot = UKismetMathLibrary::FindLookAtRotation(HeroLoc, TargetLoc);
+		LookAtRot.Pitch -= TeleportCameraPitchOffset;
+		LookAtRot.Yaw += TeleportCameraYawOffset;
+		PC->SetControlRotation(FRotator(LookAtRot.Pitch, LookAtRot.Yaw, 0.f));
+	}
 
 	EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
 }
@@ -107,20 +122,35 @@ bool UTelePort_Ability::IsPositionValid(ACharacter* Character, const FVector& Ca
 	FQuat Rot = Character->GetActorQuat();
 	FCollisionShape CapsuleShape = FCollisionShape::MakeCapsule(CapsuleRadius, CapsuleHalfHeight);
 
-	// 1) 바닥 존재 확인 (LineTraceDown)
+	FVector AdjustedPos;
 	FVector TraceStart = CandidatePos;
 	FVector TraceEnd = TraceStart - FVector(0.f, 0.f, FloorTraceDistance);
 	FHitResult FloorHit;
-	if (!World->LineTraceSingleByChannel(FloorHit, TraceStart, TraceEnd, ECC_WorldStatic, Params))
+	if (World->LineTraceSingleByChannel(FloorHit, TraceStart, TraceEnd, ECC_WorldStatic, Params))
 	{
-		return false;
+		// 바닥 있음 → 바닥 위로 보정
+		AdjustedPos = FloorHit.ImpactPoint + FVector(0.f, 0.f, CapsuleHalfHeight);
+	}
+	else
+	{
+		// 바닥 없음(공중) → 후보 위치 그대로 사용. 건물/바닥과 겹치지만 않으면 OK
+		AdjustedPos = CandidatePos;
 	}
 
-	// 바닥 위로 보정된 위치
-	FVector AdjustedPos = FloorHit.ImpactPoint + FVector(0.f, 0.f, CapsuleHalfHeight);
-
-	// 2) 캡슐 충돌 체크 (Sweep)
+	// 캡슐이 건물/바닥/장애물과 겹치는지 검사 (WorldStatic)
 	bool bSweepHit = World->SweepSingleByChannel(
+		SweepHit,
+		AdjustedPos,
+		AdjustedPos,
+		Rot,
+		ECC_WorldStatic,
+		CapsuleShape,
+		Params
+	);
+	if (bSweepHit) return false;
+
+	// Pawn(다른 캐릭터)과 겹치는지 검사
+	bSweepHit = World->SweepSingleByChannel(
 		SweepHit,
 		AdjustedPos,
 		AdjustedPos,
@@ -131,7 +161,7 @@ bool UTelePort_Ability::IsPositionValid(ACharacter* Character, const FVector& Ca
 	);
 	if (bSweepHit) return false;
 
-	// 3) MinClearance: 네 방향으로 짧은 라인 트레이스
+	// MinClearance: 네 방향으로 짧은 라인 트레이스
 	if (MinClearance > 0.f)
 	{
 		const FVector Dirs[] = {

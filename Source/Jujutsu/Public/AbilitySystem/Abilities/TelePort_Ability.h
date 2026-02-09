@@ -56,6 +56,14 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Jujutsu|Teleport")
 	bool bCancelAbilityIfNoValidSlot = true;
 
+	/** 텔레포트 시 카메라 즉시 스냅용 피치 오프셋 (TargetLock과 동일 개념) */
+	UPROPERTY(EditDefaultsOnly, Category = "Jujutsu|Teleport|Camera")
+	float TeleportCameraPitchOffset = 0.f;
+
+	/** 텔레포트 시 카메라 즉시 스냅용 요 오프셋 */
+	UPROPERTY(EditDefaultsOnly, Category = "Jujutsu|Teleport|Camera")
+	float TeleportCameraYawOffset = 0.f;
+
 	/** 타겟 기준 월드 좌표 계산 */
 	FVector ComputeWorldPositionFromSlot(AActor* Target, const FTeleportPositionSlot& Slot) const;
 

@@ -49,6 +49,9 @@ namespace JujutsuGameplayTags
 	/** Character Event Teleport */
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_Teleport, "Character.Event.Teleport");
 
+	/** Character Event TeleportSuccess */
+	UE_DEFINE_GAMEPLAY_TAG(Character_Event_TeleportSuccess, "Character.Event.TeleportSuccess");
+
 	/** 공격자 전용. Character.Event.HitSuccess */
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_HitSuccess, "Character.Event.HitSuccess");
 
