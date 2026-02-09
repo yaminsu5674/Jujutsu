@@ -54,9 +54,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Projectile")
 	void CheckOverlap();
 
-	/** 발사: Target이 유효하면 타겟 방향, 아니면 본인 Forward 방향으로 이동·속도·수명 적용하여 발사 (Owner 미사용) */
-	UFUNCTION(BlueprintCallable, Category = "Projectile")
+	/** 발사: Target이 유효하면 타겟 방향, 아니면 본인 Forward 방향으로 이동·속도·수명 적용하여 발사 (Owner 미사용). 블루프린트에서 오버라이드 가능. */
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Projectile")
 	void LaunchProjectile(AJujutsuBaseCharacter* Target);
+	virtual void LaunchProjectile_Implementation(AJujutsuBaseCharacter* Target);
 
 protected:
 	virtual void BeginPlay() override;

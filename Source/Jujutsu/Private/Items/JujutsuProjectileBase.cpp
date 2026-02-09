@@ -109,7 +109,7 @@ void AJujutsuProjectileBase::CheckOverlap()
 	// BeginPlay 시점에 이미 겹쳐 있는 액터 처리 (오버랩 이벤트로만 처리)
 }
 
-void AJujutsuProjectileBase::LaunchProjectile(AJujutsuBaseCharacter* Target)
+void AJujutsuProjectileBase::LaunchProjectile_Implementation(AJujutsuBaseCharacter* Target)
 {
 	if (!ProjectileMovementComp) return;
 
