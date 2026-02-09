@@ -2,12 +2,14 @@
 
 #include "AbilitySystem/Abilities/TelePort_Ability.h"
 #include "AbilitySystem/JujutsuAbilitySystemComponent.h"
+#include "AbilitySystemBlueprintLibrary.h"
 #include "Characters/JujutsuBaseCharacter.h"
 #include "Components/Combat/JujutsuCharacterCombatComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PlayerController.h"
 #include "JujutsuDebugHelper.h"
+#include "JujutsuGameplayTags.h"
 #include "JujutsuSkillLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Engine/World.h"
@@ -80,6 +82,8 @@ void UTelePort_Ability::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 		LookAtRot.Yaw += TeleportCameraYawOffset;
 		PC->SetControlRotation(FRotator(LookAtRot.Pitch, LookAtRot.Yaw, 0.f));
 	}
+
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Character, JujutsuGameplayTags::Character_Event_TeleportSuccess, FGameplayEventData());
 
 	EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
 }
