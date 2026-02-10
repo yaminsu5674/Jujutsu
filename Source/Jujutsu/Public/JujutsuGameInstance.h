@@ -26,7 +26,7 @@ public:
 	void SetEnemyCharacterClass(TSubclassOf<AJujutsuBaseCharacter> InClass) { EnemyCharacterClass = InClass; }
 
 	UFUNCTION(BlueprintCallable, Exec, Category = "Jujutsu|GameInstance")
-	void Host(const FString& MapPath);
+	void Host(const FString& MapPath, bool bSeamlessTravel);
 
 	UFUNCTION(BlueprintCallable, Exec, Category = "Jujutsu|GameInstance")
 	void Join(const FString& Address);

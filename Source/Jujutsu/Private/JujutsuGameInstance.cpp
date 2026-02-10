@@ -3,9 +3,10 @@
 #include "JujutsuGameInstance.h"
 #include "Engine/Engine.h"
 #include "Engine/World.h"
+#include "GameFramework/GameModeBase.h"
 #include "GameFramework/PlayerController.h"
 
-void UJujutsuGameInstance::Host(const FString& MapPath)
+void UJujutsuGameInstance::Host(const FString& MapPath, bool bSeamlessTravel)
 {
 	UEngine* Engine = GetEngine();
 	if (!ensure(Engine != nullptr)) return;
@@ -19,6 +20,11 @@ void UJujutsuGameInstance::Host(const FString& MapPath)
 	if (!URL.Contains(TEXT("?listen")))
 	{
 		URL += TEXT("?listen");
+	}
+
+	if (AGameModeBase* GameMode = World->GetAuthGameMode())
+	{
+		GameMode->bUseSeamlessTravel = bSeamlessTravel;
 	}
 	World->ServerTravel(URL);
 }
