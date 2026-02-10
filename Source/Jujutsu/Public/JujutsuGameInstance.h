@@ -25,6 +25,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Jujutsu|GameInstance")
 	void SetEnemyCharacterClass(TSubclassOf<AJujutsuBaseCharacter> InClass) { EnemyCharacterClass = InClass; }
 
+	UFUNCTION(BlueprintCallable, Exec, Category = "Jujutsu|GameInstance")
+	void Host(const FString& MapPath);
+
+	UFUNCTION(BlueprintCallable, Exec, Category = "Jujutsu|GameInstance")
+	void Join(const FString& Address);
+
 private:
 	UPROPERTY()
 	TSubclassOf<AJujutsuBaseCharacter> HeroCharacterClass;
