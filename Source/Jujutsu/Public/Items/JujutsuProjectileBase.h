@@ -81,7 +81,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile", meta = (AllowPrivateAccess = "true"))
 	float Damage = 0.f;
 
-	/** 시전자. 블루프린트 Spawn Actor from Class 시 인풋 핀으로 설정. LaunchProjectile 호출 시 참조 해제. (SimpleDamage 사용 시 데미지에는 미사용) */
+	/** 시전자. 블루프린트 Spawn Actor from Class 시 인풋 핀으로 설정. EndProjectile(소멸) 시 참조 해제. 발사 후에도 overlap 시 시전자 제외용으로 유지. (SimpleDamage 사용 시 데미지에는 미사용) */
 	UPROPERTY(BlueprintReadWrite, Category = "Projectile", meta = (ExposeOnSpawn = "true"))
 	TObjectPtr<AJujutsuBaseCharacter> Caster;
 
@@ -95,6 +95,10 @@ protected:
 	/** 현재 Target과 오버랩 중인지 */
 	UPROPERTY(BlueprintReadOnly, Category = "Projectile")
 	bool bIsOverlapping = false;
+
+	/** LaunchProjectile 호출 여부 */
+	UPROPERTY(BlueprintReadOnly, Category = "Projectile")
+	bool bDidLaunched = false;
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Projectile")
 	void OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

@@ -102,6 +102,7 @@ void AJujutsuProjectileBase::Destroyed()
 
 void AJujutsuProjectileBase::EndProjectile_Implementation()
 {
+	Caster = nullptr;
 }
 
 void AJujutsuProjectileBase::CheckOverlap()
@@ -113,12 +114,11 @@ void AJujutsuProjectileBase::LaunchProjectile_Implementation(AJujutsuBaseCharact
 {
 	if (!ProjectileMovementComp) return;
 
+	bDidLaunched = true;
+
 	// Target이 유효하면 타겟 방향, 아니면 본인(발사체) Forward 방향으로 발사
 	ProjectileMovementComp->SetDirection(Target, ProjectileMovementParams.Speed);
 	ProjectileMovementComp->ApplyBehaviorSettings(true, true, InitialLifeSpan);
-
-	// SimpleDamage Exec 사용 시 데미지에 Caster 불필요. 참조 해제
-	Caster = nullptr;
 }
 
 void AJujutsuProjectileBase::OnProjectileBeginOverlap_Implementation(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
