@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "Components/Push/JujutsuPushComponent.h"
+#include "Components/JujutsuCharacterMovementComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -34,8 +35,7 @@ void UJujutsuPushComponent::RequestPush(const FPushRequest& Request)
 	bActive = true;
 	SetComponentTickEnabled(true);
 
-	// 밀림 중에는 중력 비활성화
-	SavedGravityScale = MoveComp->GravityScale;
+	// 밀림 중에는 중력 비활성화 (EndPush 시 캐릭터 기본값으로 복원하므로 저장 불필요)
 	MoveComp->GravityScale = 0.f;
 
 	if (ActivePush.Mode == EPushMode::AttachToSource && ActivePush.Source.IsValid())
@@ -71,10 +71,17 @@ void UJujutsuPushComponent::EndPush()
 	ActivePush = FPushRequest();
 	SetComponentTickEnabled(false);
 
-	// 중력 복원
+	// 중력 복원: 캐릭터 기본값 사용 (RequestPush 시점 값 사용 시 공격 어빌리티 등 다른 시스템이 끈 상태를 잘못 복원할 수 있음)
 	if (MoveComp.IsValid())
 	{
-		MoveComp->GravityScale = SavedGravityScale;
+		if (const UJujutsuCharacterMovementComponent* JutsuMove = Cast<UJujutsuCharacterMovementComponent>(MoveComp.Get()))
+		{
+			MoveComp->GravityScale = JutsuMove->DefaultGravityScale;
+		}
+		else
+		{
+			MoveComp->GravityScale = 1.f;
+		}
 	}
 }
 

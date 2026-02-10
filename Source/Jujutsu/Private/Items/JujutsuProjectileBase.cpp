@@ -123,7 +123,7 @@ void AJujutsuProjectileBase::LaunchProjectile_Implementation(AJujutsuBaseCharact
 
 void AJujutsuProjectileBase::OnProjectileBeginOverlap_Implementation(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	Debug::Print(FString::Printf(TEXT("OnProjectileBeginOverlap: %s"), OtherActor ? *OtherActor->GetName() : TEXT("null")), FColor::Green);
+	// Debug::Print(FString::Printf(TEXT("OnProjectileBeginOverlap: %s"), OtherActor ? *OtherActor->GetName() : TEXT("null")), FColor::Green);
 
 	if (!OtherActor || OtherActor == GetOwner() || OtherActor == Caster || OtherActor == GetInstigator()) return;
 	if (OverlappedActors.Contains(OtherActor)) return;
@@ -151,7 +151,7 @@ void AJujutsuProjectileBase::OnProjectileBeginOverlap_Implementation(UPrimitiveC
 
 void AJujutsuProjectileBase::OnProjectileEndOverlap_Implementation(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	Debug::Print(FString::Printf(TEXT("OnProjectileEndOverlap: %s"), OtherActor ? *OtherActor->GetName() : TEXT("null")), FColor::Yellow);
+	// Debug::Print(FString::Printf(TEXT("OnProjectileEndOverlap: %s"), OtherActor ? *OtherActor->GetName() : TEXT("null")), FColor::Yellow);
 
 	if (OtherActor)
 	{

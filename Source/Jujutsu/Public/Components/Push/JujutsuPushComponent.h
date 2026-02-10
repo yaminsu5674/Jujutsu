@@ -85,7 +85,4 @@ private:
 
 	/** AttachToSource 모드용: 이전 프레임 Source 위치 */
 	FVector PrevSourceLocation = FVector::ZeroVector;
-
-	/** 밀림 시작 전 중력 배율. EndPush 시 복원용 */
-	float SavedGravityScale = 1.f;
 };
