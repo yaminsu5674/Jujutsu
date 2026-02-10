@@ -3,6 +3,7 @@
 #include "GameModes/JujutsuMultiSelectionGameMode.h"
 #include "Controllers/JujutsuPlayerState.h"
 #include "Controllers/JujutsuHeroController.h"
+#include "JujutsuGameInstance.h"
 #include "EngineUtils.h"
 #include "GameFramework/PlayerController.h"
 #include "Engine/World.h"
@@ -92,8 +93,12 @@ void AJujutsuMultiSelectionGameMode::Tick(float DeltaSeconds)
 			UE_LOG(LogMultiSelectionLobby, Error, TEXT("[SeamlessTravel] ABORT - Not server! NetMode=%d"), (int32)World->GetNetMode());
 			return;
 		}
-		UE_LOG(LogMultiSelectionLobby, Warning, TEXT("[SeamlessTravel] Server calling now. URL=%s"), *BattleMapPath);
-		World->SeamlessTravel(BattleMapPath, true);
-		UE_LOG(LogMultiSelectionLobby, Warning, TEXT("[SeamlessTravel] Call returned"));
+		UE_LOG(LogMultiSelectionLobby, Warning, TEXT("[Travel] Server calling GameInstance::Host. URL=%s"), *BattleMapPath);
+		// 기존: World->SeamlessTravel(BattleMapPath, true);
+		if (UJujutsuGameInstance* GI = World->GetGameInstance<UJujutsuGameInstance>())
+		{
+			GI->Host(BattleMapPath, true);
+		}
+		UE_LOG(LogMultiSelectionLobby, Warning, TEXT("[Travel] Host call returned"));
 	}
 }
