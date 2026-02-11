@@ -39,38 +39,41 @@ AActor* AJujutsuMultiPlayGameMode::ChoosePlayerStart_Implementation(AController*
 	return Super::ChoosePlayerStart_Implementation(Player);
 }
 
-void AJujutsuMultiPlayGameMode::StartPlay()
+void AJujutsuMultiPlayGameMode::InitializePlayerStarts()
 {
 	UWorld* World = GetWorld();
-	if (World)
+	if (!World) return;
+
+	PlayerStartActors.Empty();
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	if (APlayerStart* PS1 = World->SpawnActor<APlayerStart>(Player1Location, Player1Rotation, SpawnParams))
 	{
-		PlayerStartActors.Empty();
-		FActorSpawnParameters SpawnParams;
-		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-		if (APlayerStart* PS1 = World->SpawnActor<APlayerStart>(Player1Location, Player1Rotation, SpawnParams))
-		{
-			PlayerStartActors.Add(PS1);
-		}
-		if (APlayerStart* PS2 = World->SpawnActor<APlayerStart>(Player2Location, Player2Rotation, SpawnParams))
-		{
-			PlayerStartActors.Add(PS2);
-		}
+		PlayerStartActors.Add(PS1);
 	}
+	if (APlayerStart* PS2 = World->SpawnActor<APlayerStart>(Player2Location, Player2Rotation, SpawnParams))
+	{
+		PlayerStartActors.Add(PS2);
+	}
+}
 
+void AJujutsuMultiPlayGameMode::HandleSeamlessTravelPlayer(AController*& C)
+{
+	// HandleSeamlessTravelPlayer는 StartPlay보다 먼저 호출될 수 있음. RestartPlayer 시 ChoosePlayerStart가 필요하므로 미리 생성
+	if (PlayerStartActors.Num() == 0)
+	{
+		InitializePlayerStarts();
+	}
+	// 엔진 기본 로직이 해당 컨트롤러에 대해 RestartPlayer 한 번만 호출. StartPlay 루프 제거로 중복 스폰 방지
+	Super::HandleSeamlessTravelPlayer(C);
+}
+
+void AJujutsuMultiPlayGameMode::StartPlay()
+{
+	InitializePlayerStarts();
 	Super::StartPlay();
-
-	// Seamless Travel 시 기존 플레이어들은 PostLogin을 거치지 않으므로 Pawn이 없음. RestartPlayer로 스폰
-	if (World)
-	{
-		for (FConstPlayerControllerIterator It = World->GetPlayerControllerIterator(); It; ++It)
-		{
-			if (APlayerController* PC = It->Get(); PC && !PC->GetPawn())
-			{
-				RestartPlayer(PC);
-			}
-		}
-	}
+	// RestartPlayer는 HandleSeamlessTravelPlayer에서 플레이어별로 한 번씩만 호출됨. 여기서 루프로 호출하면 중복 스폰(Unpossessed) 발생
 }
 
 void AJujutsuMultiPlayGameMode::OnAllCharactersReady()

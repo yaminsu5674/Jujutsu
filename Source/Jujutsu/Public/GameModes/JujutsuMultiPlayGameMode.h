@@ -26,6 +26,9 @@ protected:
 
 	virtual void StartPlay() override;
 
+	/** Seamless Travel 시 플레이어별로 한 번만 호출됨. 여기서 Super 호출로 RestartPlayer 실행. StartPlay 루프와 중복되지 않도록 루프 제거 */
+	virtual void HandleSeamlessTravelPlayer(AController*& C) override;
+
 	/** 캐릭터 전원 준비 시 타겟 설정 */
 	virtual void OnAllCharactersReady() override;
 
@@ -40,6 +43,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Spawn|Player2")
 	FRotator Player2Rotation = FRotator::ZeroRotator;
+
+	/** PlayerStart 스폰. HandleSeamlessTravelPlayer(StartPlay보다 먼저 호출될 수 있음)와 StartPlay 양쪽에서 사용 */
+	void InitializePlayerStarts();
 
 	TArray<APlayerStart*> PlayerStartActors;
 };

@@ -38,10 +38,7 @@ void AJujutsuHeroController::SetHeroCharacterClass(TSubclassOf<AJujutsuBaseChara
 	{
 		PS->SetHeroCharacterClass(InClass);
 	}
-	if (UJujutsuGameInstance* GI = GetGameInstance<UJujutsuGameInstance>())
-	{
-		GI->SetHeroCharacterClass(InClass);
-	}
+	// 멀티는 PlayerState만 사용. GameInstance 갱신 안 함.
 }
 
 TSubclassOf<AJujutsuBaseCharacter> AJujutsuHeroController::GetEnemyCharacterClass() const
@@ -59,10 +56,7 @@ void AJujutsuHeroController::SetEnemyCharacterClass(TSubclassOf<AJujutsuBaseChar
 	{
 		PS->SetEnemyCharacterClass(InClass);
 	}
-	if (UJujutsuGameInstance* GI = GetGameInstance<UJujutsuGameInstance>())
-	{
-		GI->SetEnemyCharacterClass(InClass);
-	}
+	// 멀티는 PlayerState만 사용. GameInstance 갱신 안 함.
 }
 
 void AJujutsuHeroController::TravelServerByLevel(const TSoftObjectPtr<UWorld>& Level)
@@ -131,18 +125,18 @@ void AJujutsuHeroController::Client_ShowCountdown_Implementation(int32 SecondsRe
 void AJujutsuHeroController::BeginPlay()
 {
 	Super::BeginPlay();
-	if (IsLocalController() && GetNetMode() == NM_Client)
-	{
-		if (UJujutsuGameInstance* GI = GetGameInstance<UJujutsuGameInstance>())
-		{
-			TSubclassOf<AJujutsuBaseCharacter> HeroClass = GI->GetHeroCharacterClass();
-			TSubclassOf<AJujutsuBaseCharacter> EnemyClass = GI->GetEnemyCharacterClass();
-			if (HeroClass || EnemyClass)
-			{
-				ServerSetPlayerSelection(HeroClass, EnemyClass);
-			}
-		}
-	}
+	// if (IsLocalController() && GetNetMode() == NM_Client)
+	// {
+	// 	if (UJujutsuGameInstance* GI = GetGameInstance<UJujutsuGameInstance>())
+	// 	{
+	// 		TSubclassOf<AJujutsuBaseCharacter> HeroClass = GI->GetHeroCharacterClass();
+	// 		TSubclassOf<AJujutsuBaseCharacter> EnemyClass = GI->GetEnemyCharacterClass();
+	// 		if (HeroClass || EnemyClass)
+	// 		{
+	// 			ServerSetPlayerSelection(HeroClass, EnemyClass);
+	// 		}
+	// 	}
+	// }
 }
 
 void AJujutsuHeroController::OnPossess(APawn* InPawn)
