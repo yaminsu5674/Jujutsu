@@ -159,6 +159,40 @@ void AJujutsuBaseCharacter::PossessedBy(AController* NewController)
 		{
 			CharacterStartUpDataReal->GiveToAbilitySystemComponent(JujutsuAbilitySystemComponent);
 		}
+
+		// 호스트(리슨 서버): PossessedBy는 서버에서만 실행됨. 이때 내가 로컬 플레이어면 여기서 UI 어빌리티 활성화.
+		TryActivateLocalControllerUIAbilities();
+	}
+}
+
+void AJujutsuBaseCharacter::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
+
+	// 원격 클라: PossessedBy는 클라이언트에서 실행 안 됨. PlayerState 복제 도착 시점에 로컬에서 UI 어빌리티 활성화.
+	TryActivateLocalControllerUIAbilities();
+}
+
+void AJujutsuBaseCharacter::TryActivateLocalControllerUIAbilities()
+{
+	if (!IsLocallyControlled()) return;
+
+	if (AJujutsuHeroController* HeroController = Cast<AJujutsuHeroController>(GetController()))
+	{
+		if (!HeroController->TryActivateControllerGrantedAbilities())
+		{
+			// 어빌리티 스펙이 아직 복제 안 됐을 수 있음(원격 클라) → 다음 틱에 한 번 더 시도
+			if (UWorld* World = GetWorld())
+			{
+				World->GetTimerManager().SetTimerForNextTick([this]()
+				{
+					if (AJujutsuHeroController* HC = Cast<AJujutsuHeroController>(GetController()))
+					{
+						HC->TryActivateControllerGrantedAbilities();
+					}
+				});
+			}
+		}
 	}
 }
 

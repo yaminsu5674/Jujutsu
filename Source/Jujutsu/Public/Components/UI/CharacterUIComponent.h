@@ -22,4 +22,7 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnPercentChangedDelegate OnCurrentRageChanged;
+
+	/** 현재 체력/분노 퍼센트를 한 번 브로드캐스트. 속성 복제만 되고 PostGE가 안 타는 클라이언트에서 위젯 초기값용. */
+	void BroadcastCurrentHealthAndRage();
 };

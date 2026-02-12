@@ -74,6 +74,9 @@ public:
 	UFUNCTION(Client, Reliable, Category = "Jujutsu|Controller")
 	void Client_ShowCountdown(int32 SecondsRemaining);
 
+	/** OnRep_PlayerState 등에서 호출. 로컬에서만 컨트롤러 부여 어빌리티(위젯 등) 수동 활성화. 어빌리티 스펙이 아직 없으면 false. */
+	bool TryActivateControllerGrantedAbilities();
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* InPawn) override;

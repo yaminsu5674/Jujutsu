@@ -144,6 +144,33 @@ void AJujutsuHeroController::OnPossess(APawn* InPawn)
 	Super::OnPossess(InPawn);
 }
 
+bool AJujutsuHeroController::TryActivateControllerGrantedAbilities()
+{
+	if (!IsLocalController()) return false;
+
+	AJujutsuBaseCharacter* BaseCharacter = Cast<AJujutsuBaseCharacter>(GetPawn());
+	UJujutsuAbilitySystemComponent* ASC = BaseCharacter ? BaseCharacter->GetJujutsuAbilitySystemComponent() : nullptr;
+	if (!ASC) return false;
+
+	bool bActivatedAny = false;
+	const TArray<TSubclassOf<UGameplayAbility>>& Classes = GetAbilitiesToGrantWithCharacterInit();
+	for (const FGameplayAbilitySpec& Spec : ASC->GetActivatableAbilities())
+	{
+		if (!Spec.Ability) continue;
+		UClass* SpecClass = Spec.Ability->GetClass();
+		for (TSubclassOf<UGameplayAbility> Class : Classes)
+		{
+			if (Class && SpecClass->IsChildOf(Class))
+			{
+				ASC->TryActivateAbility(Spec.Handle);
+				bActivatedAny = true;
+				break;
+			}
+		}
+	}
+	return bActivatedAny;
+}
+
 void AJujutsuHeroController::OnCharacterASCInitComplete_Implementation()
 {
 }

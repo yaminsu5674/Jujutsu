@@ -43,7 +43,11 @@ protected:
 
 	//~ Begin APawn Interface.
 	virtual void PossessedBy(AController* NewController) override;
+	virtual void OnRep_PlayerState() override;
 	//~ End APawn Interface
+
+	/** PossessedBy(호스트) / OnRep_PlayerState(원격 클라) 양쪽에서 호출. IsLocallyControlled()일 때만 컨트롤러 부여 UI 어빌리티 수동 활성화. */
+	void TryActivateLocalControllerUIAbilities();
 
 	//~ Begin ACharacter Interface.
 	virtual void Landed(const FHitResult& Hit) override;

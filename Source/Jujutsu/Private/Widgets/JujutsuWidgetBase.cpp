@@ -14,6 +14,7 @@ void UJujutsuWidgetBase::InitCharacterCreatedWidget_Implementation(AActor* Ownin
 		if (UCharacterUIComponent* UIComp = BaseCharacter->GetCharacterUIComponent())
 		{
 			BP_OnOwningCharacterUIComponentInitialized(UIComp);
+			UIComp->BroadcastCurrentHealthAndRage();
 		}
 	}
 }
@@ -28,6 +29,7 @@ void UJujutsuWidgetBase::NativeOnInitialized()
 		if (UCharacterUIComponent* UIComp = BaseCharacter->GetCharacterUIComponent())
 		{
 			BP_OnOwningCharacterUIComponentInitialized(UIComp);
+			UIComp->BroadcastCurrentHealthAndRage();
 		}
 	}
 }
