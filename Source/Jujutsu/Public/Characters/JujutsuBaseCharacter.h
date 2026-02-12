@@ -61,8 +61,13 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AbilitySystem")
 	UJujutsuAttributeSet* JujutsuAttributeSet;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData")
+	/** 레거시. 블루프린트 CDO 호환용으로만 유지. 코드에서는 사용하지 않음. */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData", meta = (DisplayName = "Character Start Up Data (Legacy)"))
 	TSoftObjectPtr<UDataAsset_StartUpDataBase> CharacterStartUpData;
+
+	/** 캐릭터별 스타트업 GE/어빌리티. 여기만 사용 (동기 로딩 없음). */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData")
+	TObjectPtr<UDataAsset_StartUpDataBase> CharacterStartUpDataReal;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	UJujutsuCharacterCombatComponent* CharacterCombatComponent;

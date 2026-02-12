@@ -144,7 +144,7 @@ void AJujutsuBaseCharacter::PossessedBy(AController* NewController)
 	if (JujutsuAbilitySystemComponent)
 	{
 		JujutsuAbilitySystemComponent->InitAbilityActorInfo(this, this);
-		ensureMsgf(!CharacterStartUpData.IsNull(), TEXT("Forgot to assign start up data to %s"), *GetName());
+		ensureMsgf(CharacterStartUpDataReal != nullptr, TEXT("Forgot to assign CharacterStartUpDataReal to %s"), *GetName());
 
 		// GE 적용 시 OnCurrentHealthChanged.Broadcast 호출됨. 위젯이 그 시점에 이미 바인딩돼 있어야 초기 체력을 받음. PossessedBy가 BeginPlay보다 먼저 오면 위젯이 아직 null일 수 있으므로 여기서 한 번 더 시도.
 		if (CharacterHealthWidgetComponent)
@@ -155,12 +155,9 @@ void AJujutsuBaseCharacter::PossessedBy(AController* NewController)
 			}
 		}
 
-		if (!CharacterStartUpData.IsNull())
+		if (CharacterStartUpDataReal && JujutsuAbilitySystemComponent->GetAvatarActor())
 		{
-			if (UDataAsset_StartUpDataBase* LoadedData = CharacterStartUpData.LoadSynchronous())
-			{
-				LoadedData->GiveToAbilitySystemComponent(JujutsuAbilitySystemComponent);
-			}
+			CharacterStartUpDataReal->GiveToAbilitySystemComponent(JujutsuAbilitySystemComponent);
 		}
 	}
 }
