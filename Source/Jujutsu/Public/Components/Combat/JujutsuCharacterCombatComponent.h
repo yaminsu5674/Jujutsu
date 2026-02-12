@@ -36,9 +36,17 @@ public:
 	/** 바디 콜리전 EndOverlap 시 호출 (타겟에서 벗어남) */
 	virtual void OnPulledFromTargetActor(AActor* InteractedActor);
 
-	/** 현재 타겟 (약한 참조). 타겟 락 등에서 여기서 관리 */
+	/** 현재 타겟 (약한 참조). 타겟 락 등에서 여기서 관리. 서버에서 설정 시 ReplicatedTarget으로 클라이언트에 복제됨. */
 	UPROPERTY(BlueprintReadOnly, Category = "Jujutsu|Combat")
 	TWeakObjectPtr<AJujutsuBaseCharacter> Target;
+
+	/** 서버에서 설정·복제. 클라이언트는 OnRep에서 Target에 동기화. 타겟 변경 시 SetTarget 사용. */
+	UPROPERTY(ReplicatedUsing = OnRep_Target)
+	TObjectPtr<AJujutsuBaseCharacter> ReplicatedTarget;
+
+	/** 타겟 설정 (서버/권한에서 호출. ReplicatedTarget 복제로 클라이언트에 전달) */
+	UFUNCTION(BlueprintCallable, Category = "Jujutsu|Combat")
+	void SetTarget(AJujutsuBaseCharacter* NewTarget);
 
 	/** 바디 콜리전 히트 시 피격자에게 전달할 이벤트 태그 */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Jujutsu|Combat")
@@ -60,8 +68,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Jujutsu|Combat|Damage", meta = (ClampMin = "0"))
 	void SetBaseDamage(float InDamage);
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 protected:
 	virtual void BeginPlay() override;
+
+	UFUNCTION()
+	void OnRep_Target();
 
 	/** 현재 오버랩 중인 액터 (Hit 이벤트 중복 발동 방지·콜리전 끌 때 비움) */
 	TArray<AActor*> OverlappedActors;

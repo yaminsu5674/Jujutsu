@@ -95,7 +95,7 @@ void AJujutsuMultiPlayGameMode::OnAllCharactersReady()
 			if (!Combat) continue;
 
 			int32 TargetIndex = (i + 1) % Characters.Num();
-			Combat->Target = Characters[TargetIndex];
+			Combat->SetTarget(Characters[TargetIndex]);
 		}
 	}
 }

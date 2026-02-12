@@ -76,8 +76,8 @@ void AJujutsuSinglePlayGameMode::OnAllCharactersReady()
 		UJujutsuCharacterCombatComponent* Combat1 = Characters[1]->GetCharacterCombatComponent();
 		if (Combat0 && Combat1)
 		{
-			Combat0->Target = Characters[1];
-			Combat1->Target = Characters[0];
+			Combat0->SetTarget(Characters[1]);
+			Combat1->SetTarget(Characters[0]);
 		}
 	}
 }

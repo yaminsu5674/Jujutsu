@@ -186,7 +186,7 @@ EBTNodeResult::Type UBTTask_CustomMove::ExecuteMoveDecision(UBehaviorTreeCompone
 
 	if (UJujutsuCharacterCombatComponent* Combat = Character->GetCharacterCombatComponent())
 	{
-		Combat->Target = TargetCharacter;
+		Combat->SetTarget(TargetCharacter);
 	}
 
 	const FVector MyLoc = Character->GetActorLocation();

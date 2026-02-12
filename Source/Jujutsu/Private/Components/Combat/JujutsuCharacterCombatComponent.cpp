@@ -6,10 +6,29 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "JujutsuGameplayTags.h"
 #include "JujutsuSkillLibrary.h"
+#include "Net/UnrealNetwork.h"
 
 UJujutsuCharacterCombatComponent::UJujutsuCharacterCombatComponent()
 {
 	HitEventTag = JujutsuGameplayTags::Character_Event_Hit_Light;
+	SetIsReplicatedByDefault(true);
+}
+
+void UJujutsuCharacterCombatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(UJujutsuCharacterCombatComponent, ReplicatedTarget);
+}
+
+void UJujutsuCharacterCombatComponent::OnRep_Target()
+{
+	Target = ReplicatedTarget;
+}
+
+void UJujutsuCharacterCombatComponent::SetTarget(AJujutsuBaseCharacter* NewTarget)
+{
+	ReplicatedTarget = NewTarget;
+	Target = NewTarget;
 }
 
 void UJujutsuCharacterCombatComponent::SetHitEventTag(FGameplayTag InTag)
