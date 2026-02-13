@@ -87,7 +87,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile", meta = (AllowPrivateAccess = "true"))
 	float Damage = 0.f;
 
-	/** 시전자. 블루프린트 Spawn Actor from Class 시 인풋 핀으로 설정. EndProjectile(소멸) 시 참조 해제. 발사 후에도 overlap 시 시전자 제외용으로 유지. (SimpleDamage 사용 시 데미지에는 미사용). 복제되어 클라이언트에서도 시전자 무시 가능. */
+	/** 시전자. 블루프린트 Spawn Actor from Class 시 인풋 핀으로 설정. 발사 후 overlap 시 시전자 제외용으로 유지. (SimpleDamage 사용 시 데미지에는 미사용). 복제되어 클라이언트에서도 시전자 무시 가능. */
 	UPROPERTY(BlueprintReadWrite, Category = "Projectile", ReplicatedUsing = OnRep_Caster, meta = (ExposeOnSpawn = "true"))
 	TObjectPtr<AJujutsuBaseCharacter> Caster;
 
@@ -117,6 +117,14 @@ protected:
 	/** 오버랩 시 데미지 적용 직전 호출 (이펙트 등) */
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Projectile Overlap FX"))
 	void BP_OnProjectileOverlapFX(const FVector& HitLocation);
+
+	/** BeginOverlap 처리(데미지 등) 직후 블루프린트에서 구현 가능 */
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "After Overlap Begin"))
+	void AfterOverlapBegin(AActor* OtherActor);
+
+	/** EndOverlap 처리(이펙트 제거 등) 직후 블루프린트에서 구현 가능 */
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "After Overlap End"))
+	void AfterOverlapEnd(AActor* OtherActor);
 
 protected:
 	/** 현재 오버랩 중인 액터 목록. 자식 클래스에서 EndProjectile 등에서 활용 가능 */

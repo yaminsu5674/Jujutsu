@@ -129,7 +129,6 @@ void AJujutsuProjectileBase::Destroyed()
 
 void AJujutsuProjectileBase::EndProjectile_Implementation()
 {
-	Caster = nullptr;
 }
 
 void AJujutsuProjectileBase::CheckOverlap()
@@ -150,18 +149,29 @@ void AJujutsuProjectileBase::LaunchProjectile_Implementation(AJujutsuBaseCharact
 
 void AJujutsuProjectileBase::OnProjectileBeginOverlap_Implementation(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (!OtherActor || OtherActor == GetOwner() || OtherActor == Caster || OtherActor == GetInstigator()) return;
+	if (!OtherActor) return;
+
+	// 방어벽 업그레이드: 시전자 본인 + 시전자가 주인인 무기/부착물(GetOwner/GetInstigator) 모두 차단
+	const bool bIsCasterFamily = (OtherActor == Caster) ||
+		(OtherActor->GetOwner() == Caster) ||
+		(OtherActor->GetInstigator() == Caster);
+	if (OtherActor == GetOwner() || bIsCasterFamily) return;
 	if (OverlappedActors.Contains(OtherActor)) return;
 
-	Debug::Print(FString::Printf(TEXT("OnProjectileBeginOverlap: %s"), OtherActor ? *OtherActor->GetName() : TEXT("null")), FColor::Green);
+	Debug::Print(FString::Printf(TEXT("적중한 타겟: %s"), *OtherActor->GetName()), FColor::Green);
 
 	OverlappedActors.AddUnique(OtherActor);
 	bIsOverlapping = true;
 
-	// GAS 원칙: 데미지 판정은 서버(Authority)에서만. 클라이언트는 데미지 적용 불가.
+	// 연출(Visual) 영역: 서버·클라이언트 모두 실행 (클라2에서도 타격 이펙트/사운드 재생)
+	if (OtherActor != GetOwner() && OtherActor != Caster && OtherActor != GetInstigator())
+	{
+		AfterOverlapBegin(OtherActor);
+	}
+
+	// 로직(Logic) 영역: 데미지는 서버만
 	if (!HasAuthority()) return;
 
-	// 데미지 이펙트 적용: SimpleDamage Exec용. Source(Caster) 불필요. 타겟 ASC가 스펙 만들어 자기에게 적용.
 	if (DamageEffectClass)
 	{
 		FActiveGameplayEffectHandle Handle = UJujutsuSkillLibrary::ApplyDamageEffectToTarget(
@@ -181,23 +191,31 @@ void AJujutsuProjectileBase::OnProjectileBeginOverlap_Implementation(UPrimitiveC
 
 void AJujutsuProjectileBase::OnProjectileEndOverlap_Implementation(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	// Debug::Print(FString::Printf(TEXT("OnProjectileEndOverlap: %s"), OtherActor ? *OtherActor->GetName() : TEXT("null")), FColor::Yellow);
+	if (!OtherActor) return;
 
-	// GAS 원칙: 이펙트 제거도 서버에서만. 클라이언트는 권한 없음.
-	if (!HasAuthority()) return;
-
-	if (OtherActor)
-	{
-		if (FActiveGameplayEffectHandle* Handle = ActiveDamageHandles.Find(OtherActor))
-		{
-			if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
-			{
-				TargetASC->RemoveActiveGameplayEffect(*Handle);
-			}
-			ActiveDamageHandles.Remove(OtherActor);
-		}
-	}
+	const bool bIsCasterFamily = (OtherActor == Caster) ||
+		(OtherActor->GetOwner() == Caster) ||
+		(OtherActor->GetInstigator() == Caster);
+	if (OtherActor == GetOwner() || bIsCasterFamily) return;
 
 	OverlappedActors.Remove(OtherActor);
 	bIsOverlapping = (OverlappedActors.Num() > 0);
+
+	// 연출: 서버·클라이언트 모두 실행
+	if (OtherActor != GetOwner() && OtherActor != Caster && OtherActor != GetInstigator())
+	{
+		AfterOverlapEnd(OtherActor);
+	}
+
+	// 로직: 이펙트 제거는 서버만
+	if (!HasAuthority()) return;
+
+	if (FActiveGameplayEffectHandle* Handle = ActiveDamageHandles.Find(OtherActor))
+	{
+		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
+		{
+			TargetASC->RemoveActiveGameplayEffect(*Handle);
+		}
+		ActiveDamageHandles.Remove(OtherActor);
+	}
 }
