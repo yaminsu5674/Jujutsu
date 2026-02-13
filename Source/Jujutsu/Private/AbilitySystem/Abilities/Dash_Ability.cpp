@@ -7,7 +7,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "JujutsuGameplayTags.h"
 #include "JujutsuSkillLibrary.h"
-#include "TimerManager.h"
+#include "Abilities/Tasks/AbilityTask_ApplyRootMotionConstantForce.h"
 
 void UDash_Ability::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -20,11 +20,6 @@ void UDash_Ability::ActivateAbility(const FGameplayAbilitySpecHandle Handle, con
 	bEndAbilityRequested = false;
 	bIsAirDashing = false;
 	bIsGroundDashing = false;
-	if (UWorld* World = GetWorld())
-	{
-		World->GetTimerManager().ClearTimer(DashGravityRestoreHandle);
-		World->GetTimerManager().ClearTimer(DashFrictionRestoreHandle);
-	}
 
 	AJujutsuBaseCharacter* Character = GetCharacterFromActorInfo();
 	if (!Character) return;
@@ -75,21 +70,35 @@ void UDash_Ability::ApplyMovementForAirDash(AJujutsuBaseCharacter* Character)
 		RunSpeed = JutsuMove->RunSpeed;
 	}
 
-	SavedGravityScale = MoveComp->GravityScale;
-	MoveComp->GravityScale = 0.f;
 	FVector DashDir = Character->GetActorForwardVector();
 	DashDir.Z = 0.f;
+	if (DashDir.IsNearlyZero()) return;
 	DashDir = DashDir.GetSafeNormal();
-	Character->LaunchCharacter(DashDir * RunSpeed * AirDashSpeedMultiplier, true, true);
+
+	const float Strength = RunSpeed * AirDashSpeedMultiplier;
+	const FVector FinishVelocity = DashDir * RunSpeed;
+
+	UAbilityTask_ApplyRootMotionConstantForce* DashTask = UAbilityTask_ApplyRootMotionConstantForce::ApplyRootMotionConstantForce(
+		this,
+		FName(TEXT("AirDashTask")),
+		DashDir,
+		Strength,
+		AirDashGravityRestoreDelay,
+		false,
+		nullptr,
+		ERootMotionFinishVelocityMode::SetVelocity,
+		FinishVelocity,
+		0.1f,
+		false   // bEnableGravity: 공중 대시 중에는 중력 무시
+	);
+
+	if (DashTask)
+	{
+		DashTask->OnFinish.AddDynamic(this, &UDash_Ability::RestoreMovementAfterAirDash);
+		DashTask->ReadyForActivation();
+	}
 
 	bIsAirDashing = true;
-	if (UWorld* World = GetWorld())
-	{
-		World->GetTimerManager().SetTimer(DashGravityRestoreHandle, [this]()
-		{
-			RestoreMovementAfterAirDash();
-		}, AirDashGravityRestoreDelay, false);
-	}
 }
 
 void UDash_Ability::ApplyMovementForGroundDash(AJujutsuBaseCharacter* Character)
@@ -103,51 +112,44 @@ void UDash_Ability::ApplyMovementForGroundDash(AJujutsuBaseCharacter* Character)
 		RunSpeed = JutsuMove->RunSpeed;
 	}
 
-	SavedBrakingFrictionFactor = MoveComp->BrakingFrictionFactor;
-	SavedGroundFriction = MoveComp->GroundFriction;
-	SavedBrakingDecelerationWalking = MoveComp->BrakingDecelerationWalking;
-	MoveComp->BrakingFrictionFactor = 0.f;
-	MoveComp->GroundFriction = 0.f;
-	MoveComp->BrakingDecelerationWalking = 0.f;
-
 	FVector DashDir = Character->GetActorForwardVector();
 	DashDir.Z = 0.f;
-	if (!DashDir.IsNearlyZero())
+	if (DashDir.IsNearlyZero()) return;
+	DashDir = DashDir.GetSafeNormal();
+
+	const float Strength = RunSpeed * GroundDashSpeedMultiplier;
+	const FVector FinishVelocity = DashDir * RunSpeed;
+
+	UAbilityTask_ApplyRootMotionConstantForce* DashTask = UAbilityTask_ApplyRootMotionConstantForce::ApplyRootMotionConstantForce(
+		this,
+		FName(TEXT("GroundDashTask")),
+		DashDir,
+		Strength,
+		GroundDashFrictionRestoreDelay,
+		false,  // bIsAdditive
+		nullptr,
+		ERootMotionFinishVelocityMode::SetVelocity,
+		FinishVelocity,
+		0.1f,
+		false   // bEnableGravity
+	);
+
+	if (DashTask)
 	{
-		DashDir = DashDir.GetSafeNormal();
-		FVector Vel = MoveComp->Velocity;
-		Vel.X = Vel.Y = 0.f;
-		MoveComp->Velocity = Vel;
-		MoveComp->AddImpulse(DashDir * RunSpeed * GroundDashSpeedMultiplier, true);
+		DashTask->OnFinish.AddDynamic(this, &UDash_Ability::RestoreMovementAfterGroundDash);
+		DashTask->ReadyForActivation();
 	}
 
 	bIsGroundDashing = true;
-	if (UWorld* World = GetWorld())
-	{
-		World->GetTimerManager().SetTimer(DashFrictionRestoreHandle, [this]()
-		{
-			RestoreMovementAfterGroundDash();
-		}, GroundDashFrictionRestoreDelay, false);
-	}
 }
 
 void UDash_Ability::RestoreMovementAfterAirDash()
 {
 	if (!bIsAirDashing) return;
 	bIsAirDashing = false;
-	if (UWorld* World = GetWorld())
-	{
-		World->GetTimerManager().ClearTimer(DashGravityRestoreHandle);
-	}
-	if (AJujutsuBaseCharacter* Character = GetCharacterFromActorInfo())
-	{
-		if (UCharacterMovementComponent* MoveComp = Character->GetCharacterMovement())
-		{
-			MoveComp->GravityScale = SavedGravityScale;
-		}
-	}
+
 	bDashFinished = true;
-	if (bEndAbilityRequested)
+	if (bEndAbilityRequested || bDashFinished)
 	{
 		bEndAbilityRequested = false;
 		EndAbility(CachedAbilityHandle, CachedActorInfo, CachedActivationInfo, true, false);
@@ -158,21 +160,9 @@ void UDash_Ability::RestoreMovementAfterGroundDash()
 {
 	if (!bIsGroundDashing) return;
 	bIsGroundDashing = false;
-	if (UWorld* World = GetWorld())
-	{
-		World->GetTimerManager().ClearTimer(DashFrictionRestoreHandle);
-	}
-	if (AJujutsuBaseCharacter* Character = GetCharacterFromActorInfo())
-	{
-		if (UCharacterMovementComponent* MoveComp = Character->GetCharacterMovement())
-		{
-			MoveComp->BrakingFrictionFactor = SavedBrakingFrictionFactor;
-			MoveComp->GroundFriction = SavedGroundFriction;
-			MoveComp->BrakingDecelerationWalking = SavedBrakingDecelerationWalking;
-		}
-	}
+
 	bDashFinished = true;
-	if (bEndAbilityRequested)
+	if (bEndAbilityRequested || bDashFinished)
 	{
 		bEndAbilityRequested = false;
 		EndAbility(CachedAbilityHandle, CachedActorInfo, CachedActivationInfo, true, false);
@@ -181,14 +171,9 @@ void UDash_Ability::RestoreMovementAfterGroundDash()
 
 void UDash_Ability::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
-	// Character_Status_Hit(피격) 상태일 때는 즉시 가속도/마찰/중력 복구
+	// Character_Status_Hit(피격) 상태일 때는 즉시 복구
 	if (ActorInfo && ActorInfo->AbilitySystemComponent.IsValid() && ActorInfo->AbilitySystemComponent->HasMatchingGameplayTag(JujutsuGameplayTags::Character_Status_Hit))
 	{
-		if (UWorld* World = GetWorld())
-		{
-			World->GetTimerManager().ClearTimer(DashGravityRestoreHandle);
-			World->GetTimerManager().ClearTimer(DashFrictionRestoreHandle);
-		}
 		if (bIsAirDashing)
 		{
 			RestoreMovementAfterAirDash();
@@ -207,11 +192,6 @@ void UDash_Ability::EndAbility(const FGameplayAbilitySpecHandle Handle, const FG
 		return;
 	}
 
-	if (UWorld* World = GetWorld())
-	{
-		World->GetTimerManager().ClearTimer(DashGravityRestoreHandle);
-		World->GetTimerManager().ClearTimer(DashFrictionRestoreHandle);
-	}
 	if (bIsAirDashing)
 	{
 		RestoreMovementAfterAirDash();
