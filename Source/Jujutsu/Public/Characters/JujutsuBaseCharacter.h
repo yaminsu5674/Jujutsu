@@ -49,6 +49,9 @@ protected:
 	/** PossessedBy(호스트) / OnRep_PlayerState(원격 클라) 양쪽에서 호출. IsLocallyControlled()일 때만 컨트롤러 부여 UI 어빌리티 수동 활성화. */
 	void TryActivateLocalControllerUIAbilities();
 
+	/** 머리 위 체력바: 본인(로컬 조종)이면 숨김, 상대면 표시. SetOwner(nullptr) 후 이걸로 "나만 숨김". */
+	void UpdateHeadHealthBarVisibility();
+
 	//~ Begin ACharacter Interface.
 	virtual void Landed(const FHitResult& Hit) override;
 	//~ End ACharacter Interface

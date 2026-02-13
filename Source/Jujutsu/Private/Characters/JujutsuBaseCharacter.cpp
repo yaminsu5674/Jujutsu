@@ -111,6 +111,14 @@ void AJujutsuBaseCharacter::BeginPlay()
 		{
 			HealthWidget->InitCharacterCreatedWidget(this);
 		}
+		// Screen 모드: 리슨 서버에서도 "이 컴퓨터 모니터"에 그리도록, 위젯 주인을 현재 로컬 플레이어로 강제 지정.
+		if (APlayerController* LocalPC = GetWorld()->GetFirstPlayerController())
+		{
+			if (ULocalPlayer* LocalPlayer = LocalPC->GetLocalPlayer())
+			{
+				CharacterHealthWidgetComponent->SetOwnerPlayer(LocalPlayer);
+			}
+		}
 	}
 
 	if (UWorld* World = GetWorld())
@@ -122,6 +130,8 @@ void AJujutsuBaseCharacter::BeginPlay()
 				PlayGM->NotifyCharacterReady(this);
 			}
 		}
+		// 타이밍 이슈 방지: 다음 틱에 가시성 업데이트
+		World->GetTimerManager().SetTimerForNextTick([this]() { UpdateHeadHealthBarVisibility(); });
 	}
 }
 
@@ -162,6 +172,8 @@ void AJujutsuBaseCharacter::PossessedBy(AController* NewController)
 
 		// 호스트(리슨 서버): PossessedBy는 서버에서만 실행됨. 이때 내가 로컬 플레이어면 여기서 UI 어빌리티 활성화.
 		TryActivateLocalControllerUIAbilities();
+
+		UpdateHeadHealthBarVisibility();
 	}
 }
 
@@ -171,6 +183,15 @@ void AJujutsuBaseCharacter::OnRep_PlayerState()
 
 	// 원격 클라: PossessedBy는 클라이언트에서 실행 안 됨. PlayerState 복제 도착 시점에 로컬에서 UI 어빌리티 활성화.
 	TryActivateLocalControllerUIAbilities();
+
+	UpdateHeadHealthBarVisibility();
+}
+
+void AJujutsuBaseCharacter::UpdateHeadHealthBarVisibility()
+{
+	if (!CharacterHealthWidgetComponent) return;
+	// SetOwner(nullptr)로 모두에게 보이게 해둔 뒤, 본인(로컬 조종)만 숨김
+	CharacterHealthWidgetComponent->SetHiddenInGame(IsLocallyControlled());
 }
 
 void AJujutsuBaseCharacter::TryActivateLocalControllerUIAbilities()
