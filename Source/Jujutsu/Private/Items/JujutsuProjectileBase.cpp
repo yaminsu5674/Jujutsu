@@ -25,6 +25,10 @@ AJujutsuProjectileBase::AJujutsuProjectileBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
+	// 서버가 스폰한 발사체가 클라이언트(클라2)에 보이도록 복제. 리슨 서버(클라1)가 쓴 스킬 발사체가 클라2 화면에 나오게 함.
+	bReplicates = true;
+	SetReplicateMovement(true);
+
 	InitialLifeSpan = 5.0f;
 
 	ProjectileCollisionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("ProjectileCollisionSphere"));
