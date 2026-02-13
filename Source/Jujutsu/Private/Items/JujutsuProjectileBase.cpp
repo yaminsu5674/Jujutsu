@@ -69,11 +69,14 @@ void AJujutsuProjectileBase::OnRep_Caster()
 	if (ProjectileCollisionSphere && Caster)
 	{
 		ProjectileCollisionSphere->IgnoreActorWhenMoving(Caster, true);
-		if (UJujutsuCharacterCombatComponent* Combat = Caster->GetCharacterCombatComponent())
+		if (bUseAutoObjectRotation)
 		{
-			if (AActor* TargetActor = Combat->Target.Get())
+			if (UJujutsuCharacterCombatComponent* Combat = Caster->GetCharacterCombatComponent())
 			{
-				UJujutsuSkillLibrary::SetObjectRotationToTarget(GetRootComponent(), TargetActor);
+				if (AActor* TargetActor = Combat->Target.Get())
+				{
+					UJujutsuSkillLibrary::SetObjectRotationToTarget(GetRootComponent(), TargetActor);
+				}
 			}
 		}
 	}
@@ -91,11 +94,14 @@ void AJujutsuProjectileBase::BeginPlay()
 	if (AJujutsuBaseCharacter* CasterChar = Caster)
 	{
 		ProjectileCollisionSphere->IgnoreActorWhenMoving(CasterChar, true);
-		if (UJujutsuCharacterCombatComponent* Combat = CasterChar->GetCharacterCombatComponent())
+		if (bUseAutoObjectRotation)
 		{
-			if (AActor* TargetActor = Combat->Target.Get())
+			if (UJujutsuCharacterCombatComponent* Combat = CasterChar->GetCharacterCombatComponent())
 			{
-				UJujutsuSkillLibrary::SetObjectRotationToTarget(GetRootComponent(), TargetActor);
+				if (AActor* TargetActor = Combat->Target.Get())
+				{
+					UJujutsuSkillLibrary::SetObjectRotationToTarget(GetRootComponent(), TargetActor);
+				}
 			}
 		}
 	}

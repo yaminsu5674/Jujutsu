@@ -84,6 +84,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile")
 	FProjectileMovementParams ProjectileMovementParams;
 
+	/** true면 BeginPlay/OnRep_Caster에서 Caster의 Target 방향으로 자동 회전(SetObjectRotationToTarget). 블루프린트 기본값 편집 가능. */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile")
+	bool bUseAutoObjectRotation = true;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile", meta = (AllowPrivateAccess = "true"))
 	float Damage = 0.f;
 
