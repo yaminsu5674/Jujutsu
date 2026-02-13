@@ -16,6 +16,7 @@
 #include "JujutsuSkillLibrary.h"
 #include "JujutsuFunctionLibrary.h"
 #include "JujutsuGameplayTags.h"
+#include "Net/UnrealNetwork.h"
 
 // Debug
 #include "JujutsuDebugHelper.h"
@@ -54,6 +55,28 @@ AJujutsuProjectileBase::AJujutsuProjectileBase()
 	ProjectileMovementComp->ProjectileGravityScale = 0.f;
 	ProjectileMovementComp->bAutoActivate = true;
 	ProjectileMovementComp->bSweepCollision = true;
+}
+
+void AJujutsuProjectileBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AJujutsuProjectileBase, Caster);
+}
+
+void AJujutsuProjectileBase::OnRep_Caster()
+{
+	// 클라이언트: 복제된 Caster에 대해 시전자 무시 적용 (BeginPlay는 Caster 수신 전에 올 수 있음)
+	if (ProjectileCollisionSphere && Caster)
+	{
+		ProjectileCollisionSphere->IgnoreActorWhenMoving(Caster, true);
+		if (UJujutsuCharacterCombatComponent* Combat = Caster->GetCharacterCombatComponent())
+		{
+			if (AActor* TargetActor = Combat->Target.Get())
+			{
+				UJujutsuSkillLibrary::SetObjectRotationToTarget(GetRootComponent(), TargetActor);
+			}
+		}
+	}
 }
 
 void AJujutsuProjectileBase::BeginPlay()
@@ -127,13 +150,16 @@ void AJujutsuProjectileBase::LaunchProjectile_Implementation(AJujutsuBaseCharact
 
 void AJujutsuProjectileBase::OnProjectileBeginOverlap_Implementation(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	// Debug::Print(FString::Printf(TEXT("OnProjectileBeginOverlap: %s"), OtherActor ? *OtherActor->GetName() : TEXT("null")), FColor::Green);
-
 	if (!OtherActor || OtherActor == GetOwner() || OtherActor == Caster || OtherActor == GetInstigator()) return;
 	if (OverlappedActors.Contains(OtherActor)) return;
 
+	Debug::Print(FString::Printf(TEXT("OnProjectileBeginOverlap: %s"), OtherActor ? *OtherActor->GetName() : TEXT("null")), FColor::Green);
+
 	OverlappedActors.AddUnique(OtherActor);
 	bIsOverlapping = true;
+
+	// GAS 원칙: 데미지 판정은 서버(Authority)에서만. 클라이언트는 데미지 적용 불가.
+	if (!HasAuthority()) return;
 
 	// 데미지 이펙트 적용: SimpleDamage Exec용. Source(Caster) 불필요. 타겟 ASC가 스펙 만들어 자기에게 적용.
 	if (DamageEffectClass)
@@ -156,6 +182,9 @@ void AJujutsuProjectileBase::OnProjectileBeginOverlap_Implementation(UPrimitiveC
 void AJujutsuProjectileBase::OnProjectileEndOverlap_Implementation(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	// Debug::Print(FString::Printf(TEXT("OnProjectileEndOverlap: %s"), OtherActor ? *OtherActor->GetName() : TEXT("null")), FColor::Yellow);
+
+	// GAS 원칙: 이펙트 제거도 서버에서만. 클라이언트는 권한 없음.
+	if (!HasAuthority()) return;
 
 	if (OtherActor)
 	{

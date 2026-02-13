@@ -59,8 +59,14 @@ public:
 	void LaunchProjectile(AJujutsuBaseCharacter* Target);
 	virtual void LaunchProjectile_Implementation(AJujutsuBaseCharacter* Target);
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 protected:
 	virtual void BeginPlay() override;
+
+	/** 클라이언트에서 Caster 복제 수신 시 시전자 무시(콜리전/오버랩) 적용 */
+	UFUNCTION()
+	void OnRep_Caster();
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Projectile")
 	USphereComponent* ProjectileCollisionSphere;
@@ -81,8 +87,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile", meta = (AllowPrivateAccess = "true"))
 	float Damage = 0.f;
 
-	/** 시전자. 블루프린트 Spawn Actor from Class 시 인풋 핀으로 설정. EndProjectile(소멸) 시 참조 해제. 발사 후에도 overlap 시 시전자 제외용으로 유지. (SimpleDamage 사용 시 데미지에는 미사용) */
-	UPROPERTY(BlueprintReadWrite, Category = "Projectile", meta = (ExposeOnSpawn = "true"))
+	/** 시전자. 블루프린트 Spawn Actor from Class 시 인풋 핀으로 설정. EndProjectile(소멸) 시 참조 해제. 발사 후에도 overlap 시 시전자 제외용으로 유지. (SimpleDamage 사용 시 데미지에는 미사용). 복제되어 클라이언트에서도 시전자 무시 가능. */
+	UPROPERTY(BlueprintReadWrite, Category = "Projectile", ReplicatedUsing = OnRep_Caster, meta = (ExposeOnSpawn = "true"))
 	TObjectPtr<AJujutsuBaseCharacter> Caster;
 
 	/** 오버랩 중인 타겟에게 적용할 데미지 게임플레이 이펙트 (지정 시 BeginOverlap에서 적용, EndOverlap에서 제거) */
