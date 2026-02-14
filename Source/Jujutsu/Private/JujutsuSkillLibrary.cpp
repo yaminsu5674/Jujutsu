@@ -4,7 +4,6 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "Characters/JujutsuBaseCharacter.h"
-#include "GameFramework/Character.h"
 #include "Components/Combat/JujutsuCharacterCombatComponent.h"
 #include "Components/JujutsuCharacterMovementComponent.h"
 #include "Components/SceneComponent.h"
@@ -68,29 +67,6 @@ FVector UJujutsuSkillLibrary::GetKnockbackDirection(AActor* SourceActor)
 		Dir2D.Z = 0.f;
 	}
 	return Dir2D.GetSafeNormal();
-}
-
-void UJujutsuSkillLibrary::LaunchCharacterFromSourceToTarget(AActor* SourceActor, ACharacter* TargetCharacter, float HorizontalForce, float VerticalForce)
-{
-	if (!SourceActor || !TargetCharacter) return;
-
-	// Launch 전에 타겟 움직임·가속도 초기화 (대시 등 잔류 속도 제거)
-	if (UCharacterMovementComponent* MoveComp = TargetCharacter->GetCharacterMovement())
-	{
-		MoveComp->StopMovementImmediately();
-	}
-
-	FVector Dir2D = SourceActor->GetVelocity();
-	Dir2D.Z = 0.f;
-	if (Dir2D.IsNearlyZero())
-	{
-		Dir2D = SourceActor->GetActorForwardVector();
-		Dir2D.Z = 0.f;
-	}
-	Dir2D = Dir2D.GetSafeNormal();
-
-	FVector LaunchVelocity(Dir2D.X * HorizontalForce, Dir2D.Y * HorizontalForce, VerticalForce);
-	TargetCharacter->LaunchCharacter(LaunchVelocity, true, true);
 }
 
 void UJujutsuSkillLibrary::SetObjectRotationToTarget(USceneComponent* Object, AActor* Target)
