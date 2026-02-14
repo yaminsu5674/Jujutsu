@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystem/Abilities/JujutsuGameplayAbility.h"
+#include "JujutsuTypes/JujutsuEnumTypes.h"
 #include "TelePort_Ability.generated.h"
 
 /**
@@ -39,6 +40,10 @@ protected:
 	/** 타겟과 텔레포트할 떨어진 거리 (월드 유닛) */
 	UPROPERTY(EditDefaultsOnly, Category = "Jujutsu|Teleport", meta = (ClampMin = "1"))
 	float DistanceFromTarget = 150.f;
+
+	/** 기본 슬롯 사용 시 우선 검사할 방향. PositionSlots가 비어 있을 때만 적용 */
+	UPROPERTY(EditDefaultsOnly, Category = "Jujutsu|Teleport")
+	ETeleportPriorityDirection PreferredDirection = ETeleportPriorityDirection::Back;
 
 	/** 위치 슬롯 (우선순위 순 정렬 후 검사). 비어 있으면 기본 슬롯 사용 */
 	UPROPERTY(EditDefaultsOnly, Category = "Jujutsu|Teleport")

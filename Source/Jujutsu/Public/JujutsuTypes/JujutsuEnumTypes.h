@@ -48,3 +48,12 @@ enum class EBodyCollisionPart : uint8
 	LeftFoot,
 	RightFoot
 };
+
+/** 텔레포트 기본 슬롯 검사 시 어느 방향을 우선할지. 자식 어빌리티에서 EditDefaultsOnly로 변경 가능 */
+UENUM(BlueprintType)
+enum class ETeleportPriorityDirection : uint8
+{
+	Back   UMETA(DisplayName = "Back"),
+	Right  UMETA(DisplayName = "Right"),
+	Left   UMETA(DisplayName = "Left")
+};

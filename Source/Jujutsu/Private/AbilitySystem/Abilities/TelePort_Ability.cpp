@@ -189,11 +189,35 @@ bool UTelePort_Ability::IsPositionValid(ACharacter* Character, const FVector& Ca
 
 TArray<FTeleportPositionSlot> UTelePort_Ability::GetDefaultSlots() const
 {
+	float P_Back = 0.6f, P_BackRight = 0.8f, P_BackLeft = 0.8f, P_Right = 0.5f, P_Left = 0.5f;
+	switch (PreferredDirection)
+	{
+	case ETeleportPriorityDirection::Back:
+		P_Back = 1.0f;
+		P_BackRight = P_BackLeft = 0.8f;
+		P_Right = P_Left = 0.5f;
+		break;
+	case ETeleportPriorityDirection::Right:
+		P_Right = 1.0f;
+		P_BackRight = 0.8f;
+		P_Back = 0.6f;
+		P_BackLeft = 0.5f;
+		P_Left = 0.3f;
+		break;
+	case ETeleportPriorityDirection::Left:
+		P_Left = 1.0f;
+		P_BackLeft = 0.8f;
+		P_Back = 0.6f;
+		P_BackRight = 0.5f;
+		P_Right = 0.3f;
+		break;
+	}
+
 	return {
-		{ FVector2D(-1.f, 0.f), 1.0f },   // 정면 뒤
-		{ FVector2D(-0.8f, 0.5f), 0.8f }, // 뒤-오른쪽
-		{ FVector2D(-0.8f, -0.5f), 0.8f }, // 뒤-왼쪽
-		{ FVector2D(0.f, 1.f), 0.5f },    // 오른쪽
-		{ FVector2D(0.f, -1.f), 0.5f }    // 왼쪽
+		{ FVector2D(-1.f, 0.f), P_Back },       // 정면 뒤
+		{ FVector2D(-0.8f, 0.5f), P_BackRight }, // 뒤-오른쪽
+		{ FVector2D(-0.8f, -0.5f), P_BackLeft }, // 뒤-왼쪽
+		{ FVector2D(0.f, 1.f), P_Right },       // 오른쪽
+		{ FVector2D(0.f, -1.f), P_Left }        // 왼쪽
 	};
 }
