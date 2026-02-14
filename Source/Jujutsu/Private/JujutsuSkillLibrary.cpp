@@ -56,6 +56,20 @@ void UJujutsuSkillLibrary::SetGravityEnabled(AJujutsuBaseCharacter* InCharacter,
 	}
 }
 
+FVector UJujutsuSkillLibrary::GetKnockbackDirection(AActor* SourceActor)
+{
+	if (!SourceActor) return FVector::ZeroVector;
+
+	FVector Dir2D = SourceActor->GetVelocity();
+	Dir2D.Z = 0.f;
+	if (Dir2D.IsNearlyZero())
+	{
+		Dir2D = SourceActor->GetActorForwardVector();
+		Dir2D.Z = 0.f;
+	}
+	return Dir2D.GetSafeNormal();
+}
+
 void UJujutsuSkillLibrary::LaunchCharacterFromSourceToTarget(AActor* SourceActor, ACharacter* TargetCharacter, float HorizontalForce, float VerticalForce)
 {
 	if (!SourceActor || !TargetCharacter) return;

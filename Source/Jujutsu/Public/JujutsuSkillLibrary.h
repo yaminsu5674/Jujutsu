@@ -30,6 +30,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Jujutsu|SkillLibrary", meta = (DisplayName = "Set Gravity Enabled"))
 	static void SetGravityEnabled(AJujutsuBaseCharacter* InCharacter, bool bEnable);
 
+	/** 넉백 방향 계산용. 공격자 속도 방향 우선, 정지 시 바라보는 방향. Apply Root Motion Jump Force 등에서 사용 */
+	UFUNCTION(BlueprintPure, Category = "Jujutsu|SkillLibrary")
+	static FVector GetKnockbackDirection(AActor* SourceActor);
+
 	/** 소스 액터의 이동 방향으로 타겟 캐릭터를 LaunchCharacter. 방향 XY 정규화 후 Z=1, 수평/수직 힘으로 세기 조절 */
 	UFUNCTION(BlueprintCallable, Category = "Jujutsu|SkillLibrary")
 	static void LaunchCharacterFromSourceToTarget(AActor* SourceActor, ACharacter* TargetCharacter, float HorizontalForce, float VerticalForce);
