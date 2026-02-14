@@ -49,6 +49,7 @@ namespace JujutsuGameplayTags
 	/** Character Event Teleport */
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_Teleport, "Character.Event.Teleport");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_Teleport_Back, "Character.Event.Teleport.Back");
+	UE_DEFINE_GAMEPLAY_TAG(Character_Event_Teleport_Front, "Character.Event.Teleport.Front");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_Teleport_Right, "Character.Event.Teleport.Right");
 
 	/** Character Event TeleportSuccess */

@@ -53,6 +53,7 @@ enum class EBodyCollisionPart : uint8
 UENUM(BlueprintType)
 enum class ETeleportPriorityDirection : uint8
 {
+	Front  UMETA(DisplayName = "Front"),
 	Back   UMETA(DisplayName = "Back"),
 	Right  UMETA(DisplayName = "Right"),
 	Left   UMETA(DisplayName = "Left")

@@ -47,6 +47,7 @@ namespace JujutsuGameplayTags
 	/** Character Event Teleport (텔레포트 어빌리티 트리거. 몽타주 노티파이 등에서 SendGameplayEvent) */
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Event_Teleport);
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Event_Teleport_Back);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Event_Teleport_Front);
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Event_Teleport_Right);
 
 	/** Character Event TeleportSuccess (텔레포트 성공 시 발동. 연출 등에서 활용) */
