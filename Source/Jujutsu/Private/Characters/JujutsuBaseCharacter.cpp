@@ -190,8 +190,9 @@ void AJujutsuBaseCharacter::OnRep_PlayerState()
 void AJujutsuBaseCharacter::UpdateHeadHealthBarVisibility()
 {
 	if (!CharacterHealthWidgetComponent) return;
-	// SetOwner(nullptr)로 모두에게 보이게 해둔 뒤, 본인(로컬 조종)만 숨김
-	CharacterHealthWidgetComponent->SetHiddenInGame(IsLocallyControlled());
+	// 로컬에서 조종하면서 동시에 사람(Player)이 조종할 때만 체력바 숨김 (AI는 로컬 조종이어도 IsPlayerControlled=false라 체력바 표시)
+	const bool bIsLocalPlayer = IsLocallyControlled() && IsPlayerControlled();
+	CharacterHealthWidgetComponent->SetHiddenInGame(bIsLocalPlayer);
 }
 
 void AJujutsuBaseCharacter::TryActivateLocalControllerUIAbilities()
