@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "Abilities/GameplayAbilityTypes.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "JujutsuFunctionLibrary.generated.h"
 
@@ -50,4 +51,16 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Jujutsu|FunctionLibrary", meta = (DisplayName = "Get Character Combat Component From Actor", ExpandEnumAsExecs = "OutValidType"))
 	static UJujutsuCharacterCombatComponent* BP_GetCharacterCombatComponentFromActor(AActor* InActor, EJujutsuValidType& OutValidType);
+
+	/**
+	 * 서버에서만 TargetActor의 ASC에 게임플레이 이벤트를 전달합니다.
+	 * 발사체 오버랩 등에서 블루프린트로 호출할 때 사용. 클라이언트에서 호출하면 무시되어
+	 * 피격자(원격 클라이언트)가 이벤트를 서버 ASC에서만 받고 피격 어빌리티가 정상 실행됩니다.
+	 * @param TargetActor 피격자(이벤트를 받을 액터)
+	 * @param EventTag 전달할 이벤트 태그 (예: Character.Event.Hit.Light)
+	 * @param EventData 이벤트 페이로드
+	 * @param WorldContextObject 서버 여부 판단용 (발사체 오버랩이면 Self/Projectile 전달)
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Jujutsu|FunctionLibrary", meta = (WorldContext = "WorldContextObject", DisplayName = "Send Gameplay Event To Actor (Authority Only)"))
+	static void SendGameplayEventToActorAuthorityOnly(AActor* TargetActor, FGameplayTag EventTag, FGameplayEventData EventData, UObject* WorldContextObject);
 };

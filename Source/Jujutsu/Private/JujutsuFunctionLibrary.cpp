@@ -5,6 +5,13 @@
 #include "AbilitySystem/JujutsuAbilitySystemComponent.h"
 #include "Characters/JujutsuBaseCharacter.h"
 #include "Components/Combat/JujutsuCharacterCombatComponent.h"
+#include "Engine/Engine.h"
+#include "Engine/World.h"
+
+// Debug
+#include "JujutsuDebugHelper.h"
+
+
 
 UJujutsuAbilitySystemComponent* UJujutsuFunctionLibrary::NativeGetJujutsuASCFromActor(AActor* InActor)
 {
@@ -64,4 +71,18 @@ UJujutsuCharacterCombatComponent* UJujutsuFunctionLibrary::BP_GetCharacterCombat
 	OutValidType = CombatComponent ? EJujutsuValidType::Valid : EJujutsuValidType::Invalid;
 
 	return CombatComponent;
+}
+
+void UJujutsuFunctionLibrary::SendGameplayEventToActorAuthorityOnly(AActor* TargetActor, FGameplayTag EventTag, FGameplayEventData EventData, UObject* WorldContextObject)
+{
+	if (!TargetActor || !EventTag.IsValid()) return;
+
+	// 현업 표준: 타겟 액터가 권한(Authority)이 없다면(=클라이언트의 껍데기라면) 컷!
+	// 싱글(0), 데디(1), 리슨(2)에서는 HasAuthority()가 true가 나와 무사통과합니다.
+	if (!TargetActor->HasAuthority())
+	{
+		return;
+	}
+
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(TargetActor, EventTag, EventData);
 }
