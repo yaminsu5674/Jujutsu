@@ -67,6 +67,7 @@ namespace JujutsuGameplayTags
 
 	/** Character Ability/Status (Enemy death 등) */
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_Death);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Event_Death);
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Status_Hit);
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Status_Dead);
 

@@ -75,7 +75,9 @@ void UJujutsuAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCal
 
 		if (GetCurrentHealth() == 0.f)
 		{
-			UJujutsuFunctionLibrary::AddGameplayTagToActorIfNone(Data.Target.GetAvatarActor(), JujutsuGameplayTags::Character_Status_Dead);
+			AActor* AvatarActor = Data.Target.GetAvatarActor();
+			UJujutsuFunctionLibrary::AddGameplayTagToActorIfNone(AvatarActor, JujutsuGameplayTags::Character_Status_Dead);
+			UJujutsuFunctionLibrary::SendGameplayEventToActorAuthorityOnly(AvatarActor, JujutsuGameplayTags::Character_Event_Death, FGameplayEventData(), AvatarActor);
 		}
 	}
 }

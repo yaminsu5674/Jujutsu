@@ -69,6 +69,7 @@ namespace JujutsuGameplayTags
 
 	/** Character Ability/Status (Enemy death 등) */
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Death, "Character.Ability.Death");
+	UE_DEFINE_GAMEPLAY_TAG(Character_Event_Death, "Character.Event.Death");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Status_Hit, "Character.Status.Hit");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Status_Dead, "Character.Status.Dead");
 
