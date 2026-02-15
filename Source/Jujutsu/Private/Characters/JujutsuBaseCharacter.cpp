@@ -104,20 +104,19 @@ void AJujutsuBaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// 위젯은 보통 BeginPlay 시점쯤 생성됨. 여기서 바인딩해두면 대미지 시 체력바 갱신 가능.
+	// 위젯: 소유권을 먼저 지정한 뒤(SetOwnerPlayer 시 위젯이 리셋될 수 있음) 이 캐릭터 데이터로 바인딩.
 	if (CharacterHealthWidgetComponent)
 	{
-		if (UJujutsuWidgetBase* HealthWidget = Cast<UJujutsuWidgetBase>(CharacterHealthWidgetComponent->GetWidget()))
-		{
-			HealthWidget->InitCharacterCreatedWidget(this);
-		}
-		// Screen 모드: 리슨 서버에서도 "이 컴퓨터 모니터"에 그리도록, 위젯 주인을 현재 로컬 플레이어로 강제 지정.
 		if (APlayerController* LocalPC = GetWorld()->GetFirstPlayerController())
 		{
 			if (ULocalPlayer* LocalPlayer = LocalPC->GetLocalPlayer())
 			{
 				CharacterHealthWidgetComponent->SetOwnerPlayer(LocalPlayer);
 			}
+		}
+		if (UJujutsuWidgetBase* HealthWidget = Cast<UJujutsuWidgetBase>(CharacterHealthWidgetComponent->GetWidget()))
+		{
+			HealthWidget->InitCharacterCreatedWidget(this);
 		}
 	}
 

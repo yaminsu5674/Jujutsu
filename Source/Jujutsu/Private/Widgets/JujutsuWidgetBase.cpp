@@ -22,14 +22,6 @@ void UJujutsuWidgetBase::InitCharacterCreatedWidget_Implementation(AActor* Ownin
 void UJujutsuWidgetBase::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
-
-	APawn* OwningPawn = GetOwningPlayer() ? GetOwningPlayer()->GetPawn() : nullptr;
-	if (AJujutsuBaseCharacter* BaseCharacter = Cast<AJujutsuBaseCharacter>(OwningPawn))
-	{
-		if (UCharacterUIComponent* UIComp = BaseCharacter->GetCharacterUIComponent())
-		{
-			BP_OnOwningCharacterUIComponentInitialized(UIComp);
-			UIComp->BroadcastCurrentHealthAndRage();
-		}
-	}
+	// 자동 바인딩 제거: GetOwningPlayer()->GetPawn()으로 스스로 주인을 찾으면, SetOwnerPlayer(LocalPlayer)된 적 체력바가 플레이어에 바인딩되어 이중 구독됨.
+	// 모든 위젯은 외부에서 InitCharacterCreatedWidget 호출 시에만 바인딩. (캐릭터 머리 위 = BeginPlay, Hero 오버레이 = GA_DrawOverlayWidget에서 생성 직후)
 }

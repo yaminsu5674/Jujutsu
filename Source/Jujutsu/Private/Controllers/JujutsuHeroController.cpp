@@ -117,9 +117,9 @@ void AJujutsuHeroController::Server_SetReady_Implementation(bool bReady)
 
 void AJujutsuHeroController::Client_ShowCountdown_Implementation(int32 SecondsRemaining)
 {
-	UE_LOG(LogTemp, Log, TEXT("[Client_ShowCountdown] IsLocal=%d NetMode=%d Seconds=%d - 받은 클라이언트"),
+	UE_LOG(LogTemp, Log, TEXT("[Client_ShowCountdown] IsLocal=%d NetMode=%d Seconds=%d - client received"),
 		IsLocalController(), GetNetMode(), SecondsRemaining);
-	Debug::Print(FString::Printf(TEXT("3초 후에 게임실행된다 - %d"), SecondsRemaining), FColor::Yellow, 0);
+	Debug::Print(FString::Printf(TEXT("Game starts in %d..."), SecondsRemaining), FColor::Yellow, 0);
 }
 
 void AJujutsuHeroController::BeginPlay()

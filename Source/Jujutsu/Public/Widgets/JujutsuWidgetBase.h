@@ -19,8 +19,8 @@ class JUJUTSU_API UJujutsuWidgetBase : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	/** CharacterHealthWidgetComponent에서 BeginPlay 시 호출. 캐릭터 체력 위젯 등 오너 캐릭터 바인딩용 */
-	UFUNCTION(BlueprintNativeEvent, Category = "Jujutsu|Widget")
+	/** CharacterHealthWidgetComponent에서 BeginPlay 시 호출. 캐릭터 체력 위젯 등 오너 캐릭터 바인딩용. 블루프린트에서도 호출 가능(예: Hero 오버레이 위젯 생성 직후) */
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Jujutsu|Widget")
 	void InitCharacterCreatedWidget(AActor* OwningCharacter);
 
 protected:
