@@ -106,43 +106,53 @@ void UJujutsuCharacterCombatComponent::OnHitTargetActor(AActor* HitActor)
 {
 	if (!HitActor) return;
 
-	if (OverlappedActors.Contains(HitActor))
-	{
-		return;
-	}
+	APawn* OwningPawn = GetOwningPawn();
+	if (!OwningPawn) return;
 
-	OverlappedActors.AddUnique(HitActor);
+	// 로컬 플레이어(클라/리슨서버 본인)이거나 서버가 조종하는 AI일 때만 판정 시작
+	const bool bIsLocalPlayer = OwningPawn->IsLocallyControlled();
+	const bool bIsServerAI = OwningPawn->HasAuthority() && !OwningPawn->IsPlayerControlled();
+
+	if (bIsLocalPlayer || bIsServerAI)
+	{
+		if (OverlappedActors.Contains(HitActor)) return;
+		OverlappedActors.AddUnique(HitActor);
+		Server_ProcessHit(HitActor, HitEventTag);
+	}
+}
+
+void UJujutsuCharacterCombatComponent::Server_ProcessHit_Implementation(AActor* HitActor, FGameplayTag PassedHitTag)
+{
+	if (!HitActor) return;
 
 	APawn* OwningPawn = GetOwningPawn();
 	if (!OwningPawn) return;
 
-	FGameplayEventData Data;
-	Data.Instigator = OwningPawn;  // 때린 쪽
-	Data.Target = HitActor;        // 맞은 쪽
-
-	// 공격자에게만 HitSuccess 전달 → 블루프린트에서 이 이벤트 대기 후 Data.Target에게 피격반응/데미지 적용
-	// UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
-	// 	OwningPawn,
-	// 	JujutsuGameplayTags::Character_Event_HitSuccess,
-	// 	Data
-	// );
-
-	// 피격자에게 HitEventTag 전달
-	if (HitEventTag.IsValid())
+	// 원격 클라이언트가 보낸 RPC일 때만 서버에서 중복 체크 (서버 본인/AI가 때린 건 OnHitTargetActor에서 이미 추가됨)
+	if (!OwningPawn->IsLocallyControlled())
 	{
-		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(HitActor, HitEventTag, Data);
+		if (OverlappedActors.Contains(HitActor)) return;
+		OverlappedActors.AddUnique(HitActor);
 	}
 
-	// 데미지 적용
+	FGameplayEventData Data;
+	Data.Instigator = OwningPawn;
+	Data.Target = HitActor;
+
+	if (PassedHitTag.IsValid())
+	{
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(HitActor, PassedHitTag, Data);
+	}
+
 	if (DamageEffectClass)
 	{
 		UJujutsuSkillLibrary::ApplyDamageEffectToTarget(
 			HitActor,
 			DamageEffectClass,
 			Damage,
-			0,   // UsedComboCount (바디 콜리전은 0)
-			1,   // Level
-			OwningPawn // InstigatorForContext (공격자)
+			0,
+			1,
+			OwningPawn
 		);
 	}
 }

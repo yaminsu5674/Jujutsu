@@ -36,6 +36,10 @@ public:
 	/** 바디 콜리전 EndOverlap 시 호출 (타겟에서 벗어남) */
 	virtual void OnPulledFromTargetActor(AActor* InteractedActor);
 
+	/** 클라이언트가 찌른 판정을 서버로 보내는 RPC (근접 히트 동기화). 태그를 같이 보내서 클라-서버 desync 방지. */
+	UFUNCTION(Server, Reliable)
+	void Server_ProcessHit(AActor* HitActor, FGameplayTag PassedHitTag);
+
 	/** 현재 타겟 (약한 참조). 타겟 락 등에서 여기서 관리. 서버에서 설정 시 ReplicatedTarget으로 클라이언트에 복제됨. */
 	UPROPERTY(BlueprintReadOnly, Category = "Jujutsu|Combat")
 	TWeakObjectPtr<AJujutsuBaseCharacter> Target;
