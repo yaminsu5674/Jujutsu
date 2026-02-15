@@ -11,6 +11,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Controllers/JujutsuHeroController.h"
+#include "AbilitySystemComponent.h"
 #include "AbilitySystem/JujutsuAbilitySystemComponent.h"
 #include "AbilitySystem/JujutsuAttributeSet.h"
 #include "DataAssets/StartUpData/DataAsset_StartUpDataBase.h"
@@ -155,6 +156,12 @@ void AJujutsuBaseCharacter::PossessedBy(AController* NewController)
 		JujutsuAbilitySystemComponent->InitAbilityActorInfo(this, this);
 		ensureMsgf(CharacterStartUpDataReal != nullptr, TEXT("Forgot to assign CharacterStartUpDataReal to %s"), *GetName());
 
+		// GAS 속성 변경 시 UI 갱신 (서버 GE뿐 아니라 클라이언트 복제 수신 시에도 델리게이트가 터지므로 멀티플레이 체력바 동기화)
+		JujutsuAbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UJujutsuAttributeSet::GetCurrentHealthAttribute()).AddLambda(
+			[this](const FOnAttributeChangeData&) { if (CharacterUIComponent) CharacterUIComponent->BroadcastCurrentHealthAndRage(); });
+		JujutsuAbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UJujutsuAttributeSet::GetCurrentRageAttribute()).AddLambda(
+			[this](const FOnAttributeChangeData&) { if (CharacterUIComponent) CharacterUIComponent->BroadcastCurrentHealthAndRage(); });
+
 		// GE 적용 시 OnCurrentHealthChanged.Broadcast 호출됨. 위젯이 그 시점에 이미 바인딩돼 있어야 초기 체력을 받음. PossessedBy가 BeginPlay보다 먼저 오면 위젯이 아직 null일 수 있으므로 여기서 한 번 더 시도.
 		if (CharacterHealthWidgetComponent)
 		{
@@ -179,6 +186,15 @@ void AJujutsuBaseCharacter::PossessedBy(AController* NewController)
 void AJujutsuBaseCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
+
+	if (JujutsuAbilitySystemComponent)
+	{
+		// 클라이언트: 복제된 체력/분노 수신 시 UI 갱신되도록 델리게이트 바인딩
+		JujutsuAbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UJujutsuAttributeSet::GetCurrentHealthAttribute()).AddLambda(
+			[this](const FOnAttributeChangeData&) { if (CharacterUIComponent) CharacterUIComponent->BroadcastCurrentHealthAndRage(); });
+		JujutsuAbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UJujutsuAttributeSet::GetCurrentRageAttribute()).AddLambda(
+			[this](const FOnAttributeChangeData&) { if (CharacterUIComponent) CharacterUIComponent->BroadcastCurrentHealthAndRage(); });
+	}
 
 	// 원격 클라: PossessedBy는 클라이언트에서 실행 안 됨. PlayerState 복제 도착 시점에 로컬에서 UI 어빌리티 활성화.
 	TryActivateLocalControllerUIAbilities();

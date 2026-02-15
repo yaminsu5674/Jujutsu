@@ -28,21 +28,31 @@ public:
 
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Health")
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Health", ReplicatedUsing = OnRep_CurrentHealth)
 	FGameplayAttributeData CurrentHealth;
 	ATTRIBUTE_ACCESSORS(UJujutsuAttributeSet, CurrentHealth)
+	UFUNCTION()
+	virtual void OnRep_CurrentHealth(const FGameplayAttributeData& OldCurrentHealth);
 
-	UPROPERTY(BlueprintReadOnly, Category = "Health")
+	UPROPERTY(BlueprintReadOnly, Category = "Health", ReplicatedUsing = OnRep_MaxHealth)
 	FGameplayAttributeData MaxHealth;
 	ATTRIBUTE_ACCESSORS(UJujutsuAttributeSet, MaxHealth)
+	UFUNCTION()
+	virtual void OnRep_MaxHealth(const FGameplayAttributeData& OldMaxHealth);
 
-	UPROPERTY(BlueprintReadOnly, Category = "Rage")
+	UPROPERTY(BlueprintReadOnly, Category = "Rage", ReplicatedUsing = OnRep_CurrentRage)
 	FGameplayAttributeData CurrentRage;
 	ATTRIBUTE_ACCESSORS(UJujutsuAttributeSet, CurrentRage)
+	UFUNCTION()
+	virtual void OnRep_CurrentRage(const FGameplayAttributeData& OldCurrentRage);
 
-	UPROPERTY(BlueprintReadOnly, Category = "Rage")
+	UPROPERTY(BlueprintReadOnly, Category = "Rage", ReplicatedUsing = OnRep_MaxRage)
 	FGameplayAttributeData MaxRage;
 	ATTRIBUTE_ACCESSORS(UJujutsuAttributeSet, MaxRage)
+	UFUNCTION()
+	virtual void OnRep_MaxRage(const FGameplayAttributeData& OldMaxRage);
 
 	UPROPERTY(BlueprintReadOnly, Category = "Damage")
 	FGameplayAttributeData AttackPower;

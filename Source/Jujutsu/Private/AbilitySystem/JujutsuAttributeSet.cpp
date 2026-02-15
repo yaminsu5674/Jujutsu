@@ -6,6 +6,7 @@
 #include "GameplayEffectExtension.h"
 #include "JujutsuFunctionLibrary.h"
 #include "JujutsuGameplayTags.h"
+#include "Net/UnrealNetwork.h"
 
 // Debug
 #include "JujutsuDebugHelper.h"
@@ -20,41 +21,48 @@ UJujutsuAttributeSet::UJujutsuAttributeSet()
 	InitDefensePower(1.f);
 }
 
+void UJujutsuAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME_CONDITION_NOTIFY(UJujutsuAttributeSet, CurrentHealth, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UJujutsuAttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UJujutsuAttributeSet, CurrentRage, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UJujutsuAttributeSet, MaxRage, COND_None, REPNOTIFY_Always);
+}
+
+void UJujutsuAttributeSet::OnRep_CurrentHealth(const FGameplayAttributeData& OldCurrentHealth)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UJujutsuAttributeSet, CurrentHealth, OldCurrentHealth);
+}
+
+void UJujutsuAttributeSet::OnRep_MaxHealth(const FGameplayAttributeData& OldMaxHealth)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UJujutsuAttributeSet, MaxHealth, OldMaxHealth);
+}
+
+void UJujutsuAttributeSet::OnRep_CurrentRage(const FGameplayAttributeData& OldCurrentRage)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UJujutsuAttributeSet, CurrentRage, OldCurrentRage);
+}
+
+void UJujutsuAttributeSet::OnRep_MaxRage(const FGameplayAttributeData& OldMaxRage)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UJujutsuAttributeSet, MaxRage, OldMaxRage);
+}
+
 void UJujutsuAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
-	if (!CachedCharacterUIComponent.IsValid())
-	{
-		if (AActor* Avatar = Data.Target.GetAvatarActor())
-		{
-			if (AJujutsuBaseCharacter* Char = Cast<AJujutsuBaseCharacter>(Avatar))
-			{
-				CachedCharacterUIComponent = Char->GetCharacterUIComponent();
-			}
-		}
-	}
-
-	UCharacterUIComponent* UIComp = CachedCharacterUIComponent.Get();
-
 	if (Data.EvaluatedData.Attribute == GetCurrentHealthAttribute())
 	{
 		const float NewCurrentHealth = FMath::Clamp(GetCurrentHealth(), 0.f, GetMaxHealth());
 		SetCurrentHealth(NewCurrentHealth);
-
-		if (UIComp)
-		{
-			UIComp->OnCurrentHealthChanged.Broadcast(GetCurrentHealth() / GetMaxHealth());
-		}
 	}
 
 	if (Data.EvaluatedData.Attribute == GetCurrentRageAttribute())
 	{
 		const float NewCurrentRage = FMath::Clamp(GetCurrentRage(), 0.f, GetMaxRage());
 		SetCurrentRage(NewCurrentRage);
-
-		if (UIComp)
-		{
-			UIComp->OnCurrentRageChanged.Broadcast(GetCurrentRage() / GetMaxRage());
-		}
 	}
 
 	if (Data.EvaluatedData.Attribute == GetDamageTakenAttribute())
@@ -64,11 +72,6 @@ void UJujutsuAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCal
 		const float NewCurrentHealth = FMath::Clamp(OldHealth - DamageDone, 0.f, GetMaxHealth());
 
 		SetCurrentHealth(NewCurrentHealth);
-
-		if (UIComp)
-		{
-			UIComp->OnCurrentHealthChanged.Broadcast(GetCurrentHealth() / GetMaxHealth());
-		}
 
 		if (GetCurrentHealth() == 0.f)
 		{
