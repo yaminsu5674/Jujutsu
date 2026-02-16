@@ -301,3 +301,11 @@ void AJujutsuBaseCharacter::RemoveHealthWidgetComponent()
 		CharacterHealthWidgetComponent = nullptr;
 	}
 }
+
+void AJujutsuBaseCharacter::Multicast_ProcessDeath_Implementation()
+{
+	//GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetCharacterMovement()->DisableMovement();
+	StopAnimMontage();
+	GetMesh()->bPauseAnims = true;
+}

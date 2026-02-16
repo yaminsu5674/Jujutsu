@@ -141,6 +141,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void RemoveHealthWidgetComponent();
 
+	/** 어빌리티(GA_Death) 종료 시 블루프린트에서 호출. 서버가 호출하면 모든 클라이언트에서도 실행되어 좀비(몽타주 끝나고 일어남) 방지. */
+	UFUNCTION(NetMulticast, Reliable, BlueprintCallable, Category = "Combat|Death")
+	void Multicast_ProcessDeath();
+
 	UBoxComponent* GetLeftHandCollisionBox() const { return LeftHandCollisionBox; }
 	UBoxComponent* GetRightHandCollisionBox() const { return RightHandCollisionBox; }
 	UBoxComponent* GetLeftFootCollisionBox() const { return LeftFootCollisionBox; }
