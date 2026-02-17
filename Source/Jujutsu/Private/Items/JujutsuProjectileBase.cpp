@@ -164,7 +164,7 @@ void AJujutsuProjectileBase::OnProjectileBeginOverlap_Implementation(UPrimitiveC
 	if (OtherActor == GetOwner() || bIsCasterFamily) return;
 	if (OverlappedActors.Contains(OtherActor)) return;
 
-	Debug::Print(FString::Printf(TEXT("적중한 타겟: %s"), *OtherActor->GetName()), FColor::Green);
+	// Debug::Print(FString::Printf(TEXT("적중한 타겟: %s"), *OtherActor->GetName()), FColor::Green);
 
 	OverlappedActors.AddUnique(OtherActor);
 	bIsOverlapping = true;
@@ -204,7 +204,7 @@ void AJujutsuProjectileBase::OnProjectileEndOverlap_Implementation(UPrimitiveCom
 		(OtherActor->GetInstigator() == Caster);
 	if (OtherActor == GetOwner() || bIsCasterFamily) return;
 
-	Debug::Print(FString::Printf(TEXT("적중한 타겟: %s"), *OtherActor->GetName()), FColor::Green);
+	// Debug::Print(FString::Printf(TEXT("적중한 타겟: %s"), *OtherActor->GetName()), FColor::Green);
 
 	OverlappedActors.Remove(OtherActor);
 	bIsOverlapping = (OverlappedActors.Num() > 0);
