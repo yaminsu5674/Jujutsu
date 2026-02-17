@@ -149,7 +149,8 @@ void UDash_Ability::RestoreMovementAfterAirDash()
 	bIsAirDashing = false;
 
 	bDashFinished = true;
-	if (bEndAbilityRequested || bDashFinished)
+	// 키를 이미 뗀 경우에만 여기서 EndAbility 호출. 아니면 어빌리티 유지(공중은 RunSpeed 미적용, 지상은 RunSpeed 유지)
+	if (bEndAbilityRequested)
 	{
 		bEndAbilityRequested = false;
 		EndAbility(CachedAbilityHandle, CachedActorInfo, CachedActivationInfo, true, false);
@@ -162,7 +163,8 @@ void UDash_Ability::RestoreMovementAfterGroundDash()
 	bIsGroundDashing = false;
 
 	bDashFinished = true;
-	if (bEndAbilityRequested || bDashFinished)
+	// 키를 이미 뗀 경우에만 여기서 EndAbility 호출. 아니면 어빌리티 유지 → MaxWalkSpeed = RunSpeed 유지
+	if (bEndAbilityRequested)
 	{
 		bEndAbilityRequested = false;
 		EndAbility(CachedAbilityHandle, CachedActorInfo, CachedActivationInfo, true, false);
