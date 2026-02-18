@@ -144,6 +144,9 @@ void UJujutsuCharacterCombatComponent::Server_ProcessHit_Implementation(AActor* 
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(HitActor, PassedHitTag, Data);
 	}
 
+	// 시전자(공격자)에게 HitSuccess 전달. Data.Target = 피격자 (블루프린트에서 연출/콤보 등 활용)
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OwningPawn, JujutsuGameplayTags::Character_Event_HitSuccess, Data);
+
 	if (DamageEffectClass)
 	{
 		UJujutsuSkillLibrary::ApplyDamageEffectToTarget(
