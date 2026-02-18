@@ -79,4 +79,28 @@ namespace JujutsuGameplayTags
 
 	/** Cooldown tags */
 	UE_DEFINE_GAMEPLAY_TAG(Cooldown_Dash, "Cooldown.Dash");
+
+	/** GameplayCue.Sound (부모. Gojo/Sukuna → A, E, R, ER) */
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Sound, "GameplayCue.Sound");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Sound_Gojo, "GameplayCue.Sound.Gojo");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Sound_Gojo_A, "GameplayCue.Sound.Gojo.A");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Sound_Gojo_E, "GameplayCue.Sound.Gojo.E");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Sound_Gojo_R, "GameplayCue.Sound.Gojo.R");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Sound_Gojo_ER, "GameplayCue.Sound.Gojo.ER");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Sound_Sukuna, "GameplayCue.Sound.Sukuna");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Sound_Sukuna_A, "GameplayCue.Sound.Sukuna.A");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Sound_Sukuna_E, "GameplayCue.Sound.Sukuna.E");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Sound_Sukuna_R, "GameplayCue.Sound.Sukuna.R");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Sound_Sukuna_ER, "GameplayCue.Sound.Sukuna.ER");
+
+	/** GameplayCue.Effect (부모. Gojo/Sukuna → Light, Heavy, Special) */
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Effect, "GameplayCue.Effect");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Effect_Gojo, "GameplayCue.Effect.Gojo");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Effect_Gojo_Light, "GameplayCue.Effect.Gojo.Light");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Effect_Gojo_Heavy, "GameplayCue.Effect.Gojo.Heavy");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Effect_Gojo_Special, "GameplayCue.Effect.Gojo.Special");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Effect_Sukuna, "GameplayCue.Effect.Sukuna");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Effect_Sukuna_Light, "GameplayCue.Effect.Sukuna.Light");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Effect_Sukuna_Heavy, "GameplayCue.Effect.Sukuna.Heavy");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Effect_Sukuna_Special, "GameplayCue.Effect.Sukuna.Special");
 }

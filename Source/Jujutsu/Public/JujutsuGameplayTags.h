@@ -77,4 +77,28 @@ namespace JujutsuGameplayTags
 
 	/** Cooldown tags (어빌리티 쿨다운 중 부여. Activation Blocked Tags에 등록) */
 	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown_Dash);
+
+	/** GameplayCue.Sound (부모. 하위 Gojo/Sukuna → A, E, R, ER) */
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Sound);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Sound_Gojo);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Sound_Gojo_A);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Sound_Gojo_E);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Sound_Gojo_R);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Sound_Gojo_ER);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Sound_Sukuna);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Sound_Sukuna_A);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Sound_Sukuna_E);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Sound_Sukuna_R);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Sound_Sukuna_ER);
+
+	/** GameplayCue.Effect (부모. 하위 Gojo/Sukuna → Light, Heavy, Special) */
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Effect);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Effect_Gojo);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Effect_Gojo_Light);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Effect_Gojo_Heavy);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Effect_Gojo_Special);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Effect_Sukuna);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Effect_Sukuna_Light);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Effect_Sukuna_Heavy);
+	JUJUTSU_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Effect_Sukuna_Special);
 }
