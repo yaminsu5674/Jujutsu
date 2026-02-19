@@ -25,8 +25,12 @@ public:
 protected:
 	virtual void Tick(float DeltaSeconds) override;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Lobby|Travel")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Lobby|Travel")
 	FString BattleMapPath = TEXT("/Game/Dynamic/Maps/CityMap/CityMapMulti.CityMapMulti");
+
+	/** 배틀 맵 이동 시 사용할 게임 모드 경로. C++: /Script/Jujutsu.JujutsuMultiPlayGameMode, 블루프린트: /Game/.../BP_XXX.BP_XXX_C */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Lobby|Travel")
+	FString MultiGameModePath = TEXT("/Script/Jujutsu.JujutsuMultiPlayGameMode");
 
 	UPROPERTY(EditDefaultsOnly, Category = "Lobby|Ready")
 	int32 RequiredPlayerCount = 2;

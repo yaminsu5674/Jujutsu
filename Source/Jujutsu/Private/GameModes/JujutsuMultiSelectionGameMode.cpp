@@ -94,10 +94,10 @@ void AJujutsuMultiSelectionGameMode::Tick(float DeltaSeconds)
 			return;
 		}
 		UE_LOG(LogMultiSelectionLobby, Warning, TEXT("[Travel] Server calling GameInstance::Host. URL=%s"), *BattleMapPath);
-		// 기존: World->SeamlessTravel(BattleMapPath, true);
 		if (UJujutsuGameInstance* GI = World->GetGameInstance<UJujutsuGameInstance>())
 		{
-			GI->Host(BattleMapPath, true);
+			FString TravelURL = FString::Printf(TEXT("%s?game=%s"), *BattleMapPath, *MultiGameModePath);
+			GI->Host(TravelURL, true);
 		}
 		UE_LOG(LogMultiSelectionLobby, Warning, TEXT("[Travel] Host call returned"));
 	}
