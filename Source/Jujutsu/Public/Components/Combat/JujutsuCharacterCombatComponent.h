@@ -52,6 +52,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Jujutsu|Combat")
 	void SetTarget(AJujutsuBaseCharacter* NewTarget);
 
+	/** 현재 타겟을 참조 가능한 강한 포인터로 반환. Target(약한참조)이 유효하면 캐릭터 포인터, 아니면 nullptr */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Jujutsu|Combat")
+	AJujutsuBaseCharacter* GetTargetAsCharacter() const;
+
 	/** 바디 콜리전 히트 시 피격자에게 전달할 이벤트 태그 */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Jujutsu|Combat")
 	FGameplayTag HitEventTag;

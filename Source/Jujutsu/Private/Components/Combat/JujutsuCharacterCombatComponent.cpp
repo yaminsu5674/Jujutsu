@@ -31,6 +31,15 @@ void UJujutsuCharacterCombatComponent::SetTarget(AJujutsuBaseCharacter* NewTarge
 	Target = NewTarget;
 }
 
+AJujutsuBaseCharacter* UJujutsuCharacterCombatComponent::GetTargetAsCharacter() const
+{
+	if (Target.IsValid())
+	{
+		return Target.Get();
+	}
+	return nullptr;
+}
+
 void UJujutsuCharacterCombatComponent::SetHitEventTag(FGameplayTag InTag)
 {
 	HitEventTag = InTag;
