@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "Items/CustomProjectileMovement.h"
+#include "Items/JujutsuProjectileBase.h"
 #include "GameFramework/Actor.h"
 
 UCustomProjectileMovement::UCustomProjectileMovement()
@@ -37,6 +38,20 @@ void UCustomProjectileMovement::HandleImpact(const FHitResult& Hit, float TimeSl
 
 UProjectileMovementComponent::EHandleBlockingHitResult UCustomProjectileMovement::HandleBlockingHit(const FHitResult& Hit, float TimeTick, const FVector& MoveDelta, float& SubTickTimeRemaining)
 {
+	if (Hit.bBlockingHit)
+	{
+		if (AJujutsuProjectileBase* Projectile = Cast<AJujutsuProjectileBase>(GetOwner()))
+		{
+			Projectile->OnProjectileHit(
+				Hit.GetComponent(),
+				Hit.GetActor(),
+				Hit.ImpactPoint,
+				Hit.ImpactNormal,
+				Hit
+			);
+		}
+	}
+
 	switch (MoveType)
 	{
 	case EProjectileMoveType::Single:

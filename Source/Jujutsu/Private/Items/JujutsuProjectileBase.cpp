@@ -38,6 +38,8 @@ AJujutsuProjectileBase::AJujutsuProjectileBase()
 	ProjectileCollisionSphere->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 	ProjectileCollisionSphere->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Block);
 	ProjectileCollisionSphere->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+	ProjectileCollisionSphere->SetCollisionResponseToChannel(ECC_GameTraceChannel2, ECR_Block);  // Floor
+	ProjectileCollisionSphere->SetCollisionResponseToChannel(ECC_GameTraceChannel3, ECR_Block);  // Wall
 	ProjectileCollisionSphere->OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::OnProjectileBeginOverlap);
 	ProjectileCollisionSphere->OnComponentEndOverlap.AddUniqueDynamic(this, &ThisClass::OnProjectileEndOverlap);
 
@@ -134,6 +136,10 @@ void AJujutsuProjectileBase::Destroyed()
 }
 
 void AJujutsuProjectileBase::EndProjectile_Implementation()
+{
+}
+
+void AJujutsuProjectileBase::OnProjectileHit_Implementation(UPrimitiveComponent* HitComponent, AActor* OtherActor, const FVector& ImpactPoint, const FVector& ImpactNormal, const FHitResult& HitResult)
 {
 }
 

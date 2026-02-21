@@ -61,6 +61,11 @@ public:
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+	/** Wall/Floor 등에 블로킹 충돌 시 호출 (CustomProjectileMovement의 스윕 히트). 블루프린트에서 오버라이드 가능. */
+	UFUNCTION(BlueprintNativeEvent, Category = "Projectile")
+	void OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, const FVector& ImpactPoint, const FVector& ImpactNormal, const FHitResult& HitResult);
+	virtual void OnProjectileHit_Implementation(UPrimitiveComponent* HitComponent, AActor* OtherActor, const FVector& ImpactPoint, const FVector& ImpactNormal, const FHitResult& HitResult);
+
 protected:
 	virtual void BeginPlay() override;
 
