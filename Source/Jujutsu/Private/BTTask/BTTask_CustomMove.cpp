@@ -12,6 +12,7 @@
 #include "BehaviorTree/Blackboard/BlackboardKeyType_Object.h"
 #include "JujutsuGameplayTags.h"
 #include "JujutsuSkillLibrary.h"
+#include "JujutsuDebugHelper.h"
 #include "TimerManager.h"
 
 UBTTask_CustomMove::UBTTask_CustomMove(const FObjectInitializer& ObjectInitializer)
@@ -152,6 +153,7 @@ void UBTTask_CustomMove::ScheduleSecondJump(AJujutsuBaseCharacter* Character, ui
 		UJujutsuAbilitySystemComponent* ASC = Character ? Character->GetJujutsuAbilitySystemComponent() : nullptr;
 		if (ASC && TagToActivate.IsValid())
 		{
+			// Debug::Print(TEXT("[BTTask_CustomMove] 이단점프 2차 수행"), FColor::Cyan, 1002);
 			ASC->TryActivateAbilityByTag(TagToActivate, true); // 연속 점프 허용
 		}
 
@@ -226,6 +228,19 @@ EBTNodeResult::Type UBTTask_CustomMove::ExecuteMoveDecision(UBehaviorTreeCompone
 
 		if (bActivated)
 		{
+			// if (bUseDoubleJump)
+			// {
+			// 	Debug::Print(TEXT("[BTTask_CustomMove] 이단점프 1차 수행"), FColor::Cyan, 1001);
+			// }
+			// else
+			// {
+			// 	Debug::Print(TEXT("[BTTask_CustomMove] 일반점프 수행"), FColor::Green, 1000);
+			// }
+
+			// 점프와 동시에 수평 이동 적용 (일반 이동과 동일한 AddMovementInput)
+			UJujutsuSkillLibrary::SetActorRotationToTarget(Character);
+			Character->AddMovementInput(Character->GetActorForwardVector(), MoveInputStrength);
+
 			if (Mem)
 			{
 				Mem->bWaitingForAbility = true;
@@ -288,14 +303,14 @@ void UBTTask_CustomMove::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Node
 
 	if (Mem && Mem->bWaitingForAbility)
 	{
-		// 지상: 대시 대기 중 이동 입력
+		// 지상: 대시 대기 중 이동 입력 (AddMovementInput)
 		if (Character && !Character->GetCharacterMovement()->IsFalling())
 		{
+			UJujutsuSkillLibrary::SetActorRotationToTarget(Character);
 			Character->AddMovementInput(Character->GetActorForwardVector(), MoveInputStrength);
 		}
-		// 공중: 이단점프 구간(첫 점프 후~두 번째 점프 중)에만 수평 이동 (AirControl)
-		else if (Character && Character->GetCharacterMovement()->IsFalling() &&
-			(Mem->RemainingJumpsCount == 1 || (Mem->RemainingJumpsCount == 0 && IsMovementAbilityActive(OwnerComp))))
+		// 공중: 점프/이단점프 중에도 수평 이동 적용 (일반 이동과 동일)
+		else if (Character && Character->GetCharacterMovement()->IsFalling())
 		{
 			UJujutsuSkillLibrary::SetActorRotationToTarget(Character);
 			Character->AddMovementInput(Character->GetActorForwardVector(), MoveInputStrength);
@@ -330,6 +345,7 @@ void UBTTask_CustomMove::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Node
 	{
 		if (Character && !Character->GetCharacterMovement()->IsFalling())
 		{
+			UJujutsuSkillLibrary::SetActorRotationToTarget(Character);
 			Character->AddMovementInput(Character->GetActorForwardVector(), MoveInputStrength);
 		}
 	}
